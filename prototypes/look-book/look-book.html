@@ -96,6 +96,14 @@ canvas#scene{display:block;width:100%;height:100%;cursor:pointer;touch-action:ma
 .card[data-look="air"]{--c-bg:#fbfaf7;--c-fg:#191917;--c-muted:#6b6a64;--c-accent:#191917;--c-line:rgba(25,25,23,.18);box-shadow:0 1px 0 rgba(0,0,0,.4)}
 .card[data-look="air"] .choice{background:transparent;border-color:rgba(25,25,23,.25)}
 
+.journal{display:flex;flex-direction:column;gap:14px;border-top:1px solid var(--line);padding-top:26px;margin-top:8px}
+.journal h2{margin:0;font-family:var(--f-display);font-weight:var(--t-dw);font-size:calc(40px * var(--t-hscale));line-height:1;text-transform:var(--t-trans)}
+.journal>p{margin:0;color:var(--muted);max-width:66ch;text-wrap:pretty}
+.jpage{width:100%;max-width:520px;background:#f3f2ee;border-radius:3px;box-shadow:0 1px 0 rgba(255,255,255,.06),0 18px 30px -18px rgba(0,0,0,.7)}
+.jpage svg{display:block;width:100%;height:auto}
+.jpage .goal{cursor:pointer;outline:none}.jpage .goal:focus{outline:none}.jpage .goal:focus-visible .hit{stroke:#2f5fa8;stroke-width:1.5;stroke-dasharray:3 3}
+.jpage .strike{transition:stroke-dashoffset .5s ease}
+@media (prefers-reduced-motion:reduce){.jpage .strike{transition:none}}
 .quilts{display:flex;flex-direction:column;gap:16px;border-top:1px solid var(--line);padding-top:26px;margin-top:8px}
 .quilts h2{margin:0;font-family:var(--f-display);font-weight:var(--t-dw);font-size:calc(40px * var(--t-hscale));line-height:1;text-transform:var(--t-trans)}
 .quilts>p{margin:0;color:var(--muted);max-width:66ch;text-wrap:pretty}
@@ -181,6 +189,12 @@ canvas#scene{display:block;width:100%;height:100%;cursor:pointer;touch-action:ma
       <p class="hint">The encounter is sample text. Its choices aren't playable yet. Tap the scene or press N for a new seed.</p>
     </div>
   </div>
+
+  <section class="journal" aria-labelledby="j-h">
+    <h2 id="j-h">Run journal</h2>
+    <p>The season's goals, kept the way your Tasks pages are: boxed, circled, starred, with arrows to places. Tap a goal to strike it through. The lines are drawn by code with a little hand wobble; the words use the current type set until your handwriting font is built.</p>
+    <div class="jpage" id="jpage"></div>
+  </section>
 
   <section class="quilts" aria-labelledby="q-h">
     <h2 id="q-h">Barn quilt modifiers</h2>
@@ -465,7 +479,7 @@ function loadSketch(k,meta){if(SK[k])return;const im=new Image();SK[k]={img:im,r
 const SK_FALLBACK=['tower','cranes','critter','face1','face2','face3','traveler','bulb'];
 fetch('sketches/manifest.json').then(r=>r.ok?r.json():Promise.reject()).then(m=>{for(const k in m)loadSketch(k,m[k])}).catch(()=>SK_FALLBACK.forEach(k=>loadSketch(k)));
 const sketchesOf=kind=>Object.keys(SK).filter(k=>SK[k].ready&&SK[k].meta.kind===kind).sort();
-let sketchTimer=0;function sketchLoaded(){clearTimeout(sketchTimer);sketchTimer=setTimeout(()=>{if(typeof regen==='function'&&state.hand)regen();if(typeof renderQuilts==='function')renderQuilts()},80)}
+let sketchTimer=0;function sketchLoaded(){clearTimeout(sketchTimer);sketchTimer=setTimeout(()=>{if(typeof regen==='function'&&state.hand)regen();if(typeof renderQuilts==='function')renderQuilts();if(typeof renderJournal==='function')renderJournal()},80)}
 const skOn=k=>typeof state!=='undefined'&&state.hand&&SK[k]&&SK[k].ready;
 const PLBUF=document.createElement('canvas');
 function plateCanvas(it,style,k){const w=Math.max(1,Math.round(it.w*k)),h=Math.max(1,Math.round(it.h*k)),c=PLBUF;if(c.width!==w||c.height!==h){c.width=w;c.height=h}const x=c.getContext('2d');x.setTransform(1,0,0,1,0,0);
@@ -1111,7 +1125,7 @@ function renderUI(){
   const L=LOOKS.find(l=>l.id===state.look);document.getElementById('about-name').textContent=L.name;document.getElementById('about-good').textContent=L.good;document.getElementById('about-risk').textContent=L.risk;
   const fr=document.getElementById('about-from');fr.textContent=L.from||'';fr.hidden=!L.from;
   const segb=(id,list,pressed,onpick)=>document.getElementById(id).replaceChildren(...list.map(([k,name])=>{const b=el('button',{type:'button',id:id+'-'+k,'aria-pressed':String(pressed(k)),text:name});b.onclick=()=>onpick(k);return b}));
-  segb('types',Object.entries(TYPES).map(([k,t])=>[k,t.name]),k=>k===state.type,k=>{state.type=k;store.set('type',k);TYPE=TYPES[k];if(k==='wood')delete document.documentElement.dataset.type;else document.documentElement.dataset.type=k;renderUI();loadType()});
+  segb('types',Object.entries(TYPES).map(([k,t])=>[k,t.name]),k=>k===state.type,k=>{state.type=k;store.set('type',k);TYPE=TYPES[k];if(k==='wood')delete document.documentElement.dataset.type;else document.documentElement.dataset.type=k;renderUI();loadType().then(renderJournal)});
   document.getElementById('type-note').textContent=TYPE.note;
   segb('hands',[['on','Hand-drawn'],['off','Code only']],k=>(k==='on')===!!state.hand,k=>{state.hand=k==='on';store.set('hand',state.hand);renderUI();regen()});
   const isPrint=state.look==='print',ed=EDMAP[state.edition],mx=MIXMAP[state.mix];document.getElementById('edition-row').hidden=!isPrint;
@@ -1130,12 +1144,52 @@ function renderUI(){
   document.getElementById('c-choices').replaceChildren(...C.choices.map(([a,b])=>el('div',{class:'choice'},[el('b',{text:a}),el('span',{class:'tag',text:b})])));
   document.getElementById('c-prov').textContent=`${C.prov[0]} / ${C.prov[1]}`;document.getElementById('c-season').textContent=C.season;document.getElementById('c-fill').style.width=(C.prov[0]/C.prov[1]*100)+'%';
   document.getElementById('c-mod').textContent=C.mod[0];document.getElementById('c-modtext').textContent=C.mod[1]}
+/* ---------------- run journal ---------------- */
+const JOURNAL=[
+  {t:'Reach 600 provisions before first frost',mark:'box',star:true},
+  {t:'Finish the crane count',mark:'circle',to:'the Platte'},
+  {t:'Find out who keeps the row line clear',to:'Bessey rows'},
+  {t:'Get the traveler to the lamp',mark:'circle'},
+  {t:'Trade salt on Main Street',done:true},
+  {t:'Do not knock on the door in the grass',mark:'circle2'}];
+function jPath(R,pts){let d=`M${pts[0][0].toFixed(1)} ${pts[0][1].toFixed(1)}`;for(let i=1;i<pts.length;i++){const[a,b]=pts[i-1],[c,e]=pts[i];d+=` Q${a.toFixed(1)} ${b.toFixed(1)} ${((a+c)/2).toFixed(1)} ${((b+e)/2).toFixed(1)}`}const l=pts[pts.length-1];return d+` L${l[0].toFixed(1)} ${l[1].toFixed(1)}`}
+function jLine(R,x1,y1,x2,y2,j=.9){const n=Math.max(2,Math.ceil(Math.hypot(x2-x1,y2-y1)/9)),pts=[];for(let i=0;i<=n;i++){const t=i/n;pts.push([lerp(x1,x2,t)+(R()-.5)*j,lerp(y1,y2,t)+(R()-.5)*j])}return jPath(R,pts)}
+function jBox(R,x,y,w,h){const o=()=>(R()-.3)*6;return[jLine(R,x-o(),y,x+w+o(),y+(R()-.5)*2),jLine(R,x+w,y-o()*.5,x+w+(R()-.5)*2,y+h+o()*.5),jLine(R,x+w+o(),y+h,x-o(),y+h+(R()-.5)*2),jLine(R,x,y+h+o()*.5,x+(R()-.5)*2,y-o()*.5)]}
+function jLoop(R,cx,cy,rx,ry,turns=1.15){const pts=[],a0=R()*TAU,n=Math.ceil(36*turns);for(let i=0;i<=n;i++){const a=a0+i/n*TAU*turns,k=1+(R()-.5)*.06+i/n*.05;pts.push([cx+Math.cos(a)*rx*k,cy+Math.sin(a)*ry*k])}return jPath(R,pts)}
+function jStar(R,x,y,r){const pts=[];for(let i=0;i<=5;i++){const a=-Math.PI/2+i*4*Math.PI/5;pts.push([x+Math.cos(a)*r+(R()-.5)*1.5,y+Math.sin(a)*r+(R()-.5)*1.5])}return pts.map((p,i)=>(i?'L':'M')+p[0].toFixed(1)+' '+p[1].toFixed(1)).join(' ')}
+function renderJournal(){const host=document.getElementById('jpage');if(!host)return;let done={};try{done=JSON.parse(localStorage.getItem('halsey.journal')||'{}')}catch(e){}
+  const Wv=360,lh=58,top=96,Hv=top+JOURNAL.length*lh+190,ink='#2b2b2b',ns='http://www.w3.org/2000/svg',fam=TYPE.body,mc=document.createElement('canvas').getContext('2d');mc.font=`17px ${fam}`;
+  const el2=(n,a,p)=>{const e=document.createElementNS(ns,n);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e};
+  const svg=el2('svg',{viewBox:`0 0 ${Wv} ${Hv}`,role:'img','aria-label':'Run journal page'});
+  const pen=(d,p,w=1.3,extra={})=>el2('path',{d,fill:'none',stroke:ink,'stroke-width':w,'stroke-linecap':'round','stroke-linejoin':'round',...extra},p||svg);
+  const txt=(t,x,y,size,p,anchor='start')=>{const e=el2('text',{x,y,'font-size':size,'font-family':fam,fill:ink,'text-anchor':anchor},p||svg);e.textContent=t;return e};
+  const R0=rng(hashStr('journal'+state.seed));
+  txt('Fall · Year 2',22,42,24);pen(jLine(R0,20,52,170,50),null,1.6);
+  txt('provisions',186,34,12);let tx=186;const tally=34;for(let g=0;g<Math.floor(tally/5);g++){for(let i=0;i<4;i++)pen(jLine(R0,tx+i*3.4,40,tx+i*3.4+(R0()-.5)*1.5,56,.4),null,1.1);pen(jLine(R0,tx-2,52,tx+13,43,.4),null,1.1);tx+=19}
+  for(let i=0;i<tally%5;i++)pen(jLine(R0,tx+i*3.4,40,tx+i*3.4,56,.4),null,1.1);txt('×10',tx+(tally%5)*3.4+5,54,11);
+  JOURNAL.forEach((g,i)=>{const R=rng(hashStr(g.t)),y=top+i*lh,x=34,lines=[];let line='';for(const w of g.t.split(' ')){const tryL=line?line+' '+w:w;if(mc.measureText(tryL).width>(g.to?200:270)&&line){lines.push(line);line=w}else line=tryL}lines.push(line);
+    const grp=el2('g',{class:'goal',tabindex:'0',role:'button','aria-pressed':String(!!(done[i]??g.done)),'aria-label':g.t});svg.appendChild(grp);
+    const wmax=Math.max(...lines.map(l=>mc.measureText(l).width)),hgt=lines.length*20;
+    el2('rect',{class:'hit',x:x-10,y:y-18,width:wmax+(g.to?120:30),height:hgt+16,fill:'transparent'},grp);
+    pen(jLine(R,14,y-5,24,y-5,.5),grp,1.4);
+    lines.forEach((l,k)=>txt(l,x,y+k*20,17,grp));
+    if(g.mark==='box')jBox(R,x-7,y-19,wmax+14,hgt+12).forEach(d=>pen(d,grp,1.5));
+    if(g.mark==='circle'||g.mark==='circle2'){pen(jLoop(R,x+wmax/2,y-6+hgt/2-8,wmax/2+12,hgt/2+10),grp,1.3);if(g.mark==='circle2')pen(jLoop(R,x+wmax/2,y-6+hgt/2-8,wmax/2+16,hgt/2+14,1.05),grp,1.1)}
+    if(g.star)pen(jStar(R,x+wmax+24,y-8,8),grp,1.3);
+    if(g.to){const ax=x+wmax+12,ay=y-6;pen(jLine(R,ax,ay,ax+34,ay-2),grp,1.3);pen(jLine(R,ax+28,ay-7,ax+35,ay-2,.3)+' '+jLine(R,ax+35,ay-2,ax+28,ay+4,.3),grp,1.3);txt(g.to,ax+40,ay+4,14,grp)}
+    const sl=jLine(R,x-6,y-6,x+wmax+8,y-4+(lines.length-1)*20,1.2),st=pen(sl,grp,2.1,{class:'strike'});const L=wmax+60;st.style.strokeDasharray=L;const on=!!(done[i]??g.done);st.style.strokeDashoffset=on?0:L;
+    const toggle=()=>{const now=!(done[i]??g.done);done[i]=now;st.style.strokeDashoffset=now?0:L;grp.setAttribute('aria-pressed',String(now));try{localStorage.setItem('halsey.journal',JSON.stringify(done))}catch(e){}};
+    grp.addEventListener('click',toggle);grp.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();toggle()}})});
+  const fy=top+JOURNAL.length*lh+10;pen(jLine(R0,20,fy,340,fy+2),null,1);txt('Ideas',22,fy+30,15);
+  for(const[k,x,y,s2]of[['stars',306,fy+14,70],['starburst',90,fy+98,52]])if(SK[k]&&SK[k].ready){const ar=SK[k].ar,hh=ar>=1?s2/ar:s2,ww=ar>=1?s2:s2*ar;el2('image',{href:'sketches/'+k+'.png',x:x-ww/2,y,width:ww,height:hh,opacity:.85},svg)}
+  txt('the pivot turned again.',22,fy+56,14);txt('check the track.',22,fy+76,14);txt('ask about the bulb.',140,fy+130,14);
+  host.replaceChildren(svg)}
 function reroll(){state.seed=1+Math.floor(Math.random()*99999);store.set('seed',state.seed);renderUI();regen()}
 document.getElementById('reroll').onclick=reroll;cv.onclick=reroll;
 document.addEventListener('keydown',e=>{if(e.target.closest&&e.target.closest('input,textarea'))return;if(e.key==='n'||e.key==='N')reroll();const i=parseInt(e.key,10);if(i>=1&&i<=LOOKS.length){document.getElementById('look-'+LOOKS[i-1].id).click()}});
 new ResizeObserver(resize).observe(cv);
 let last=0;function loop(now){requestAnimationFrame(loop);if(reduce.matches||document.hidden)return;if(now-last<66)return;last=now;frame(now/1000)}
-renderUI();resize();regen();requestAnimationFrame(loop);renderQuilts();
+renderUI();resize();regen();requestAnimationFrame(loop);renderQuilts();renderJournal();
 const fontLoads=[loadType()];
 Promise.all(fontLoads).then(()=>{dirty=true;frame(4)});
 /* test hook: render a still of any combination into a canvas */

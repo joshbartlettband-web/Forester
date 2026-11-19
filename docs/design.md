@@ -67,6 +67,12 @@ Round five, "both and":
 - The look book has a **Hand-drawn / Code only** switch. Hand-drawn puts the tower in the pines (with a lamp in its doorway), cranes on a Platte sandbar, a many-legged creature on the Sandhills ridge, and a portrait on each encounter card.
 - Library: `art/sketches/`. Future ideas: a run journal drawn like the owner's task lists (boxes, circles, arrows, strike-through on completion), doodle geometry for rare barn quilt modifiers, scribbles as marks left on bark and grain bins.
 
+Round six (while notebook exports run):
+
+- **Sketch intake:** `tools/sketch-intake/` makes gridded contact sheets from Kobo exports and cuts drawings into the library, updating `manifest.json`. The look book loads drawings from the manifest, and card portraits rotate through every portrait.
+- Five Tasks doodles are now painted barn quilt emblems (Lookout Lamp, Root Cellar, Hidebehind, Arbor Day, Kingsley Dam). A row of storefronts became **Main Street**, a landmark on a Sandhills ridge with one window lit.
+- **Run journal:** goals drawn like the Tasks pages (boxes, circles, stars, arrows to places, provisions as tally marks). Tapping a goal strikes it through. The words are a stand-in until the handwriting font exists.
+
 **Decided:** 2D for now. `prototypes/print-3d/print-3d.html` is a Three.js test that prints a 3D forest with the same ink-separation idea in a shader, kept for comparison.
 
 **Open:** pick one look, or a blend of two.
