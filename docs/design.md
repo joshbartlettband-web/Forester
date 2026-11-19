@@ -60,6 +60,13 @@ Round four:
 - **Overprint** is now the default edition.
 - **Fonts:** none of the open-license sets felt right. Next step: a custom font from the owner's own handwriting (`tools/handwriting-font/`).
 
+Round five, "both and":
+
+- **Decided:** the game mixes generated and hand-drawn art. Generated: places, weather, light, layout. Hand-drawn (from the owner's notebooks): portraits, creatures, landmarks, modifier doodles. The mix is the point; it should feel contemporary rather than pure.
+- Drawings are **plates**, an extra ink layer in the scene model. Every look prints them with its own inks and texture: a pale carved edge for solid shapes, a doubled stroke for thin line art, and a fixed darkness so distance doesn't wash them out.
+- The look book has a **Hand-drawn / Code only** switch. Hand-drawn puts the tower in the pines (with a lamp in its doorway), cranes on a Platte sandbar, a many-legged creature on the Sandhills ridge, and a portrait on each encounter card.
+- Library: `art/sketches/`. Future ideas: a run journal drawn like the owner's task lists (boxes, circles, arrows, strike-through on completion), doodle geometry for rare barn quilt modifiers, scribbles as marks left on bark and grain bins.
+
 **Decided:** 2D for now. `prototypes/print-3d/print-3d.html` is a Three.js test that prints a 3D forest with the same ink-separation idea in a shader, kept for comparison.
 
 **Open:** pick one look, or a blend of two.
