@@ -1,0 +1,184 @@
+<title>Halsey Print 3D</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Holtwood+One+SC&family=Goudy+Bookletter+1911&family=Special+Elite&display=swap">
+<style>
+/* Layout: one column; the live 3D print on top, controls under it, then notes. Single dark chrome so the print carries the color. */
+:root{--bg:#141310;--panel:#1d1b17;--line:#35312a;--fg:#ece4d2;--muted:#a59c8a;--accent:#d99a45;
+  --t-display:"Holtwood One SC","Rockwell Extra Bold",Georgia,serif;--t-body:"Goudy Bookletter 1911","Goudy Old Style",Georgia,serif;--t-label:"Special Elite","Courier New",monospace;color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--t-body);font-size:17px;line-height:1.5}
+.wrap{max-width:980px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 48px;display:flex;flex-direction:column;gap:16px}
+h1{font-family:var(--t-display);font-weight:400;font-size:34px;line-height:1;margin:0;letter-spacing:.01em}
+h1 small{display:block;font-family:var(--t-label);font-size:13px;letter-spacing:.08em;color:var(--muted);margin-top:8px}
+.stage{display:grid;grid-template-columns:minmax(0,1fr);gap:18px;align-items:start}
+@media (min-width:860px){.stage{grid-template-columns:minmax(0,520px) minmax(0,1fr)}}
+.box{position:relative;width:100%;max-width:100%;aspect-ratio:4/5;background:#000;overflow:hidden;border-radius:2px;touch-action:none}
+canvas{display:block;width:100%;height:100%;cursor:grab}
+.fps{position:absolute;right:max(8px,env(safe-area-inset-right,0px));top:8px;font:12px var(--t-label);color:#fff;background:rgba(0,0,0,.55);padding:3px 7px;border-radius:2px;font-variant-numeric:tabular-nums}
+.side{display:flex;flex-direction:column;gap:14px;min-width:0}
+.label{font-family:var(--t-label);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.seg{display:flex;gap:6px;flex-wrap:wrap}
+.seg button,.btn{font:15px/1 var(--t-label);color:var(--fg);background:var(--panel);border:1px solid var(--line);border-radius:2px;padding:10px 12px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.notes{display:flex;flex-direction:column;gap:10px;border-top:1px solid var(--line);padding-top:12px}
+.notes p{margin:0;max-width:62ch}
+.notes h2{margin:0;font-family:var(--t-display);font-weight:400;font-size:18px}
+.notes ul{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:4px}
+.err{color:#f0a37a}
+</style>
+
+<div class="wrap">
+  <h1>Halsey in 3D<small>A real 3D planted forest, printed as a five-ink screen print every frame</small></h1>
+  <div class="stage">
+    <div class="box" id="box"><canvas id="c" aria-label="3D walk down a firebreak through the planted forest. Drag to look around."></canvas><div class="fps" id="fps">-- fps</div></div>
+    <div class="side">
+      <div class="label">Print</div>
+      <div class="seg" id="modes"></div>
+      <div class="label">Light</div>
+      <div class="seg" id="times"></div>
+      <div class="seg"><button class="btn" id="walk" type="button">Pause walk</button></div>
+      <p class="err" id="err" hidden></p>
+      <div class="notes">
+        <h2>What you are seeing</h2>
+        <p>About 2,200 pines and cedars, a fire lookout with a lamp, a campfire on the lane and a pair of eyes in the cedars. The 3D scene is drawn in plain gray. A shader then splits it into ink layers, halftones the in-between tones, knocks ink out where the paper tooth is deep and nudges each screen slightly off register. Choose <b>Raw 3D</b> to see the scene before printing.</p>
+        <h2>What 3D adds</h2>
+        <ul><li>The camera can walk the lane, and you can drag to look around.</li><li>Lamplight actually falls on the nearby trunks.</li><li>Depth and fog come from real distance.</li></ul>
+        <h2>What it costs</h2>
+        <ul><li>Watch the frame counter on your phone, and how warm it gets after a few minutes.</li><li>Trees close to the camera look simpler than the drawn 2D trees.</li><li>Because the paper stays still while the world moves, it reads more like animation than a print.</li></ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+"use strict";
+const TAU=Math.PI*2,clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
+function rng(seed){let a=seed>>>0;return()=>{a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+function hexc(c){c=c.replace('#','');return[parseInt(c.slice(0,2),16),parseInt(c.slice(2,4),16),parseInt(c.slice(4,6),16)]}
+function rgba(c,a){const[r,g,b]=hexc(c);return`rgba(${r},${g},${b},${a})`}
+const errEl=document.getElementById('err');
+function fail(msg){errEl.hidden=false;errEl.textContent=msg}
+if(!window.THREE){fail('The 3D library did not load, so the scene cannot start. Reload the page to try again.')}
+
+/* ---------- paper, from the look book ---------- */
+const PAPERS={rag:{base:'#f0e8d6',dark:'#c6b797',light:'#fffaf0',mottle:.1,fiber:'#c4b596',fiber2:'#fffdf6',fibers:6000,fleck:['#8a7a5e','#b9a982'],flecks:260},
+  black:{base:'#1c1c1f',dark:'#0d0d0f',light:'#303036',mottle:.3,fiber:'#3a3a41',fiber2:'#29292e',fibers:3000,fleck:['#45454c'],flecks:220},
+  news:{base:'#d8d0ba',dark:'#b0a27e',light:'#e8e1cf',mottle:.14,fiber:'#a69a7e',fiber2:'#ebe4d2',fibers:7000,fleck:['#5a5548','#7d7560'],flecks:520,yellow:'#c2a866'}};
+function makePaper(kind,cw,ch){const P=PAPERS[kind],c=document.createElement('canvas');c.width=cw;c.height=ch;const x=c.getContext('2d'),R=rng(1903),k=cw/400,area=cw*ch/(800*1000);
+  x.fillStyle=P.base;x.fillRect(0,0,cw,ch);
+  for(let i=0;i<140;i++){const px=R()*cw,py=R()*ch,r=(20+R()*110)*k,col=R()<.5?P.dark:P.light,g=x.createRadialGradient(px,py,0,px,py,r);g.addColorStop(0,rgba(col,P.mottle));g.addColorStop(1,rgba(col,0));x.fillStyle=g;x.fillRect(px-r,py-r,2*r,2*r)}
+  x.lineCap='round';for(let i=0,n=Math.round(P.fibers*area);i<n;i++){const px=R()*cw,py=R()*ch,len=(1.5+R()*R()*12)*k,a=R()*TAU,b=(R()-.5)*len*.8;x.strokeStyle=rgba(R()<.6?P.fiber:P.fiber2,.08+R()*.24);x.lineWidth=Math.max(.5,(.25+R()*.5)*k);x.beginPath();x.moveTo(px,py);x.quadraticCurveTo(px+Math.cos(a)*len/2-Math.sin(a)*b,py+Math.sin(a)*len/2+Math.cos(a)*b,px+Math.cos(a)*len,py+Math.sin(a)*len);x.stroke()}
+  for(let i=0,n=Math.round(P.flecks*area);i<n;i++){x.fillStyle=rgba(P.fleck[(R()*P.fleck.length)|0],.35+R()*.5);x.beginPath();x.arc(R()*cw,R()*ch,Math.max(.4,(.25+R()*R()*1.3)*k),0,TAU);x.fill()}
+  if(P.yellow){const g=x.createRadialGradient(cw/2,ch/2,Math.min(cw,ch)*.3,cw/2,ch/2,Math.max(cw,ch)*.75);g.addColorStop(0,rgba(P.yellow,0));g.addColorStop(1,rgba(P.yellow,.6));x.fillStyle=g;x.fillRect(0,0,cw,ch)}
+  return c}
+function makeTooth(){const s=document.createElement('canvas');s.width=s.height=80;const sx=s.getContext('2d'),d=sx.createImageData(80,80),R=rng(31);for(let i=0;i<d.data.length;i+=4){d.data[i]=d.data[i+1]=d.data[i+2]=255;d.data[i+3]=R()*255}sx.putImageData(d,0,0);
+  const c=document.createElement('canvas');c.width=c.height=160;const x=c.getContext('2d');x.drawImage(s,0,0,160,160);return c}
+
+/* ---------- print presets ---------- */
+const MODES=[
+  {id:'rag',name:'Rag paper',paper:'rag',inks:['#e9b26c','#c7695b','#6c4a6b','#2e2f4e','#16131c'],th:[.08,.3,.5,.68,.86],soft:.08,invert:0,tooth:.35,spot:'#f2c35a',cell:5},
+  {id:'black',name:'Black stock',paper:'black',inks:['#2c6f7c','#e8dec6'],th:[.12,.62],soft:.2,invert:1,tooth:.35,spot:'#d4a74b',cell:4.5},
+  {id:'news',name:'Newsprint',paper:'news',inks:['#1e1c19'],th:[.5],soft:1,invert:0,tooth:.2,spot:'#1e1c19',cell:4},
+  {id:'raw',name:'Raw 3D',raw:true}];
+const TIMES=[{id:'dusk',name:'Dusk'},{id:'night',name:'Night'}];
+const state={mode:'rag',time:'dusk',walking:!matchMedia('(prefers-reduced-motion: reduce)').matches};
+
+/* ---------- scene ---------- */
+const box=document.getElementById('box'),cv=document.getElementById('c');
+let renderer,rt,scene,camera,post,postScene,postCam,lights={},spots=[],eyes=[],skyTex,sun;
+const P=160; // the forest repeats every P units so the walk can loop
+function mergeGeoms(list){const pos=[],nor=[];for(const g of list){const n=g.index?g.toNonIndexed():g;n.computeVertexNormals();pos.push(...n.attributes.position.array);nor.push(...n.attributes.normal.array)}
+  const out=new THREE.BufferGeometry();out.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));out.setAttribute('normal',new THREE.Float32BufferAttribute(nor,3));return out}
+function at(g,x,y,z,sx=1,sy=1,sz=1){g.scale(sx,sy,sz);g.translate(x,y,z);return g}
+function pineGeom(){const parts=[at(new THREE.CylinderGeometry(.03,.045,.22,5),0,.11,0)];for(let i=0;i<4;i++){const r=.3*(1-i*.19);parts.push(at(new THREE.ConeGeometry(r,.36,7),0,.3+i*.19,0))}return mergeGeoms(parts)}
+function cedarGeom(){return mergeGeoms([at(new THREE.SphereGeometry(.36,8,6),0,.32,0,1,1.1,1),at(new THREE.ConeGeometry(.36,.8,8),0,.62,0)])}
+function glowTex(){const c=document.createElement('canvas');c.width=c.height=64;const x=c.getContext('2d'),g=x.createRadialGradient(32,32,0,32,32,32);g.addColorStop(0,'rgba(255,255,255,1)');g.addColorStop(.25,'rgba(255,255,255,.7)');g.addColorStop(1,'rgba(255,255,255,0)');x.fillStyle=g;x.fillRect(0,0,64,64);return new THREE.CanvasTexture(c)}
+function skyTexture(time){const c=document.createElement('canvas');c.width=4;c.height=256;const x=c.getContext('2d'),g=x.createLinearGradient(0,0,0,256);
+  const s=time==='night'?[[0,.06],[.55,.22],[1,.5]]:[[0,.38],[.5,.7],[1,.97]];for(const[o,v]of s){const q=Math.round(v*255);g.addColorStop(o,`rgb(${q},${q},${q})`)}x.fillStyle=g;x.fillRect(0,0,4,256);const t=new THREE.CanvasTexture(c);return t}
+function build(){
+  renderer=new THREE.WebGLRenderer({canvas:cv,antialias:false,powerPreference:'low-power'});
+  scene=new THREE.Scene();camera=new THREE.PerspectiveCamera(55,4/5,.1,400);camera.position.set(0,1.7,0);
+  const R=rng(1903),wild=1;
+  const pineMat=new THREE.MeshLambertMaterial({color:0x2a2a2a}),cedarMat=new THREE.MeshLambertMaterial({color:0x1c1c1c});
+  const pines=[],cedars=[];
+  for(let per=0;per<2;per++){const off=-per*P,R2=rng(77);
+    for(let row=0;row<16;row++){const side=row<12?-1:1,i=row<12?row:row-12,x=side*(6.5+i*3.2);
+      for(let j=0;j<P/3.2;j++){if(R2()<.07)continue;const z=off-j*3.2+(R2()-.5)*.4;pines.push([x+(R2()-.5)*.3,z,11+R2()*3])}}
+    for(let i=0;i<320;i++){const x=wild*(15+Math.pow(R2(),.7)*45),z=off-R2()*P;cedars.push([x,z,4+R2()*4.5])}
+    for(let i=0;i<30;i++){const x=wild*(8+R2()*7),z=off-R2()*P;cedars.push([x,z,1.5+R2()*2])}}
+  const m=new THREE.Matrix4(),q=new THREE.Quaternion(),s=new THREE.Vector3(),p=new THREE.Vector3(),up=new THREE.Vector3(0,1,0);
+  const pm=new THREE.InstancedMesh(pineGeom(),pineMat,pines.length);pines.forEach(([x,z,h],i)=>{q.setFromAxisAngle(up,R()*TAU);s.set(h*.9,h,h*.9);p.set(x,0,z);m.compose(p,q,s);pm.setMatrixAt(i,m)});scene.add(pm);
+  const cm=new THREE.InstancedMesh(cedarGeom(),cedarMat,cedars.length);cedars.forEach(([x,z,h],i)=>{q.setFromAxisAngle(up,R()*TAU);s.set(h*.75,h,h*.75);p.set(x,0,z);m.compose(p,q,s);cm.setMatrixAt(i,m)});scene.add(cm);
+  const ground=new THREE.Mesh(new THREE.PlaneGeometry(500,2*P+300),new THREE.MeshLambertMaterial({color:0x8a8a8a}));ground.rotation.x=-Math.PI/2;ground.position.z=-P;scene.add(ground);
+  const lane=new THREE.Mesh(new THREE.PlaneGeometry(5,2*P+300),new THREE.MeshLambertMaterial({color:0xe6e6e6}));lane.rotation.x=-Math.PI/2;lane.position.set(0,.02,-P);scene.add(lane);
+  const gt=glowTex(),spotMat=new THREE.SpriteMaterial({map:gt,color:0xffff00,blending:THREE.AdditiveBlending,depthWrite:false,transparent:true});
+  const towerMat=new THREE.MeshLambertMaterial({color:0x262626});
+  for(let per=0;per<2;per++){const off=-per*P;
+    const tw=new THREE.Group();const H=26;for(const[a,b]of[[-1,-1],[1,-1],[1,1],[-1,1]]){const leg=new THREE.Mesh(new THREE.CylinderGeometry(.12,.18,H,4),towerMat);leg.position.set(a*1.6,H/2,b*1.6);leg.rotation.z=-a*.07;leg.rotation.x=b*.07;tw.add(leg)}
+    for(let k=1;k<5;k++){const y=H*k/5,w=3.6-k*.35;for(const r of[0,Math.PI/2]){const br=new THREE.Mesh(new THREE.BoxGeometry(w*2,.12,.12),towerMat);br.position.y=y;br.rotation.y=r;br.position.x=r?0:0;tw.add(br)}}
+    const cab=new THREE.Mesh(new THREE.BoxGeometry(3.4,2.4,3.4),towerMat);cab.position.y=H+1.2;tw.add(cab);const roof=new THREE.Mesh(new THREE.ConeGeometry(2.8,1.6,4),towerMat);roof.position.y=H+3.2;roof.rotation.y=Math.PI/4;tw.add(roof);
+    const win=new THREE.Sprite(spotMat);win.scale.set(3,3,1);win.position.set(0,H+1.2,1.8);tw.add(win);spots.push({s:win,base:3,k:1.3});
+    tw.position.set(-22,0,off-70);scene.add(tw);
+    const fire=new THREE.Sprite(spotMat);fire.scale.set(2.4,2.4,1);fire.position.set(1.6,1.2,off-45);scene.add(fire);spots.push({s:fire,base:2.4,k:4.1});
+    const pl=new THREE.PointLight(0xffffff,1.6,16,1.6);pl.position.set(1.6,1.2,off-45);scene.add(pl);lights['fire'+per]=pl;
+    for(const dx of[-.18,.18]){const e=new THREE.Sprite(spotMat);e.scale.set(.32,.32,1);e.position.set(16+dx,2.1,off-104);scene.add(e);eyes.push(e)}}
+  lights.amb=new THREE.AmbientLight(0xffffff,.6);scene.add(lights.amb);lights.dir=new THREE.DirectionalLight(0xffffff,.7);lights.dir.position.set(-40,30,-60);scene.add(lights.dir);
+  sun=new THREE.Sprite(new THREE.SpriteMaterial({map:gt,color:0xffffff,fog:false,depthWrite:false,transparent:true}));scene.add(sun);
+  // post pass
+  postScene=new THREE.Scene();postCam=new THREE.OrthographicCamera(-1,1,1,-1,0,1);
+  const tooth=new THREE.CanvasTexture(makeTooth());tooth.wrapS=tooth.wrapT=THREE.RepeatWrapping;
+  post=new THREE.ShaderMaterial({uniforms:{tScene:{value:null},tPaper:{value:null},tTooth:{value:tooth},res:{value:new THREE.Vector2(1,1)},inks:{value:Array.from({length:5},()=>new THREE.Color())},th:{value:[0,0,0,0,0]},
+      offs:{value:Array.from({length:5},()=>new THREE.Vector2())},angles:{value:[.26,1.31,0,.79,.52]},count:{value:5},soft:{value:.08},cell:{value:5},invert:{value:0},tooth:{value:.35},raw:{value:0},spotCol:{value:new THREE.Color()}},
+    vertexShader:'varying vec2 vUv;void main(){vUv=uv;gl_Position=vec4(position.xy,0.,1.);}',
+    fragmentShader:`precision highp float;uniform sampler2D tScene,tPaper,tTooth;uniform vec2 res;uniform vec3 inks[5];uniform float th[5];uniform vec2 offs[5];uniform float angles[5];uniform int count;uniform float soft,cell,invert,tooth,raw;uniform vec3 spotCol;varying vec2 vUv;
+      float dotScreen(vec2 px,float ang,float cov){float s=sin(ang),c=cos(ang);vec2 p=vec2(c*px.x-s*px.y,s*px.x+c*px.y)/cell;vec2 f=fract(p)-.5;float thr=min(1.,3.14159*dot(f,f));return smoothstep(thr-.06,thr+.06,cov);}
+      void main(){vec2 px=vUv*res;vec4 raw4=texture2D(tScene,vUv);if(raw>.5){gl_FragColor=vec4(raw4.rgb,1.);return;}
+        vec3 paper=texture2D(tPaper,vUv).rgb;vec3 col=paper;float tv=texture2D(tTooth,px/160.).a;
+        for(int k=0;k<5;k++){if(k>=count)break;vec2 uv=vUv+offs[k]/res;float l=texture2D(tScene,uv).r;float t=invert>.5?l:1.-l;float cov=clamp((t-th[k])/soft+.5,0.,1.);
+          float a=dotScreen(px+offs[k],angles[k],cov);a*=1.-smoothstep(.62,.8,tv)*tooth;col=mix(col,inks[k],a*.96);}
+        vec3 c3=texture2D(tScene,vUv+offs[2]/res).rgb;float sp=clamp((c3.g-c3.b)*1.5,0.,1.);float sa=dotScreen(px,.6,sp);col=mix(col,spotCol,sa*(1.-smoothstep(.62,.8,tv)*tooth));
+        col=mix(col,col*(.75+.5*dot(paper,vec3(.333))),.3);gl_FragColor=vec4(col,1.);}`});
+  postScene.add(new THREE.Mesh(new THREE.PlaneGeometry(2,2),post));
+  applyTime();applyMode();resize();
+}
+function applyTime(){const night=state.time==='night',fogV=night?.42:.9;scene.fog=new THREE.Fog(new THREE.Color(fogV,fogV,fogV),6,night?95:150);
+  if(skyTex)skyTex.dispose();skyTex=skyTexture(state.time);scene.background=skyTex;
+  lights.amb.intensity=night?.32:.62;lights.dir.intensity=night?.35:.7;
+  sun.scale.set(night?14:46,night?14:46,1);sun.material.opacity=1;sun.userData={y:night?42:7}}
+const paperTex={};
+function applyMode(){const M=MODES.find(m=>m.id===state.mode);post.uniforms.raw.value=M.raw?1:0;if(M.raw)return;
+  const w=rt?rt.width:800,h=rt?rt.height:1000,key=M.paper+w;
+  if(!paperTex[key]){const t=new THREE.CanvasTexture(makePaper(M.paper,Math.min(1024,w),Math.min(1280,h)));paperTex[key]=t}
+  const u=post.uniforms;u.tPaper.value=paperTex[key];u.count.value=M.inks.length;u.soft.value=M.soft;u.invert.value=M.invert;u.tooth.value=M.tooth;u.spotCol.value.set(M.spot);
+  const dpr=renderer.getPixelRatio(),R=rng(5);u.cell.value=M.cell*dpr;
+  for(let i=0;i<5;i++){u.inks.value[i].set(M.inks[i]||'#000000');u.th.value[i]=M.th[i]??2;u.offs.value[i].set(i?(R()-.5)*3*dpr:0,i?(R()-.5)*3*dpr:0)}}
+function resize(){const r=box.getBoundingClientRect(),dpr=Math.min(2,window.devicePixelRatio||1);renderer.setPixelRatio(dpr);renderer.setSize(r.width,r.height,false);camera.aspect=r.width/r.height;camera.updateProjectionMatrix();
+  const w=Math.round(r.width*dpr),h=Math.round(r.height*dpr);if(rt)rt.dispose();rt=new THREE.WebGLRenderTarget(w,h,{minFilter:THREE.LinearFilter,magFilter:THREE.LinearFilter});
+  post.uniforms.tScene.value=rt.texture;post.uniforms.res.value.set(w,h);applyMode()}
+
+/* ---------- interaction + loop ---------- */
+let yaw=0,pitch=0,drag=null,last=performance.now(),acc=0,frames=0,fpsT=0;
+cv.addEventListener('pointerdown',e=>{drag={x:e.clientX,y:e.clientY,yaw,pitch};cv.setPointerCapture(e.pointerId);cv.style.cursor='grabbing'});
+cv.addEventListener('pointermove',e=>{if(!drag)return;yaw=clamp(drag.yaw-(e.clientX-drag.x)*.005,-1.2,1.2);pitch=clamp(drag.pitch-(e.clientY-drag.y)*.004,-.35,.5)});
+const end=()=>{drag=null;cv.style.cursor='grab'};cv.addEventListener('pointerup',end);cv.addEventListener('pointercancel',end);
+function tick(now){requestAnimationFrame(tick);if(document.hidden)return;const dt=Math.min(.1,(now-last)/1000);last=now;acc+=dt;if(acc<1/30)return;const step=acc;acc=0;
+  if(state.walking){camera.position.z-=2.2*step;if(camera.position.z<-P)camera.position.z+=P}
+  const t=now/1000;camera.position.x=Math.sin(t*.35)*.6;camera.position.y=1.7+Math.sin(t*2.4)*.03*(state.walking?1:0);
+  if(!drag){yaw*=.985;pitch*=.985}
+  camera.rotation.set(pitch+.06,yaw,0,'YXZ');
+  sun.position.set(camera.position.x-30,sun.userData.y,camera.position.z-300);
+  for(const sp of spots){const f=.85+.1*Math.sin(t*9+sp.k)+.05*Math.sin(t*23+sp.k);sp.s.scale.set(sp.base*f,sp.base*f,1)}
+  for(const k in lights)if(k.startsWith('fire'))lights[k].intensity=1.4+.3*Math.sin(t*11)+.15*Math.sin(t*29);
+  const c=t%11,on=c>1.5&&c<9.5&&!(c>5.2&&c<5.38);for(const e of eyes)e.visible=on;
+  renderer.setRenderTarget(rt);renderer.render(scene,camera);renderer.setRenderTarget(null);renderer.render(postScene,postCam);
+  frames++;fpsT+=step;if(fpsT>=1){document.getElementById('fps').textContent=Math.round(frames/fpsT)+' fps';frames=0;fpsT=0}}
+
+function seg(el,list,key,on){el.replaceChildren(...list.map(o=>{const b=document.createElement('button');b.type='button';b.textContent=o.name;b.setAttribute('aria-pressed',String(state[key]===o.id));b.onclick=()=>{state[key]=o.id;seg(el,list,key,on);on()};return b}))}
+if(window.THREE){try{build();seg(document.getElementById('modes'),MODES,'mode',applyMode);seg(document.getElementById('times'),TIMES,'time',applyTime);
+  const wb=document.getElementById('walk');const lab=()=>wb.textContent=state.walking?'Pause walk':'Walk';lab();wb.onclick=()=>{state.walking=!state.walking;lab()};
+  new ResizeObserver(()=>resize()).observe(box);requestAnimationFrame(tick)}catch(e){fail('This device could not start WebGL, which the 3D test needs. '+e.message)}}
+</script>
