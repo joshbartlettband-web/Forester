@@ -162,6 +162,7 @@ canvas#scene{display:block;width:100%;height:100%;cursor:pointer;touch-action:ma
         <div class="row"><span class="label">Edition</span><div class="seg small" id="editions" role="group" aria-label="Screen print edition"></div></div>
         <div class="row"><span class="label">Mixes</span><div class="seg small" id="mixes" role="group" aria-label="Mixed looks"></div></div>
         <div class="row" id="mixdials"><span class="label">Light</span><div class="seg small" id="lights" role="group" aria-label="Light model"></div><span class="label">Paper</span><div class="seg small" id="papers" role="group" aria-label="Paper"></div></div>
+        <div class="row" id="mixdials2"><span class="label">Camera</span><div class="seg small" id="cameras" role="group" aria-label="Camera"></div><span class="label">Texture</span><div class="seg small" id="textures" role="group" aria-label="Print texture"></div></div>
       </div>
       <div class="about"><h3 id="about-name"></h3><p class="from" id="about-from"></p><p id="about-good"></p><p class="risk" id="about-risk"></p><p class="ed" id="about-ed" hidden></p></div>
       <article class="card" id="card" data-look="print">
@@ -720,9 +721,38 @@ const EDITIONS=[
   {id:'news',name:'Newsprint',note:'One black ink in a coarse halftone on cheap newsprint gone yellow at the edges, like a photo in a county weekly.',paper:'news',mode:'multiply',tooth:.22,misreg:0,capInk:0,caption:'news',cell:3.6,light:'#ffffff',
     inks:[{c:'#1e1c19',f:t=>Math.pow(t,1.1),angle:45}],card:{fg:'#1e1c19',muted:'#5f5a4f',accent:'#1e1c19'}}];
 const EDMAP=Object.fromEntries(EDITIONS.map(e=>[e.id,e]));
+const TEXTURES={clean:{name:'Clean',rough:.12,tooth:.7,mottle:.06,pins:0,mesh:0,through:.8},worn:{name:'Worn',rough:.5,tooth:1.3,mottle:.24,pins:600,mesh:.08,through:1.35},rough:{name:'Rough',rough:.95,tooth:1.75,mottle:.38,pins:1600,mesh:.13,through:1.8}};
+let noiseTile=null;function getNoise(){if(noiseTile)return noiseTile;const n=256,R=rng(77),N=noise2(R),a=new Float32Array(n*n);for(let y=0;y<n;y++)for(let x=0;x<n;x++)a[y*n+x]=(fbm2(N,x/7,y/7,3)-.5)*1.5+(R()-.5)*.7;return noiseTile=a}
+const mottleCv=(()=>{const s=document.createElement('canvas');s.width=s.height=24;const sx=s.getContext('2d'),d=sx.createImageData(24,24),R=rng(41);for(let i=0;i<d.data.length;i+=4){d.data[i+3]=R()*255}sx.putImageData(d,0,0);
+  const c=document.createElement('canvas');c.width=c.height=480;const x=c.getContext('2d');x.imageSmoothingEnabled=true;x.drawImage(s,0,0,480,480);const im=x.getImageData(0,0,480,480);for(let i=3;i<im.data.length;i+=4){const v=im.data[i]/255;im.data[i]=clamp((v-.45)*2.4,0,1)*255}x.putImageData(im,0,0);return c})();
+const meshCv=(()=>{const c=document.createElement('canvas');c.width=c.height=4;const x=c.getContext('2d');x.fillStyle='#000';x.fillRect(0,0,1,1);x.fillRect(2,2,1,1);return c})();
+function roughen(m,amount){if(amount<.05)return;const w=m.width,h=m.height,sw=Math.ceil(w/2),sh=Math.ceil(h/2),sm=buf('rsm',sw,sh),sx=sm.getContext('2d');sx.setTransform(1,0,0,1,0,0);sx.globalCompositeOperation='copy';sx.imageSmoothingEnabled=true;sx.drawImage(m,0,0,sw,sh);
+  const mx=m.getContext('2d');mx.setTransform(1,0,0,1,0,0);mx.globalCompositeOperation='copy';mx.imageSmoothingEnabled=true;mx.drawImage(sm,0,0,w,h);mx.globalCompositeOperation='source-over';
+  const im=mx.getImageData(0,0,w,h),d=im.data,NZ=getNoise();for(let y=0;y<h;y++){const row=(y&255)*256;for(let x=0;x<w;x++){const p=(y*w+x)*4+3,a=d[p];if(a===0||a===255)continue;const v=a/255+NZ[row+(x&255)]*amount*.45;d[p]=v>.52?255:v>.44?Math.round((v-.44)/.08*255):0}}
+  mx.putImageData(im,0,0)}
+function inv3(m){const[a,b,c]=m[0],[d,e,f]=m[1],[g,h,i]=m[2],A=e*i-f*h,B=-(d*i-f*g),C=d*h-e*g,det=a*A+b*B+c*C;if(Math.abs(det)<1e-6)return null;
+  return[[A/det,-(b*i-c*h)/det,(b*f-c*e)/det],[B/det,(a*i-c*g)/det,-(a*f-c*d)/det],[C/det,-(a*h-b*g)/det,(a*e-b*d)/det]]}
+const AIRCAP={pines:['THE BESSEY ROWS','Bessey Ranger District from the air'],prairie:['GHOST PIVOTS','Hooker County from the air'],river:['CRANE ROOST','The Platte near Gibbon from the air']};
+function aerialMasks(S,ed,cw,ch,k,img){const src=airImage(S),up=buf('airup',cw,ch),ux=up.getContext('2d');ux.setTransform(1,0,0,1,0,0);ux.imageSmoothingEnabled=true;ux.drawImage(src,0,0,cw,ch);
+  const px=ux.getImageData(0,0,cw,ch).data,n=ed.inks.length,NZ=getNoise(),rough=TEXTURES[state.texture].rough,paper=rgb(PAPERS[ed.paper].base);
+  let solve=null;if(ed.mode==='multiply'&&n===3&&!ed.inks.some(i=>i.fountain)){const D=ed.inks.map(i=>rgb(i.c).map(v=>-Math.log(Math.max(v,.03))));solve=inv3([[D[0][0],D[1][0],D[2][0]],[D[0][1],D[1][1],D[2][1]],[D[0][2],D[1][2],D[2][2]]])}
+  const masks=ed.inks.map((ink,i)=>{const m=buf('m'+i,cw,ch);m.getContext('2d').setTransform(1,0,0,1,0,0);m.getContext('2d').clearRect(0,0,cw,ch);return m}),outs=masks.map(m=>m.getContext('2d').createImageData(cw,ch));
+  const ang=ed.inks.map((ink,i)=>(ink.angle??[15,75,0,45,30][i])*Math.PI/180),cs=ang.map(Math.cos),sn=ang.map(Math.sin),P=Math.max(3,(ed.cell||4.5)*k*1.25),cov=new Float32Array(n);
+  for(let y=Math.floor(img[1]*k);y<img[3]*k;y++){const row=(y&255)*256;for(let x=Math.floor(img[0]*k);x<img[2]*k;x++){const p=(y*cw+x)*4,cc=v=>clamp((v/255-.52)*1.45+.5,0,1),r=cc(px[p]),g=cc(px[p+1]),b=cc(px[p+2]);
+    if(solve){const t0=-Math.log(clamp(r/paper[0],.03,1))*1.9,t1=-Math.log(clamp(g/paper[1],.03,1))*1.9,t2=-Math.log(clamp(b/paper[2],.03,1))*1.9;for(let i=0;i<3;i++)cov[i]=clamp(solve[i][0]*t0+solve[i][1]*t1+solve[i][2]*t2,0,1)}
+    else{const t=1-(r*.3+g*.59+b*.11);for(let i=0;i<n;i++){const ink=ed.inks[i];cov[i]=ink.f?clamp(ink.f(t,{type:'px'}),0,1):clamp((t-ink.th)/(ink.soft??.16)+.5,0,1)}}
+    const nz=NZ[row+(x&255)]*rough*.3;
+    for(let i=0;i<n;i++){let c=cov[i];c=lerp(c,Math.round(c*3)/3,.65);if(c<=.04)continue;let a=1;if(c<.99){const u=(cs[i]*x-sn[i]*y)/P,v=(sn[i]*x+cs[i]*y)/P,fu=u-Math.floor(u)-.5,fv=v-Math.floor(v)-.5;a=clamp((c-Math.min(1,Math.PI*(fu*fu+fv*fv))+nz)/.12+.5,0,1)}
+      const o=outs[i].data;o[p]=o[p+1]=o[p+2]=255;o[p+3]=a*255}}}
+  masks.forEach((m,i)=>m.getContext('2d').putImageData(outs[i],0,0));
+  const cx=masks[ed.capInk].getContext('2d'),cap=AIRCAP[S.biome];cx.setTransform(k,0,0,k,0,0);cx.fillStyle='#fff';cx.textBaseline='alphabetic';
+  if(ed.caption==='news'){cx.fillRect(12,H-72,W-24,1.2);cx.font=F('body',21,'');cx.fillText(ed.headline||cap[0].replace(/\w\S*/g,w=>w[0]+w.slice(1).toLowerCase()),14,H-48);cx.font=F('body',11,'italic');cx.fillText(`Fig. ${S.seed%9+1}. ${cap[1]}.`,14,H-30);cx.font=F('label',8,'');cx.fillText('THE SANDHILLS COURIER · PRINTED IN HALSEY',14,H-14)}
+  else{fitText(cx,'display',36,ed.headline||cap[0],14,H-28,W-64);cx.font=F('label',10.5,'');cx.fillText(cap[1].toUpperCase(),15,H-12)}
+  return masks}
 function printEdition(ctx,S,ed){const cw=ctx.canvas.width,ch=ctx.canvas.height,k=cw/W,R=rng(S.seed*31+7),news=ed.caption==='news',img=[12,12,W-12,H-(news?80:70)],TL=TONES[ed.tone||'air'],skyOv=(ed.tone||'air')==='air'?ed.sky:null,cap0=ed.headline||S.caption[0];
   const covOf=(ink,t,it,sky)=>{if(ink.f)return clamp(ink.f(t,it),0,1);const s=sky?(ink.soft??ed.skySoft??.08):ink.soft;return s?clamp((t-ink.th)/s+.5,0,1):(t>=ink.th?1:0)};
-  const masks=ed.inks.map((ink,i)=>{const m=buf('m'+i,cw,ch),x=m.getContext('2d');x.setTransform(1,0,0,1,0,0);x.globalCompositeOperation='source-over';x.clearRect(0,0,cw,ch);x.setTransform(k,0,0,k,0,0);
+  const TX=TEXTURES[state.texture]||TEXTURES.worn,area=cw*ch/(800*1000);
+  const masks=ed.camera==='aerial'?aerialMasks(S,ed,cw,ch,k,img):ed.inks.map((ink,i)=>{const m=buf('m'+i,cw,ch),x=m.getContext('2d');x.setTransform(1,0,0,1,0,0);x.globalCompositeOperation='source-over';x.clearRect(0,0,cw,ch);x.setTransform(k,0,0,k,0,0);
     const pc={},ang=ink.angle??[15,75,0,45,30][i],pat=c=>{const q=Math.round(c*10)/10;return pc[q]||(pc[q]=dotPattern(x,q,ed.cell||4.5,ang,k))};
     const stamp=(c,draw)=>{x.globalCompositeOperation='destination-out';draw('#000');x.globalCompositeOperation='source-over';if(c>=.97)draw('#fff');else if(c>.04)draw(pat(c))};
     x.save();x.beginPath();x.rect(img[0],img[1],img[2]-img[0],img[3]-img[1]);x.clip();
@@ -739,16 +769,17 @@ function printEdition(ctx,S,ed){const cw=ctx.canvas.width,ch=ctx.canvas.height,k
     return m});
   ctx.save();ctx.setTransform(1,0,0,1,0,0);ctx.globalCompositeOperation='source-over';const paper=makePaper(ed.paper,cw,ch);ctx.drawImage(paper,0,0);
   const tmp=buf('tmp',cw,ch),tc=tmp.getContext('2d');
-  ed.inks.forEach((ink,i)=>{tc.setTransform(1,0,0,1,0,0);tc.globalAlpha=1;tc.globalCompositeOperation='copy';tc.drawImage(masks[i],0,0);tc.globalCompositeOperation='source-in';
+  ed.inks.forEach((ink,i)=>{roughen(masks[i],TX.rough);tc.setTransform(1,0,0,1,0,0);tc.globalAlpha=1;tc.globalCompositeOperation='copy';tc.drawImage(masks[i],0,0);tc.globalCompositeOperation='source-in';
     if(ink.fountain){const g=tc.createLinearGradient(0,0,cw,0);ink.fountain.forEach((c,j)=>g.addColorStop(j/(ink.fountain.length-1),c));tc.fillStyle=g}else tc.fillStyle=ink.c;tc.fillRect(0,0,cw,ch);
-    tc.globalCompositeOperation='destination-out';tc.globalAlpha=ed.tooth;tc.fillStyle=tc.createPattern(toothCv,'repeat');tc.fillRect(0,0,cw,ch);tc.globalAlpha=1;
+    tc.globalCompositeOperation='destination-out';tc.globalAlpha=Math.min(.95,ed.tooth*TX.tooth);tc.fillStyle=tc.createPattern(toothCv,'repeat');tc.fillRect(0,0,cw,ch);tc.globalAlpha=TX.mottle;tc.save();tc.translate(-R()*480,-R()*480);tc.fillStyle=tc.createPattern(mottleCv,'repeat');tc.fillRect(0,0,cw+480,ch+480);tc.restore();tc.globalAlpha=1;tc.fillStyle='#000';for(let q=0,nq=TX.pins*area;q<nq;q++){tc.beginPath();tc.arc(R()*cw,R()*ch,(.35+R()*R()*1.3)*k,0,TAU);tc.fill()}if(TX.mesh){tc.globalAlpha=TX.mesh;tc.fillStyle=tc.createPattern(meshCv,'repeat');tc.fillRect(0,0,cw,ch)}tc.globalAlpha=1;
     const a=R()<.5,g=tc.createLinearGradient(0,0,cw*.4,ch);g.addColorStop(a?0:1,'rgba(0,0,0,0)');g.addColorStop(a?1:0,'rgba(0,0,0,.16)');tc.fillStyle=g;tc.fillRect(0,0,cw,ch);tc.globalCompositeOperation='source-over';
     const o=i===0?[0,0]:[(R()-.5)*2*ed.misreg,(R()-.5)*2*ed.misreg];ctx.globalCompositeOperation=ed.mode==='multiply'?'multiply':'source-over';ctx.globalAlpha=ed.alpha??.97;ctx.drawImage(tmp,o[0]*k,o[1]*k);ctx.globalAlpha=1});
-  const th=PAPERS[ed.paper].through;ctx.globalCompositeOperation=th[0];ctx.globalAlpha=th[1];ctx.drawImage(paper,0,0);ctx.globalAlpha=1;ctx.globalCompositeOperation='source-over';
+  const th=PAPERS[ed.paper].through;ctx.globalCompositeOperation=th[0];ctx.globalAlpha=Math.min(1,th[1]*TX.through);ctx.drawImage(paper,0,0);ctx.globalAlpha=1;ctx.globalCompositeOperation='source-over';
   if(ed.deckle){ctx.setTransform(k,0,0,k,0,0);const e=[],m=5,j=()=>(R()-.5)*2.4;for(let x=m;x<=W-m;x+=3)e.push([x,m+j()]);for(let y=m;y<=H-m;y+=3)e.push([W-m+j(),y]);for(let x=W-m;x>=m;x-=3)e.push([x,H-m+j()]);for(let y=H-m;y>=m;y-=3)e.push([m+j(),y]);
     ctx.beginPath();ctx.rect(-2,-2,W+4,H+4);poly(ctx,e);ctx.fillStyle='#151412';ctx.fill('evenodd')}
   ctx.restore()}
 function edOverlay(ctx,S,t,ed){const lc=ed.light;
+  if(ed.camera==='aerial'){for(const[x,y,r]of S.airLights||[]){const f=flick(t,x);for(let k=3;k>=1;k--){ctx.fillStyle=rgba(lc,.14*k);ctx.beginPath();ctx.arc(x,y,r*(1+k*1.6*f),0,TAU);ctx.fill()}ctx.fillStyle=lc;ctx.beginPath();ctx.arc(x,y,r*.6,0,TAU);ctx.fill()}drawBirds(ctx,S,t,ed.inks[ed.capInk].c||'#1d1822',.9);return}
   for(const l of lights(S)){const f=flick(t,l.x);for(let k=3;k>=1;k--){ctx.fillStyle=rgba(lc,.14*k);ctx.beginPath();ctx.arc(l.x,l.y,l.r*(1+k*2.2*f),0,TAU);ctx.fill()}ctx.fillStyle=lc;ctx.beginPath();ctx.arc(l.x,l.y,l.r,0,TAU);ctx.fill()}
   if(eyesOn(t))for(const e of eyes(S)){ctx.fillStyle=lc;for(const s of[-1,1]){ctx.beginPath();ctx.arc(e.x+s*e.gap/2,e.y,e.r,0,TAU);ctx.fill()}}
   drawBirds(ctx,S,t,ed.inks[ed.capInk].c||'#1d1822',1)}
@@ -763,13 +794,16 @@ const TONES={
 const PAPERNAME={rag:'Rag',cover:'Cover',speckle:'Speckled',black:'Black',news:'Newsprint'};
 const PAPERCARD={rag:{fg:'#1d1a24',muted:'#6d5b5a'},cover:{fg:'#2a2140',muted:'#6a5f78'},speckle:{fg:'#1d1822',muted:'#6a5550'},black:{fg:'#e8dec6',muted:'#9aa3a0'},news:{fg:'#1e1c19',muted:'#5f5a4f'}};
 const MIXES=[
+  {id:'air-over',name:'Meridian in overprint',inks:'overprint',paper:'cover',light:'air',camera:'aerial',note:'Andrew Moore’s aerial light separated into three transparent inks, like a riso or screen-printed photograph. Each ink has its own halftone angle, so the dots make rosettes where they overlap.'},
+  {id:'air-rag',name:'Meridian on rag',inks:'rag',paper:'rag',light:'air',camera:'aerial',note:'The aerial view posterized into five opaque inks on cotton rag, closer to a hand-cut poster than a photograph.'},
+  {id:'air-news',name:'Meridian in the weekly',inks:'news',paper:'news',light:'air',camera:'aerial',headline:'Pivot Seven, From the Air',note:'An aerial photo run in the county weekly as a single-ink halftone.'},
   {id:'ir-black',name:'Trail cam on black stock',inks:'black',paper:'black',light:'ir',note:'The infrared camera’s flash, printed in teal and bone on black paper. Near trees glow, and everything past the flash is bare paper.'},
   {id:'plate-rag',name:'Glass plate photogravure',inks:'news',paper:'rag',light:'plate',note:'Butcher’s glass-plate light printed as one black ink in a fine halftone on cotton rag, like a photogravure plate in an old county history.'},
   {id:'fog-over',name:'Fog in overprint',inks:'overprint',paper:'cover',light:'fog',note:'The fog look’s depth split into three transparent inks. The mist turns yellow and green, and near things stack to brown-black.'},
   {id:'ir-news',name:'Trail cam in the weekly',inks:'news',paper:'news',light:'ir',headline:'Seen on a Trail Camera',note:'A trail cam still run in the county paper, the kind of picture people pass around and argue about.'},
   {id:'rag-newscard',name:'Rag scene, newsprint story',inks:'rag',paper:'rag',light:'air',card:'news',note:'The scene prints on rag and the story sits on newsprint. Each material does a different job.'}];
 const MIXMAP=Object.fromEntries(MIXES.map(m=>[m.id,m]));
-function mixEd(){const b=EDMAP[state.edition];if(!b||!b.paper)return null;const m=MIXMAP[state.mix],paper=state.paper||b.paper;return{...b,paper,deckle:paper==='rag',tone:state.light||'air',headline:m&&m.headline}}
+function mixEd(){const b=EDMAP[state.edition];if(!b||!b.paper)return null;const m=MIXMAP[state.mix],paper=state.paper||b.paper;return{...b,paper,deckle:paper==='rag',tone:state.light||'air',camera:state.camera||'ground',headline:m&&m.headline}}
 const paperTiles={};function paperTile(kind){return paperTiles[kind]||(paperTiles[kind]=makePaper(kind,400,500).toDataURL('image/jpeg',.85))}
 
 /* ================= look 7: glass plate (after Solomon Butcher) ================= */
@@ -908,8 +942,7 @@ function airColor(W0,u,v,h,fp,sun){const{b,N3,N4}=W0,sh=[-sun[0]*4,-sun[1]*4];le
       c=Math.hypot(lu-200,lv-200)<190?pick:lerp3(AC.dry,AC.wet,.4);if(fp<2&&((lv/3)%1)<.3)c=lerp3(c,AC.plow,.15);if(lu<3||lv<3)c=AC.road}}
   const f=W0.fig;if(f&&fp<3){if(Math.hypot(u-f.u,v-f.v)<.9)c=AC.deck;else if(segDist(u,v,f.u,f.v,f.u-sun[0]*16,f.v-sun[1]*16)<.55)shade*=.45}
   return[c,shade]}
-const LOOK_AIR={
-  static(ctx,S){const AW=300,AH=375,hz=AH*.13,alt=140,fov=.95,P=AIRPAL[S.time],off=buf('air',AW,AH),x=off.getContext('2d'),im=x.createImageData(AW,AH),d=im.data,W0=airWorld(S);W0.t=S.time;
+function airImage(S){const AW=300,AH=375,hz=AH*.13,alt=140,fov=.95,P=AIRPAL[S.time],off=buf('air',AW,AH),x=off.getContext('2d'),im=x.createImageData(AW,AH),d=im.data,W0=airWorld(S);W0.t=S.time;
     const L=P.sun,ln=Math.hypot(...L),Ld=[L[0]/ln,L[1]/ln,L[2]/ln],sun2=[Ld[0]/Math.hypot(Ld[0],Ld[1]),Ld[1]/Math.hypot(Ld[0],Ld[1])],s0=rgb(P.sky[0]),s1=rgb(P.sky[1]),hzc=rgb(P.haze);
     for(let sy=0;sy<AH;sy++){if(sy<=hz){const c=lerp3(s0,s1,sy/hz);for(let sx=0;sx<AW;sx++){const i=(sy*AW+sx)*4;d[i]=c[0]*255;d[i+1]=c[1]*255;d[i+2]=c[2]*255;d[i+3]=255}continue}
       const a=(sy-hz)/AH*fov,z=Math.min(9000,alt/Math.tan(a)),fp=z/AW,o=fp>20?2:fp>6?3:fp>2?4:5,hf=(1-Math.exp(-z/1700))*.88;
@@ -917,12 +950,15 @@ const LOOK_AIR={
         let nx=-(hx-h)/e,ny=-(hy-h)/e,nz=1;const nl=Math.hypot(nx,ny,nz);nx/=nl;ny/=nl;nz/=nl;const ndl=Math.max(0,nx*Ld[0]+ny*Ld[1]+nz*Ld[2]);
         const[c,shade]=airColor(W0,u,v,h,fp,sun2),i=(sy*AW+sx)*4;
         for(let k=0;k<3;k++){const lit=c[k]*(P.amb[k]+P.sunC[k]*ndl*shade*1.05);d[i+k]=clamp(lit*(1-hf)+hzc[k]*hf,0,1)*255}d[i+3]=255}}
-    x.putImageData(im,0,0);ctx.save();ctx.imageSmoothingEnabled=true;ctx.drawImage(off,0,0,W,H);
-    const g=ctx.createRadialGradient(W/2,H*.5,H*.3,W/2,H*.5,H*.8);g.addColorStop(0,'rgba(0,0,0,0)');g.addColorStop(1,'rgba(0,0,0,.28)');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);grain(ctx,.07);
-    ctx.fillStyle='rgba(255,255,255,.88)';ctx.shadowColor='rgba(0,0,0,.5)';ctx.shadowBlur=4;ctx.font=F('label',10,'');ctx.textBaseline='alphabetic';ctx.fillText(`${AIRTITLE[S.biome]}, ${S.coords}`,14,H-14);ctx.restore();
+    x.putImageData(im,0,0);
     const proj=(u,v)=>{const a=Math.atan(alt/v);return[(AW/2+u/v*AW)/AW*W,(hz+a/fov*AH)/AH*H]};S.airLights=[];
     if(W0.ranch)S.airLights.push([...proj(W0.ranch.u,W0.ranch.v),2.4]);if(W0.tower)S.airLights.push([...proj(W0.tower.u,W0.tower.v),2]);
-    if(S.biome==='river'){const v=360;S.airLights.push([...proj(W0.uc(v)-90,v),2.2])}},
+    if(S.biome==='river'){const v=360;S.airLights.push([...proj(W0.uc(v)-90,v),2.2])}
+    return off}
+const LOOK_AIR={
+  static(ctx,S){const off=airImage(S);ctx.save();ctx.imageSmoothingEnabled=true;ctx.drawImage(off,0,0,W,H);
+    const g=ctx.createRadialGradient(W/2,H*.5,H*.3,W/2,H*.5,H*.8);g.addColorStop(0,'rgba(0,0,0,0)');g.addColorStop(1,'rgba(0,0,0,.28)');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);grain(ctx,.07);
+    ctx.fillStyle='rgba(255,255,255,.88)';ctx.shadowColor='rgba(0,0,0,.5)';ctx.shadowBlur=4;ctx.font=F('label',10,'');ctx.textBaseline='alphabetic';ctx.fillText(`${AIRTITLE[S.biome]}, ${S.coords}`,14,H-14);ctx.restore();},
   overlay(ctx,S,t){const night=S.time==='night';for(const[x,y,r]of S.airLights||[]){const f=flick(t,x);glow(ctx,x,y,r*(night?7:4)*f,'#ffcf7a',night?.8:.45);ctx.fillStyle='#fff3d6';ctx.beginPath();ctx.arc(x,y,r*.4,0,TAU);ctx.fill()}
     drawBirds(ctx,S,t,night?'rgba(200,210,230,.7)':'rgba(40,36,32,.75)',.9)}
 };
@@ -1012,10 +1048,10 @@ const TIMES=[['dusk','Dusk'],['night','Night'],['dawn','Dawn']];
 
 /* ================= app ================= */
 const store={get(k,d){try{const v=localStorage.getItem('halsey.'+k);return v==null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem('halsey.'+k,JSON.stringify(v))}catch(e){}}};
-const state={look:store.get('look','print'),biome:store.get('biome','pines'),time:store.get('time','dusk'),seed:store.get('seed',1903),edition:store.get('edition','rag'),mix:store.get('mix',''),paper:store.get('paper',''),light:store.get('light','air'),type:store.get('type','wood')};
-if(!EDMAP[state.edition])state.edition='rag';if(!MIXMAP[state.mix])state.mix='';if(!PAPERS[state.paper])state.paper=EDMAP[state.edition].paper||'';if(!TONES[state.light])state.light='air';if(!TYPES[state.type])state.type='wood';
+const state={look:store.get('look','print'),biome:store.get('biome','pines'),time:store.get('time','dusk'),seed:store.get('seed',1903),edition:store.get('edition','overprint'),camera:store.get('camera','ground'),texture:store.get('texture','worn'),mix:store.get('mix',''),paper:store.get('paper',''),light:store.get('light','air'),type:store.get('type','wood')};
+if(!EDMAP[state.edition])state.edition='overprint';if(!TEXTURES[state.texture])state.texture='worn';if(state.camera!=='aerial')state.camera='ground';if(!MIXMAP[state.mix])state.mix='';if(!PAPERS[state.paper])state.paper=EDMAP[state.edition].paper||'';if(!TONES[state.light])state.light='air';if(!TYPES[state.type])state.type='wood';
 TYPE=TYPES[state.type];if(state.type!=='wood')document.documentElement.dataset.type=state.type;
-function saveMix(){for(const k of['edition','mix','paper','light'])store.set(k,state[k]);dirty=true;renderUI();frame(4)}
+function saveMix(){for(const k of['edition','mix','paper','light','camera','texture'])store.set(k,state[k]);dirty=true;renderUI();frame(4)}
 function loadType(){const T=TYPE;return Promise.all([`${T.dw} 30px ${T.display}`,`16px ${T.body}`,`italic 16px ${T.body}`,`14px ${T.label}`,'20px VT323','500 10px "IBM Plex Mono"','17px "Cedarville Cursive"','19px "Permanent Marker"'].map(f=>document.fonts.load(f).catch(()=>{}))).then(()=>{dirty=true;frame(4)})}
 if(!LOOKS.some(l=>l.id===state.look))state.look='print';if(!BIOMES[state.biome])state.biome='pines';if(!TIMES.some(t=>t[0]===state.time))state.time='dusk';
 const cv=document.getElementById('scene'),mctx=cv.getContext('2d'),cache=document.createElement('canvas'),LRW=200,LRH=250;
@@ -1049,7 +1085,8 @@ function renderUI(){
   document.getElementById('type-note').textContent=TYPE.note;
   const isPrint=state.look==='print',ed=EDMAP[state.edition],mx=MIXMAP[state.mix];document.getElementById('edition-row').hidden=!isPrint;
   segb('editions',EDITIONS.map(e=>[e.id,e.name]),k=>k===state.edition&&!state.mix&&state.light==='air'&&state.paper===(EDMAP[k].paper||''),k=>{state.edition=k;state.mix='';state.paper=EDMAP[k].paper||'';state.light='air';saveMix()});
-  segb('mixes',MIXES.map(m=>[m.id,m.name]),k=>k===state.mix,k=>{const m=MIXMAP[k];state.mix=k;state.edition=m.inks;state.paper=m.paper;state.light=m.light;saveMix()});
+  segb('mixes',MIXES.map(m=>[m.id,m.name]),k=>k===state.mix,k=>{const m=MIXMAP[k];state.mix=k;state.edition=m.inks;state.paper=m.paper;state.light=m.light;state.camera=m.camera||'ground';saveMix()});
+  document.getElementById('mixdials2').hidden=!ed.paper;segb('cameras',[['ground','Ground'],['aerial','Aerial']],k=>k===state.camera,k=>{state.camera=k;state.mix='';saveMix()});segb('textures',Object.entries(TEXTURES).map(([k,t])=>[k,t.name]),k=>k===state.texture,k=>{state.texture=k;saveMix()});
   document.getElementById('mixdials').hidden=!ed.paper;
   segb('lights',Object.entries(TONES).map(([k,t])=>[k,t.name]),k=>k===state.light,k=>{state.light=k;state.mix='';saveMix()});
   segb('papers',Object.entries(PAPERNAME),k=>k===state.paper,k=>{state.paper=k;state.mix='';saveMix()});

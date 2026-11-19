@@ -53,6 +53,13 @@ Round three added:
 - **Meridian:** after Andrew Moore's *Dirt Meridian* (aerials of the Sandhills along the 100th meridian, shot from a crop duster's plane). Low-altitude, early-light aerial views of dunes, ghost pivot circles, shelterbelts, the Bessey planting blocks and the braided Platte. This is the leading candidate for the travel map. Halsey sits at about 100.3°W, almost on the meridian.
 - **Type sets.** All are SIL Open Font License, so they are fine to ship commercially: Wood type (Holtwood One SC, Goudy Bookletter 1911, Special Elite), Stencil and typewriter (Stardos Stencil, Courier Prime), Kitchen table (Sue Ellen Francisco), Letterpress (IM Fell). The device fonts on the radio and trail-cam screens stay as they are.
 
+Round four:
+
+- **Texture levels** (Clean, Worn and Rough) add ragged ink edges, uneven ink, pinholes, visible screen mesh and more paper showing through. Worn is the default.
+- **Aerial camera for prints.** Meridian views are separated into the edition's inks: true three-ink density separation for Overprint, and posterized tones for the opaque editions. Each ink gets its own halftone angle. Mixes: Meridian in overprint (the favorite direction), Meridian on rag, Meridian in the weekly.
+- **Overprint** is now the default edition.
+- **Fonts:** none of the open-license sets felt right. Next step: a custom font from the owner's own handwriting (`tools/handwriting-font/`).
+
 **Decided:** 2D for now. `prototypes/print-3d/print-3d.html` is a Three.js test that prints a 3D forest with the same ink-separation idea in a shader, kept for comparison.
 
 **Open:** pick one look, or a blend of two.

@@ -1,0 +1,3 @@
+dist/
+input/*.pdf
+__pycache__/

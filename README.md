@@ -4,4 +4,5 @@ Working title for the game developed in this repo (Forester). An encounter-drive
 
 - Design notes: [docs/design.md](docs/design.md)
 - Art direction tests: [prototypes/look-book/look-book.html](prototypes/look-book/look-book.html)
+- Handwriting font toolkit: [tools/handwriting-font](tools/handwriting-font/README.md)
 - 3D print test: [prototypes/print-3d/print-3d.html](prototypes/print-3d/print-3d.html)
