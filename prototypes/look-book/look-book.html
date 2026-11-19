@@ -369,6 +369,7 @@ function genPines(S,R,N,N2,N3,add){
     else{add({type:'struct',kind:'lookout',depth:d-.004,parts:L.parts});add({type:'light',kind:'window',depth:d-.003,x:L.light[0],y:L.light[1],r:Math.max(1.2,L.lightR)});
     S.notes.push({x,y:L.top,text:'FIRE LOOKOUT'},{x:L.light[0],y:L.light[1],text:'LAMP LIT · SOMEONE UP THERE'})}}
   else{const d=range(R,.32,.48),x=lx(d)+hw(d)*.25,y=yAt(d);add({type:'light',kind:'fire',depth:d+.002,x,y:y-hw(d)*.05,r:Math.max(1.5,hw(d)*.1)});S.notes.push({x,y,text:'CAMPFIRE · STILL WARM'})}
+  if(skOn('traveler')){const d=.84,hh=TH*hw(d)*.17,ww=hh*SK.traveler.ar,x=lx(d)-hw(d)*.42;add({type:'plate',sk:'traveler',depth:d+.003,x,y:yAt(d)+hh*.04,w:ww,h:hh});S.notes.push({x,y:yAt(d)-hh,text:'TRAVELER · WAITING ON THE LANE'})}
   if(eyeTree){const s=eyeTree.h/TH;add({type:'watcher',kind:'eyes',depth:.999,x:eyeTree.x,y:eyeTree.y-eyeTree.h*.4,r:Math.max(.8,s*.035),gap:Math.max(2.4,s*.12)});
     S.notes.push({x:eyeTree.x,y:eyeTree.y-eyeTree.h*.4,text:'EYESHINE · UNCONFIRMED'})}
   S.notes.push({x:lx(.3),y:yAt(.3),text:'FIREBREAK'},{x:lx(.42)-wild*hw(.42)*2.4,y:yAt(.42)-TH*hw(.42)*.9,text:'PLANTED ROWS · PONDEROSA'},{x:lx(.42)+wild*hw(.42)*(ub+1.6),y:yAt(.42)-TH*hw(.42)*.45,text:'REDCEDAR · NOT PLANTED'});
@@ -459,8 +460,8 @@ const eyes=S=>S.items.filter(i=>i.type==='watcher'&&i.kind==='eyes');
 const STATIC_SKIP=new Set(['light','birds']);
 /* hand-drawn plates: drawings from the owner's notebooks, used as one more ink layer */
 const SK={};
-for(const k of['tower','cranes','critter','face1','face2','face3']){const im=new Image();SK[k]={img:im,ready:false,ar:1};im.onload=()=>{SK[k].ready=true;SK[k].ar=im.width/im.height;sketchLoaded()};im.src='sketches/'+k+'.png'}
-let sketchTimer=0;function sketchLoaded(){clearTimeout(sketchTimer);sketchTimer=setTimeout(()=>{if(typeof regen==='function'&&state.hand)regen()},80)}
+for(const k of['tower','cranes','critter','face1','face2','face3','traveler','bulb']){const im=new Image();SK[k]={img:im,ready:false,ar:1};im.onload=()=>{SK[k].ready=true;SK[k].ar=im.width/im.height;sketchLoaded()};im.src='sketches/'+k+'.png'}
+let sketchTimer=0;function sketchLoaded(){clearTimeout(sketchTimer);sketchTimer=setTimeout(()=>{if(typeof regen==='function'&&state.hand)regen();if(typeof renderQuilts==='function')renderQuilts()},80)}
 const skOn=k=>typeof state!=='undefined'&&state.hand&&SK[k]&&SK[k].ready;
 const PLBUF=document.createElement('canvas');
 function plateCanvas(it,style,k){const w=Math.max(1,Math.round(it.w*k)),h=Math.max(1,Math.round(it.h*k)),c=PLBUF;if(c.width!==w||c.height!==h){c.width=w;c.height=h}const x=c.getContext('2d');x.setTransform(1,0,0,1,0,0);
@@ -1014,6 +1015,7 @@ const MODS=[
   {name:'Rusted Gear',fam:'Repeat',effect:'Repeats count as Chains',rarity:'common',block:'dishes'},
   {name:'Center Pivot',fam:'Repeat',effect:'Finish a full cycle of any pattern for ×1.5 Mult',rarity:'uncommon',block:'millwheel'},
   {name:'Eyeshine',fam:'Find',effect:'+20 Base whenever you Find something hidden',rarity:'common',block:'sawtooth'},
+  {name:'Public Power',fam:'Find',effect:'Lamps light with no fuel. Once a season, every hidden thing on the map shows itself',rarity:'uncommon',block:'sawtooth',sketch:'bulb'},
   {name:'Lookout Lamp',fam:'Find',effect:'Start each encounter with one hidden thing revealed',rarity:'uncommon',gen:2},
   {name:'Root Cellar',fam:'Spare',effect:'Each unused move adds +5 Base',rarity:'common',gen:3},
   {name:'Seed Library',fam:'Spare',effect:'Leftover provisions grow 10% each season',rarity:'uncommon',block:'logcabin'},
@@ -1039,12 +1041,13 @@ function drawQuilt(cv,mod){const s=cv.width,x=cv.getContext('2d'),R=rng(hashStr(
   x.globalAlpha=.06;x.strokeStyle='#fff';x.lineWidth=s*.004;for(let y=-side/2;y<side/2;y+=s*.012){x.beginPath();x.moveTo(-side/2,y+(R()-.5)*2);x.lineTo(side/2,y+(R()-.5)*2);x.stroke()}x.globalAlpha=1;
   x.fillStyle='rgba(236,229,211,.08)';x.fillRect(-side/2,-side/2,side,side);
   for(let i=0;i<34;i++){const cx=(R()-.5)*side,cy=(R()-.5)*side,r=s*(.004+R()*R()*.02);x.fillStyle=mix(wood,'#2b2117',R()*.5);x.beginPath();for(let k=0;k<6;k++){const a=k/6*TAU,rr=r*(.5+R());k?x.lineTo(cx+Math.cos(a)*rr,cy+Math.sin(a)*rr):x.moveTo(cx+Math.cos(a)*rr,cy+Math.sin(a)*rr)}x.closePath();x.fill()}
+  if(mod.sketch&&SK[mod.sketch]&&SK[mod.sketch].ready){const sh=side*.64,it={sk:mod.sketch,x:0,y:sh/2,w:sh*SK[mod.sketch].ar,h:sh};drawPlate(x,it,PAINT.white,s*.014);drawPlate(x,it,PAINT.black,s*.0022)}
   x.fillStyle='#2a2622';for(const[a,b]of[[-1,-1],[1,-1],[1,1],[-1,1]]){x.beginPath();x.arc(a*side*.46,b*side*.46,s*.008,0,TAU);x.fill()}
   x.restore()}
 function renderQuilts(){
   document.getElementById('legend').replaceChildren(...Object.keys(FAM).map(f=>{const s=el('span');const i=el('i');i.style.background=PAINT[FAM[f][1]];s.append(i,FAMTEXT[f]);return s}));
   document.getElementById('quilts').replaceChildren(...MODS.map(m=>{const cv=el('canvas',{width:'360',height:'360','aria-label':`${m.name} barn quilt`});drawQuilt(cv,m);
-    return el('article',{class:'qcard'},[cv,el('b',{text:m.name}),el('p',{class:'fx',text:m.effect}),el('div',{class:'meta',text:`${FAMTEXT[m.fam]} · ${m.rarity}`}),el('div',{class:'meta',text:m.block?`Block: ${BLOCKS[m.block].name}`:'Block: drawn for this modifier'})])}))}
+    return el('article',{class:'qcard'},[cv,el('b',{text:m.name}),el('p',{class:'fx',text:m.effect}),el('div',{class:'meta',text:`${FAMTEXT[m.fam]} · ${m.rarity}`}),el('div',{class:'meta',text:m.sketch?`Block: ${BLOCKS[m.block].name}, with your drawing`:m.block?`Block: ${BLOCKS[m.block].name}`:'Block: drawn for this modifier'})])}))}
 
 /* ================= looks + copy ================= */
 const LOOKS=[

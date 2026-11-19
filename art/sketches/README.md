@@ -13,6 +13,8 @@ Hand drawings from the Kobo notebooks (*Sketches* and *Tasks*), cropped for use 
 | `ridge.png` | Sketches | Gray-marker landscape (gradient-mapped plate) |
 | `grass.png` | Tasks | Grass study |
 | `doodles.png` | Tasks | Burrs and stars, candidate modifier art |
+| `traveler.png` | Tasks (May) | Character: a traveler in a wheelchair, on the firebreak lane |
+| `bulb.png` | Tasks (May) | Modifier art: Public Power (Nebraska is the only state served entirely by public power) |
 
 These are grayscale crops. The look book uses alpha versions in `prototypes/look-book/sketches/`, where ink darkness becomes opacity.
 
