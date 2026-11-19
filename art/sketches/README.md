@@ -15,6 +15,10 @@ Hand drawings from the Kobo notebooks (*Sketches* and *Tasks*), cropped for use 
 | `doodles.png` | Tasks | Burrs and stars, candidate modifier art |
 | `traveler.png` | Tasks (May) | Character: a traveler in a wheelchair, on the firebreak lane |
 | `bulb.png` | Tasks (May) | Modifier art: Public Power (Nebraska is the only state served entirely by public power) |
+| `medallion.png`, `checker.png`, `starburst.png`, `petal.png`, `stars.png` | Tasks | Emblems painted on barn quilt modifiers |
+| `mainstreet.png` | Tasks | Landmark: a Main Street of storefronts on a Sandhills ridge |
+
+`manifest.json` lists each drawing's kind, habitat, source and aspect ratio. Add new drawings with `tools/sketch-intake/`.
 
 These are grayscale crops. The look book uses alpha versions in `prototypes/look-book/sketches/`, where ink darkness becomes opacity.
 

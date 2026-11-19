@@ -397,6 +397,7 @@ function genPrairie(S,R,N,N2,N3,add){
     add({type:'struct',kind:'sod',depth:.383,parts:sh.parts});add({type:'light',kind:'window',depth:.3832,x:sh.light[0],y:sh.light[1],r:1.5});
     add({type:'struct',kind:'people',depth:.384,parts:fam.parts});add({type:'struct',kind:'ghost',depth:.3845,parts:fam.ghost});lit=true;
     S.notes.push({x,y:b-h*.8,text:'SOD HOUSE · LAMP LIT'},{x:fam.gx,y:b-h*.6,text:'ONE OF THEM MOVED'})}
+  if(skOn('mainstreet')){const ww=range(R,170,220),hh=ww/SK.mainstreet.ar,x=clamp(range(R,60,340),ww/2+8,W-ww/2-8),b=profAt(L[0],x)+4;add({type:'plate',sk:'mainstreet',depth:.1815,x,y:b,w:ww,h:hh});add({type:'light',kind:'window',depth:.1816,x:x+ww*.18,y:b-hh*.62,r:1.2});S.notes.push({x,y:b-hh,text:'MAIN STREET · ONE WINDOW LIT'})}
   if(!lit&&R()<.7){const x=range(R,40,360),b=profAt(L[0],x)+2,h=range(R,7,10),hs=house(x,b,h);add({type:'struct',kind:'house',depth:.181,parts:hs.parts});
     add({type:'light',kind:'window',depth:.182,x:hs.light[0],y:hs.light[1],r:1.1});lit=true;S.notes.push({x,y:b-h,text:'HOUSE · OCCUPIED?'})}
   if(!lit){const x=range(R,60,340),y=profAt(L[1],x)+1;add({type:'light',kind:'fire',depth:.386,x,y,r:3});S.notes.push({x,y,text:'SIGNAL FIRE'})}
@@ -460,7 +461,10 @@ const eyes=S=>S.items.filter(i=>i.type==='watcher'&&i.kind==='eyes');
 const STATIC_SKIP=new Set(['light','birds']);
 /* hand-drawn plates: drawings from the owner's notebooks, used as one more ink layer */
 const SK={};
-for(const k of['tower','cranes','critter','face1','face2','face3','traveler','bulb']){const im=new Image();SK[k]={img:im,ready:false,ar:1};im.onload=()=>{SK[k].ready=true;SK[k].ar=im.width/im.height;sketchLoaded()};im.src='sketches/'+k+'.png'}
+function loadSketch(k,meta){if(SK[k])return;const im=new Image();SK[k]={img:im,ready:false,ar:meta&&meta.ar||1,meta:meta||{}};im.onload=()=>{SK[k].ready=true;SK[k].ar=im.width/im.height;sketchLoaded()};im.src='sketches/'+k+'.png'}
+const SK_FALLBACK=['tower','cranes','critter','face1','face2','face3','traveler','bulb'];
+fetch('sketches/manifest.json').then(r=>r.ok?r.json():Promise.reject()).then(m=>{for(const k in m)loadSketch(k,m[k])}).catch(()=>SK_FALLBACK.forEach(k=>loadSketch(k)));
+const sketchesOf=kind=>Object.keys(SK).filter(k=>SK[k].ready&&SK[k].meta.kind===kind).sort();
 let sketchTimer=0;function sketchLoaded(){clearTimeout(sketchTimer);sketchTimer=setTimeout(()=>{if(typeof regen==='function'&&state.hand)regen();if(typeof renderQuilts==='function')renderQuilts()},80)}
 const skOn=k=>typeof state!=='undefined'&&state.hand&&SK[k]&&SK[k].ready;
 const PLBUF=document.createElement('canvas');
@@ -1016,16 +1020,16 @@ const MODS=[
   {name:'Center Pivot',fam:'Repeat',effect:'Finish a full cycle of any pattern for ×1.5 Mult',rarity:'uncommon',block:'millwheel'},
   {name:'Eyeshine',fam:'Find',effect:'+20 Base whenever you Find something hidden',rarity:'common',block:'sawtooth'},
   {name:'Public Power',fam:'Find',effect:'Lamps light with no fuel. Once a season, every hidden thing on the map shows itself',rarity:'uncommon',block:'sawtooth',sketch:'bulb'},
-  {name:'Lookout Lamp',fam:'Find',effect:'Start each encounter with one hidden thing revealed',rarity:'uncommon',gen:2},
-  {name:'Root Cellar',fam:'Spare',effect:'Each unused move adds +5 Base',rarity:'common',gen:3},
+  {name:'Lookout Lamp',fam:'Find',effect:'Start each encounter with one hidden thing revealed',rarity:'uncommon',sketch:'starburst'},
+  {name:'Root Cellar',fam:'Spare',effect:'Each unused move adds +5 Base',rarity:'common',sketch:'stars'},
   {name:'Seed Library',fam:'Spare',effect:'Leftover provisions grow 10% each season',rarity:'uncommon',block:'logcabin'},
   {name:'Grass Fire',fam:'Risk',effect:'×2 Mult, but lose 1 provision every turn',rarity:'uncommon',gen:3},
-  {name:'Hidebehind',fam:'Risk',effect:'×3 Mult. You can’t see the last thing you played.',rarity:'rare',gen:4},
-  {name:'Arbor Day',fam:'Season',effect:'Gains +1 Mult for every encounter you win',rarity:'rare',gen:4},
-  {name:'Kingsley Dam',fam:'Water',effect:'Hold up to 3 unused Chains for a later encounter',rarity:'rare',gen:3}];
+  {name:'Hidebehind',fam:'Risk',effect:'×3 Mult. You can’t see the last thing you played.',rarity:'rare',sketch:'checker'},
+  {name:'Arbor Day',fam:'Season',effect:'Gains +1 Mult for every encounter you win',rarity:'rare',sketch:'petal'},
+  {name:'Kingsley Dam',fam:'Water',effect:'Hold up to 3 unused Chains for a later encounter',rarity:'rare',sketch:'medallion'}];
 function drawQuilt(cv,mod){const s=cv.width,x=cv.getContext('2d'),R=rng(hashStr(mod.name)),fam=FAM[mod.fam];
   const col=key=>PAINT[{a:fam[0],b:fam[1],c:fam[2],hearth:'red',L0:'cream',L1:'gold',D0:'green',D1:'navy'}[key]];
-  const grid=mod.block?BLOCKS[mod.block].grid():genBlock(hashStr(mod.name),mod.gen);
+  const grid=mod.block?BLOCKS[mod.block].grid():mod.gen?genBlock(hashStr(mod.name),mod.gen):[[so('b')]];
   const wood='#6b5640';x.fillStyle=wood;x.fillRect(0,0,s,s);const pl=5;
   for(let i=0;i<pl;i++){const px=i*s/pl;x.fillStyle=mix(wood,R()<.5?'#3e3122':'#8a7356',R()*.45);x.fillRect(px,0,s/pl+1,s);
     for(let k=0;k<16;k++){x.strokeStyle=`rgba(30,20,10,${.1+R()*.22})`;x.lineWidth=Math.max(.6,s*.0025);x.beginPath();const gx=px+R()*s/pl;x.moveTo(gx,0);x.bezierCurveTo(gx+(R()-.5)*10,s*.3,gx+(R()-.5)*10,s*.7,gx+(R()-.5)*6,s);x.stroke()}
@@ -1041,13 +1045,14 @@ function drawQuilt(cv,mod){const s=cv.width,x=cv.getContext('2d'),R=rng(hashStr(
   x.globalAlpha=.06;x.strokeStyle='#fff';x.lineWidth=s*.004;for(let y=-side/2;y<side/2;y+=s*.012){x.beginPath();x.moveTo(-side/2,y+(R()-.5)*2);x.lineTo(side/2,y+(R()-.5)*2);x.stroke()}x.globalAlpha=1;
   x.fillStyle='rgba(236,229,211,.08)';x.fillRect(-side/2,-side/2,side,side);
   for(let i=0;i<34;i++){const cx=(R()-.5)*side,cy=(R()-.5)*side,r=s*(.004+R()*R()*.02);x.fillStyle=mix(wood,'#2b2117',R()*.5);x.beginPath();for(let k=0;k<6;k++){const a=k/6*TAU,rr=r*(.5+R());k?x.lineTo(cx+Math.cos(a)*rr,cy+Math.sin(a)*rr):x.moveTo(cx+Math.cos(a)*rr,cy+Math.sin(a)*rr)}x.closePath();x.fill()}
-  if(mod.sketch&&SK[mod.sketch]&&SK[mod.sketch].ready){const sh=side*.64,it={sk:mod.sketch,x:0,y:sh/2,w:sh*SK[mod.sketch].ar,h:sh};drawPlate(x,it,PAINT.white,s*.014);drawPlate(x,it,PAINT.black,s*.0022)}
+  if(mod.sketch&&!mod.block){x.fillStyle=col('a');const fr=inner*.12;x.fillRect(o,o,inner,fr);x.fillRect(o,-o-fr,inner,fr);x.fillRect(o,o,fr,inner);x.fillRect(-o-fr,o,fr,inner)}
+  if(mod.sketch&&SK[mod.sketch]&&SK[mod.sketch].ready){const sh=side*(mod.block?.64:.66),ar=SK[mod.sketch].ar,hh=ar>=1?sh/ar:sh,it={sk:mod.sketch,x:0,y:hh/2,w:ar>=1?sh:sh*ar,h:hh};drawPlate(x,it,PAINT.white,s*.014);drawPlate(x,it,PAINT.black,s*.0022)}
   x.fillStyle='#2a2622';for(const[a,b]of[[-1,-1],[1,-1],[1,1],[-1,1]]){x.beginPath();x.arc(a*side*.46,b*side*.46,s*.008,0,TAU);x.fill()}
   x.restore()}
 function renderQuilts(){
   document.getElementById('legend').replaceChildren(...Object.keys(FAM).map(f=>{const s=el('span');const i=el('i');i.style.background=PAINT[FAM[f][1]];s.append(i,FAMTEXT[f]);return s}));
   document.getElementById('quilts').replaceChildren(...MODS.map(m=>{const cv=el('canvas',{width:'360',height:'360','aria-label':`${m.name} barn quilt`});drawQuilt(cv,m);
-    return el('article',{class:'qcard'},[cv,el('b',{text:m.name}),el('p',{class:'fx',text:m.effect}),el('div',{class:'meta',text:`${FAMTEXT[m.fam]} · ${m.rarity}`}),el('div',{class:'meta',text:m.sketch?`Block: ${BLOCKS[m.block].name}, with your drawing`:m.block?`Block: ${BLOCKS[m.block].name}`:'Block: drawn for this modifier'})])}))}
+    return el('article',{class:'qcard'},[cv,el('b',{text:m.name}),el('p',{class:'fx',text:m.effect}),el('div',{class:'meta',text:`${FAMTEXT[m.fam]} · ${m.rarity}`}),el('div',{class:'meta',text:m.sketch?(m.block?`Block: ${BLOCKS[m.block].name}, with your drawing`:'Block: your doodle, painted'):m.block?`Block: ${BLOCKS[m.block].name}`:'Block: drawn for this modifier'})])}))}
 
 /* ================= looks + copy ================= */
 const LOOKS=[
@@ -1120,7 +1125,7 @@ function renderUI(){
   const C=CARDS[state.biome],card=document.getElementById('card');card.dataset.look=state.look;card.removeAttribute('style');
   if(isPrint&&ed.paper){const cp=(mx&&mx.card)||state.paper,pc=PAPERCARD[cp],acc=cp==='black'&&state.edition!=='black'?'#d4a74b':(mx&&mx.card?EDMAP.news.card.accent:ed.card.accent);
     card.style.background=`url(${paperTile(cp)}) center/cover`;for(const[k,v]of[['--c-fg',pc.fg],['--c-muted',pc.muted],['--c-accent',acc],['--c-line',rgba(pc.fg,.28)],['--c-chip',rgba(pc.fg,.07)]])card.style.setProperty(k,v);card.style.boxShadow=`6px 6px 0 ${acc}`}
-  const pt=document.getElementById('c-portrait'),pk={pines:'face1',prairie:'face2',river:'face3'}[state.biome];pt.hidden=!state.hand;card.classList.toggle('has-portrait',!!state.hand);pt.style.setProperty('--pm',`url(sketches/${pk}.png)`);
+  const pt=document.getElementById('c-portrait'),pl=sketchesOf('portrait'),pk=pl.length?pl[(state.seed+{pines:0,prairie:1,river:2}[state.biome])%pl.length]:'face1';pt.hidden=!state.hand;card.classList.toggle('has-portrait',!!state.hand);pt.style.setProperty('--pm',`url(sketches/${pk}.png)`);
   document.getElementById('c-place').textContent=C.place;document.getElementById('c-title').textContent=C.title;document.getElementById('c-body').textContent=C.body;
   document.getElementById('c-choices').replaceChildren(...C.choices.map(([a,b])=>el('div',{class:'choice'},[el('b',{text:a}),el('span',{class:'tag',text:b})])));
   document.getElementById('c-prov').textContent=`${C.prov[0]} / ${C.prov[1]}`;document.getElementById('c-season').textContent=C.season;document.getElementById('c-fill').style.width=(C.prov[0]/C.prov[1]*100)+'%';

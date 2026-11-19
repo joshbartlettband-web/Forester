@@ -1,0 +1,142 @@
+{
+ "bulb": {
+  "kind": "emblem",
+  "habitat": [
+   "quilt"
+  ],
+  "source": "Tasks, May 2025",
+  "ar": 0.5681
+ },
+ "checker": {
+  "kind": "emblem",
+  "habitat": [
+   "quilt"
+  ],
+  "source": "Tasks",
+  "ar": 1.0619
+ },
+ "cranes": {
+  "kind": "creature",
+  "habitat": [
+   "river",
+   "sandbar"
+  ],
+  "source": "Tasks",
+  "ar": 0.7236
+ },
+ "critter": {
+  "kind": "creature",
+  "habitat": [
+   "prairie",
+   "ridge"
+  ],
+  "source": "Sketches",
+  "ar": 1.1413
+ },
+ "doodles": {
+  "kind": "emblem",
+  "habitat": [
+   "quilt"
+  ],
+  "source": "Tasks",
+  "ar": 0.6042
+ },
+ "face1": {
+  "kind": "portrait",
+  "habitat": [
+   "card"
+  ],
+  "source": "Sketches",
+  "ar": 0.7292
+ },
+ "face2": {
+  "kind": "portrait",
+  "habitat": [
+   "card"
+  ],
+  "source": "Tasks",
+  "ar": 0.7583
+ },
+ "face3": {
+  "kind": "portrait",
+  "habitat": [
+   "card"
+  ],
+  "source": "Tasks",
+  "ar": 0.6091
+ },
+ "grass": {
+  "kind": "plate",
+  "habitat": [
+   "any"
+  ],
+  "source": "Tasks",
+  "ar": 1.5385
+ },
+ "mainstreet": {
+  "kind": "landmark",
+  "habitat": [
+   "prairie",
+   "town"
+  ],
+  "source": "Tasks",
+  "ar": 3.2727
+ },
+ "medallion": {
+  "kind": "emblem",
+  "habitat": [
+   "quilt"
+  ],
+  "source": "Tasks",
+  "ar": 0.8915
+ },
+ "petal": {
+  "kind": "emblem",
+  "habitat": [
+   "quilt"
+  ],
+  "source": "Tasks",
+  "ar": 0.9345
+ },
+ "ridge": {
+  "kind": "plate",
+  "habitat": [
+   "any"
+  ],
+  "source": "Sketches",
+  "ar": 0.7264
+ },
+ "starburst": {
+  "kind": "emblem",
+  "habitat": [
+   "quilt"
+  ],
+  "source": "Tasks",
+  "ar": 0.6008
+ },
+ "stars": {
+  "kind": "emblem",
+  "habitat": [
+   "quilt"
+  ],
+  "source": "Tasks",
+  "ar": 1.1795
+ },
+ "tower": {
+  "kind": "landmark",
+  "habitat": [
+   "pines"
+  ],
+  "source": "Sketches",
+  "ar": 0.6191
+ },
+ "traveler": {
+  "kind": "character",
+  "habitat": [
+   "pines",
+   "lane"
+  ],
+  "source": "Tasks, May 2025",
+  "ar": 0.5014
+ }
+}
