@@ -39,3 +39,19 @@ Free-form notebook pages are great reference for slant, size, connections and th
 | `fake_fill.py` | Test helper that fills the template with a stand-in font |
 
 Requirements: `pip install fonttools brotli potracer pymupdf reportlab pillow numpy`
+
+## Building from existing notes (no template)
+
+`from_notes.py` builds a font straight from notebook pages. This is how the first **Halsey Hand** was made, from the Tasks notebooks.
+
+1. `python3 from_notes.py extract Tasks.pdf May.zip --work /tmp/hw` finds every separate pen mark and estimates its line's baseline and x-height. It writes `samples.pkl` and group sheets.
+2. Pick examples. `notes-picks.json` maps each character to sample ids chosen by eye from numbered galleries of single-letter marks. Joined cursive letters are skipped; printed letters and capitals are plentiful.
+3. `python3 from_notes.py build --work /tmp/hw --picks notes-picks.json --out dist` builds the font:
+   - Each mark is thinned to its center line and redrawn with one even pen (`PEN_UNITS`), so thin gray-pen letters and bold ones match.
+   - Each letter is sized by type (x-height, ascender, descender, capital) rather than the noisy guessed baseline.
+   - Up to three variants per letter cycle through contextual alternates.
+   - Missing punctuation (. , - ' " ; = * # %) is drawn with the same pen.
+
+Still missing: &, @, $. K and Q are stand-ins (k and O). A filled template would replace the rough letters.
+
+The current font is in `art/fonts/`.

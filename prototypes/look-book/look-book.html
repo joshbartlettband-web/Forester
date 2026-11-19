@@ -4,6 +4,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Holtwood+One+SC&family=Goudy+Bookletter+1911&family=Special+Elite&family=Stardos+Stencil:wght@400;700&family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Sue+Ellen+Francisco&family=IM+Fell+English:ital@0;1&family=IM+Fell+English+SC&family=VT323&family=IBM+Plex+Mono:wght@400;500&family=Cedarville+Cursive&family=Permanent+Marker&display=swap">
 <style>
+@font-face{font-family:"Halsey Hand";src:url(fonts/HalseyHand.woff2) format("woff2");font-display:swap}
 /* Layout: one column on phones (look tabs, the generated scene, its encounter card); scene and card side by side on wide screens.
    Single dark chrome by choice, so each look's own palette carries the page. */
 :root{
@@ -14,6 +15,7 @@
   --f-ui:var(--t-body);--f-display:var(--t-display);--f-mono:var(--t-label);
   color-scheme:dark;
 }
+:root[data-type="hand"]{--t-display:"Halsey Hand","Bradley Hand",cursive;--t-body:"Halsey Hand","Bradley Hand",cursive;--t-label:"Halsey Hand","Bradley Hand",cursive;--t-dw:400;--t-bold:400;--t-trans:none;--t-hscale:.95;--t-bodysize:21px}
 :root[data-type="stencil"]{--t-display:"Stardos Stencil","Stencil",Impact,sans-serif;--t-body:"Courier Prime","Courier New",monospace;--t-label:"Courier Prime","Courier New",monospace;--t-dw:700;--t-bold:700;--t-trans:uppercase;--t-hscale:.95;--t-bodysize:15px}
 :root[data-type="kitchen"]{--t-display:"Sue Ellen Francisco","Bradley Hand",cursive;--t-body:"Goudy Bookletter 1911","Goudy Old Style",Georgia,serif;--t-label:"Special Elite","Courier New",monospace;--t-dw:400;--t-bold:400;--t-trans:none;--t-hscale:1.4;--t-bodysize:17px}
 :root[data-type="fell"]{--t-display:"IM Fell English SC","IM Fell English",Georgia,serif;--t-body:"IM Fell English",Georgia,serif;--t-label:"IM Fell English",Georgia,serif;--t-dw:400;--t-bold:400;--t-trans:none;--t-hscale:1;--t-bodysize:17px}
@@ -192,7 +194,7 @@ canvas#scene{display:block;width:100%;height:100%;cursor:pointer;touch-action:ma
 
   <section class="journal" aria-labelledby="j-h">
     <h2 id="j-h">Run journal</h2>
-    <p>The season's goals, kept the way your Tasks pages are: boxed, circled, starred, with arrows to places. Tap a goal to strike it through. The lines are drawn by code with a little hand wobble; the words use the current type set until your handwriting font is built.</p>
+    <p>The season's goals, kept the way your Tasks pages are: boxed, circled, starred, with arrows to places. Tap a goal to strike it through. The lines are drawn by code with a little hand wobble. The words are in Halsey Hand, the font built from your Tasks notebooks.</p>
     <div class="jpage" id="jpage"></div>
   </section>
 
@@ -208,11 +210,12 @@ canvas#scene{display:block;width:100%;height:100%;cursor:pointer;touch-action:ma
 "use strict";
 /* ================= type sets (all SIL Open Font License) ================= */
 const TYPES={
+  hand:{name:'Your hand',display:'"Halsey Hand",cursive',body:'"Halsey Hand",cursive',label:'"Halsey Hand",cursive',dw:400,ds:1.3,note:'Built from your own Tasks notebooks: 69 characters cut from real notes, redrawn with one even pen. Rough in places, and &, @ and $ are still missing. A filled-in template would make it sharper.'},
   wood:{name:'Wood type',display:'"Holtwood One SC",Georgia,serif',body:'"Goudy Bookletter 1911",Georgia,serif',label:'"Special Elite","Courier New",monospace',dw:400,ds:.66,note:'Holtwood One SC is cut like 19th-century wood type. Goudy Bookletter 1911 is a revival of a 1911 book face. Special Elite is a worn typewriter.'},
   stencil:{name:'Stencil & typewriter',display:'"Stardos Stencil",Impact,sans-serif',body:'"Courier Prime","Courier New",monospace',label:'"Courier Prime","Courier New",monospace',dw:700,ds:.95,note:'Stardos Stencil is the lettering on feed sacks and grain bins. Courier Prime is a typed county record.'},
   kitchen:{name:'Kitchen table',display:'"Sue Ellen Francisco",cursive',body:'"Goudy Bookletter 1911",Georgia,serif',label:'"Special Elite","Courier New",monospace',dw:400,ds:1.4,note:'Sue Ellen Francisco is an actual person’s handwriting, the way someone labels jars or writes in a margin.'},
   fell:{name:'Letterpress',display:'"IM Fell English SC",Georgia,serif',body:'"IM Fell English",Georgia,serif',label:'"IM Fell English",Georgia,serif',dw:400,ds:1,note:'The Fell types are 17th-century metal type, digitized with every rough edge left in. They look hand-set on a small-town press.'}};
-let TYPE=TYPES.wood;
+let TYPE=TYPES.hand;
 function F(role,size,style){const fam=TYPE[role],px=role==='display'?size*TYPE.ds:size;return`${style?style+' ':''}${role==='display'?TYPE.dw:400} ${px.toFixed(1)}px ${fam}`}
 function fitText(ctx,role,size,text,x,y,maxW){let s=size;ctx.font=F(role,s,'');while(ctx.measureText(text).width>maxW&&s>6){s*=.92;ctx.font=F(role,s,'')}ctx.fillText(text,x,y)}
 
@@ -1092,11 +1095,11 @@ const TIMES=[['dusk','Dusk'],['night','Night'],['dawn','Dawn']];
 
 /* ================= app ================= */
 const store={get(k,d){try{const v=localStorage.getItem('halsey.'+k);return v==null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem('halsey.'+k,JSON.stringify(v))}catch(e){}}};
-const state={look:store.get('look','print'),biome:store.get('biome','pines'),time:store.get('time','dusk'),seed:store.get('seed',1903),edition:store.get('edition','overprint'),camera:store.get('camera','ground'),texture:store.get('texture','worn'),mix:store.get('mix',''),paper:store.get('paper',''),light:store.get('light','air'),type:store.get('type','wood'),hand:store.get('hand',true)};
-if(!EDMAP[state.edition])state.edition='overprint';if(!TEXTURES[state.texture])state.texture='worn';if(state.camera!=='aerial')state.camera='ground';if(!MIXMAP[state.mix])state.mix='';if(!PAPERS[state.paper])state.paper=EDMAP[state.edition].paper||'';if(!TONES[state.light])state.light='air';if(!TYPES[state.type])state.type='wood';
-TYPE=TYPES[state.type];if(state.type!=='wood')document.documentElement.dataset.type=state.type;
+const state={look:store.get('look','print'),biome:store.get('biome','pines'),time:store.get('time','dusk'),seed:store.get('seed',1903),edition:store.get('edition','overprint'),camera:store.get('camera','ground'),texture:store.get('texture','worn'),mix:store.get('mix',''),paper:store.get('paper',''),light:store.get('light','air'),type:store.get('type','hand'),hand:store.get('hand',true)};
+if(!EDMAP[state.edition])state.edition='overprint';if(!TEXTURES[state.texture])state.texture='worn';if(state.camera!=='aerial')state.camera='ground';if(!MIXMAP[state.mix])state.mix='';if(!PAPERS[state.paper])state.paper=EDMAP[state.edition].paper||'';if(!TONES[state.light])state.light='air';if(!TYPES[state.type])state.type='hand';
+TYPE=TYPES[state.type];if(state.type!=='wood')document.documentElement.dataset.type=state.type;else delete document.documentElement.dataset.type;
 function saveMix(){for(const k of['edition','mix','paper','light','camera','texture'])store.set(k,state[k]);dirty=true;renderUI();frame(4)}
-function loadType(){const T=TYPE;return Promise.all([`${T.dw} 30px ${T.display}`,`16px ${T.body}`,`italic 16px ${T.body}`,`14px ${T.label}`,'20px VT323','500 10px "IBM Plex Mono"','17px "Cedarville Cursive"','19px "Permanent Marker"'].map(f=>document.fonts.load(f).catch(()=>{}))).then(()=>{dirty=true;frame(4)})}
+function loadType(){const T=TYPE;return Promise.all([`${T.dw} 30px ${T.display}`,`16px ${T.body}`,`italic 16px ${T.body}`,`14px ${T.label}`,'17px "Halsey Hand"','20px VT323','500 10px "IBM Plex Mono"','17px "Cedarville Cursive"','19px "Permanent Marker"'].map(f=>document.fonts.load(f).catch(()=>{}))).then(()=>{dirty=true;frame(4)})}
 if(!LOOKS.some(l=>l.id===state.look))state.look='print';if(!BIOMES[state.biome])state.biome='pines';if(!TIMES.some(t=>t[0]===state.time))state.time='dusk';
 const cv=document.getElementById('scene'),mctx=cv.getContext('2d'),cache=document.createElement('canvas'),LRW=200,LRH=250;
 const low=document.createElement('canvas');low.width=LRW;low.height=LRH;const lctx=low.getContext('2d',{willReadFrequently:true});
@@ -1158,7 +1161,7 @@ function jBox(R,x,y,w,h){const o=()=>(R()-.3)*6;return[jLine(R,x-o(),y,x+w+o(),y
 function jLoop(R,cx,cy,rx,ry,turns=1.15){const pts=[],a0=R()*TAU,n=Math.ceil(36*turns);for(let i=0;i<=n;i++){const a=a0+i/n*TAU*turns,k=1+(R()-.5)*.06+i/n*.05;pts.push([cx+Math.cos(a)*rx*k,cy+Math.sin(a)*ry*k])}return jPath(R,pts)}
 function jStar(R,x,y,r){const pts=[];for(let i=0;i<=5;i++){const a=-Math.PI/2+i*4*Math.PI/5;pts.push([x+Math.cos(a)*r+(R()-.5)*1.5,y+Math.sin(a)*r+(R()-.5)*1.5])}return pts.map((p,i)=>(i?'L':'M')+p[0].toFixed(1)+' '+p[1].toFixed(1)).join(' ')}
 function renderJournal(){const host=document.getElementById('jpage');if(!host)return;let done={};try{done=JSON.parse(localStorage.getItem('halsey.journal')||'{}')}catch(e){}
-  const Wv=360,lh=58,top=96,Hv=top+JOURNAL.length*lh+190,ink='#2b2b2b',ns='http://www.w3.org/2000/svg',fam=TYPE.body,mc=document.createElement('canvas').getContext('2d');mc.font=`17px ${fam}`;
+  const Wv=360,lh=58,top=96,Hv=top+JOURNAL.length*lh+190,ink='#2b2b2b',ns='http://www.w3.org/2000/svg',fam='"Halsey Hand",'+TYPE.body,mc=document.createElement('canvas').getContext('2d');mc.font=`17px ${fam}`;
   const el2=(n,a,p)=>{const e=document.createElementNS(ns,n);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e};
   const svg=el2('svg',{viewBox:`0 0 ${Wv} ${Hv}`,role:'img','aria-label':'Run journal page'});
   const pen=(d,p,w=1.3,extra={})=>el2('path',{d,fill:'none',stroke:ink,'stroke-width':w,'stroke-linecap':'round','stroke-linejoin':'round',...extra},p||svg);
@@ -1167,7 +1170,7 @@ function renderJournal(){const host=document.getElementById('jpage');if(!host)re
   txt('Fall · Year 2',22,42,24);pen(jLine(R0,20,52,170,50),null,1.6);
   txt('provisions',186,34,12);let tx=186;const tally=34;for(let g=0;g<Math.floor(tally/5);g++){for(let i=0;i<4;i++)pen(jLine(R0,tx+i*3.4,40,tx+i*3.4+(R0()-.5)*1.5,56,.4),null,1.1);pen(jLine(R0,tx-2,52,tx+13,43,.4),null,1.1);tx+=19}
   for(let i=0;i<tally%5;i++)pen(jLine(R0,tx+i*3.4,40,tx+i*3.4,56,.4),null,1.1);txt('×10',tx+(tally%5)*3.4+5,54,11);
-  JOURNAL.forEach((g,i)=>{const R=rng(hashStr(g.t)),y=top+i*lh,x=34,lines=[];let line='';for(const w of g.t.split(' ')){const tryL=line?line+' '+w:w;if(mc.measureText(tryL).width>(g.to?200:270)&&line){lines.push(line);line=w}else line=tryL}lines.push(line);
+  JOURNAL.forEach((g,i)=>{const R=rng(hashStr(g.t)),y=top+i*lh,x=34,lines=[];let line='';for(const w of g.t.split(' ')){const tryL=line?line+' '+w:w;if(mc.measureText(tryL).width>(g.to?165:265)&&line){lines.push(line);line=w}else line=tryL}lines.push(line);
     const grp=el2('g',{class:'goal',tabindex:'0',role:'button','aria-pressed':String(!!(done[i]??g.done)),'aria-label':g.t});svg.appendChild(grp);
     const wmax=Math.max(...lines.map(l=>mc.measureText(l).width)),hgt=lines.length*20;
     el2('rect',{class:'hit',x:x-10,y:y-18,width:wmax+(g.to?120:30),height:hgt+16,fill:'transparent'},grp);
@@ -1191,7 +1194,7 @@ new ResizeObserver(resize).observe(cv);
 let last=0;function loop(now){requestAnimationFrame(loop);if(reduce.matches||document.hidden)return;if(now-last<66)return;last=now;frame(now/1000)}
 renderUI();resize();regen();requestAnimationFrame(loop);renderQuilts();renderJournal();
 const fontLoads=[loadType()];
-Promise.all(fontLoads).then(()=>{dirty=true;frame(4)});
+Promise.all(fontLoads).then(()=>{dirty=true;frame(4);renderJournal()});
 /* test hook: render a still of any combination into a canvas */
 window.__type=k=>{TYPE=TYPES[k]};window.__still=(look,biome,time,seed,width=400,edition)=>{if(edition){if(typeof edition==='string'){state.edition=edition;state.paper=EDMAP[edition].paper||'';state.light='air';state.mix=''}else Object.assign(state,edition)}const S=genScene(seed,biome,time),st=LOOKS.find(l=>l.id===look).style,c=document.createElement('canvas');c.width=width;c.height=width*H/W;const x=c.getContext('2d'),k=width/W;
   if(st.lowres){const a=document.createElement('canvas');a.width=LRW;a.height=LRH;const ax=a.getContext('2d',{willReadFrequently:true});ax.setTransform(LRW/W,0,0,LRW/W,0,0);st.static(ax,S);st.overlay(ax,S,4);const b=document.createElement('canvas');b.width=LRW;b.height=LRH;(st.process||dither)(ax,b.getContext('2d'),4);x.imageSmoothingEnabled=!!st.smooth;x.drawImage(b,0,0,c.width,c.height);x.setTransform(k,0,0,k,0,0);st.hud(x,S,4)}

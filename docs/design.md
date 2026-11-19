@@ -73,6 +73,8 @@ Round six (while notebook exports run):
 - Five Tasks doodles are now painted barn quilt emblems (Lookout Lamp, Root Cellar, Hidebehind, Arbor Day, Kingsley Dam). A row of storefronts became **Main Street**, a landmark on a Sandhills ridge with one window lit.
 - **Run journal:** goals drawn like the Tasks pages (boxes, circles, stars, arrows to places, provisions as tally marks). Tapping a goal strikes it through. The words are a stand-in until the handwriting font exists.
 
+Round seven: **Halsey Hand.** A font made from the owner's handwriting in the Tasks notebooks, with no template. About 2,000 pen marks were extracted, 69 characters picked by eye, redrawn with one even pen, sized by letter type, with alternates cycling. It is now the default type set in the look book and the journal's handwriting. Files are in `art/fonts/`, the method in `tools/handwriting-font/README.md`. A filled template would still improve it.
+
 **Decided:** 2D for now. `prototypes/print-3d/print-3d.html` is a Three.js test that prints a 3D forest with the same ink-separation idea in a shader, kept for comparison.
 
 **Open:** pick one look, or a blend of two.

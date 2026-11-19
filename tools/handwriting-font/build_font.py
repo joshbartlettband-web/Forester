@@ -153,19 +153,13 @@ def glyph_name(ch):
 
 
 def build(paths, family, out_dir, specimen_text):
-    from fontTools.feaLib.builder import addOpenTypeFeaturesFromString
-    from fontTools.fontBuilder import FontBuilder
-    from fontTools.pens.t2CharStringPen import T2CharStringPen
-    from fontTools.ttLib import TTFont
-
+    """Read a filled template and build the font."""
     pages = load_pages(paths)
     expected = L.pages()
     notes = []
     if len(pages) != len(expected):
         notes.append(f"Found {len(pages)} pages; the template has {len(expected)}. Missing pages leave their characters out.")
-    LSB = RSB = 45
-    glyphs = {}          # name -> (charstring, advance)
-    variants = {}        # char -> list of glyph names in variant order
+    items = []
     for pi, page_cells in enumerate(expected):
         if pi >= len(pages):
             break
@@ -180,19 +174,35 @@ def build(paths, family, out_dir, specimen_text):
                 notes.append(f"page {pi + 1}: box for '{ch}' (try {v + 1}) is empty")
                 continue
             mask, base_px, upp = got
-            cols = np.nonzero(mask.any(0))[0]
-            left, right = cols.min(), cols.max()
-            plist = trace(mask)
-            width = round((right - left) * upp + LSB + RSB)
-            name = glyph_name(ch) + ("" if v == 0 else f".alt{v}")
-            pen = T2CharStringPen(width, None)
-            outline_to_pen(plist, pen, base_px, upp, left, LSB)
-            glyphs[name] = (pen.getCharString(), width)
-            variants.setdefault(ch, []).append(name)
             rows = np.nonzero(mask.any(1))[0]
             top_u, bot_u = (base_px - rows.min()) * upp, (base_px - rows.max()) * upp
             if top_u > 1000 or bot_u < -420:
                 notes.append(f"page {pi + 1}: '{ch}' (try {v + 1}) runs far outside its guide lines")
+            items.append((ch, v, mask, base_px, upp))
+    return make_font(items, family, out_dir, specimen_text, notes)
+
+
+def make_font(items, family, out_dir, specimen_text, notes=None):
+    """items: (char, variant, ink mask, baseline row in the mask, font units per pixel)."""
+    from fontTools.feaLib.builder import addOpenTypeFeaturesFromString
+    from fontTools.fontBuilder import FontBuilder
+    from fontTools.pens.t2CharStringPen import T2CharStringPen
+    from fontTools.ttLib import TTFont
+
+    notes = list(notes or [])
+    LSB = RSB = 32
+    glyphs = {}          # name -> (charstring, advance)
+    variants = {}        # char -> list of glyph names in variant order
+    for ch, v, mask, base_px, upp in items:
+        cols = np.nonzero(mask.any(0))[0]
+        left, right = cols.min(), cols.max()
+        plist = trace(mask)
+        width = round((right - left) * upp + LSB + RSB)
+        name = glyph_name(ch) + ("" if v == 0 else f".alt{v}")
+        pen = T2CharStringPen(width, None)
+        outline_to_pen(plist, pen, base_px, upp, left, LSB)
+        glyphs[name] = (pen.getCharString(), width)
+        variants.setdefault(ch, []).append(name)
 
     # Every character needs a default glyph; promote the first variant found.
     for ch, names in variants.items():
@@ -270,7 +280,7 @@ def build(paths, family, out_dir, specimen_text):
     im.save(os.path.join(out_dir, "specimen.png"))
     found = sum(len(v) for v in variants.values())
     with open(os.path.join(out_dir, "report.txt"), "w") as fh:
-        fh.write(f"{family}: {found} of {len(L.cells())} boxes traced, {len(variants)} characters.\n")
+        fh.write(f"{family}: {found} glyphs traced, {len(variants)} characters.\n")
         fh.write("\n".join(notes) + ("\n" if notes else "No problems found.\n"))
     print(open(os.path.join(out_dir, "report.txt")).read())
     return otf
