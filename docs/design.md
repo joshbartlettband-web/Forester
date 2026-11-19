@@ -38,7 +38,32 @@ Halsey is an encounter-driven roguelike for phones (and other platforms), set in
 
 `prototypes/look-book/look-book.html` holds six art directions, each drawing the same seeded scenes: screen print, linocut, survey plate, signal (one-bit dither), pieced (quilt geometry) and fog. The file is the source of a published page, so it has no `<html>` or `<head>` wrapper of its own.
 
+Round two added:
+
+- **Screen print editions**, each a set of ink separations composited onto generated paper (fibers, flecks, tooth, deckle): rag paper, overprint (transparent inks that multiply), split fountain, black stock and newsprint.
+- **Glass plate:** after Solomon Butcher's Custer County negatives, 1886–1912. People who move during the exposure become ghosts.
+- **Trail cam:** an infrared game camera whose clock reset to 01/01/2000.
+- **Expired film:** slide film with light leaks, in a cardboard mount.
+
+Favorites so far: **screen print** (paper texture matters).
+
 **Open:** pick one look, or a blend of two.
+
+### Barn quilt modifiers
+
+Modifier art is a painted barn quilt.
+
+- Common modifiers use traditional blocks: Pinwheel, Sawtooth Star, Dutchman's Puzzle, Broken Dishes, Mill Wheel, Log Cabin.
+- Rarer ones get a block generated from the modifier's name, using symmetric half-square and quarter-square triangles plus quarter circles.
+- Rare modifiers hang on point.
+- Paint color shows which event the modifier listens for: Chain is red, Repeat is rust, Find is sky blue, Spare is green, Risk is gold, Season is plum and Hold is blue.
+
+## Engine and 3D (discussion, not decided)
+
+- Prototype the art and the core loop on the web (fast to iterate, opens on a phone from a link). Keep game rules as engine-independent data so a move to Godot stays cheap.
+- Godot's strengths: native mobile and desktop exports, shaders, GPU particles, MultiMesh for thousands of trees, mixed 2D and 3D in one project.
+- Godot's catch: its showpiece atmosphere features (volumetric fog, SDFGI) need the Forward+ renderer. Phones use the Mobile renderer and web builds use Compatibility, so those effects have to be faked there.
+- If we go 3D: use 2.5D. Stylized 3D scenery with a print or paper post-process and a mostly fixed camera, with 2D for encounters and UI. Real terrain could come from public USGS elevation data.
 
 ## Open questions
 

@@ -2,7 +2,7 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800&family=Public+Sans:wght@400;600;800&family=Overpass:wght@400;700&family=Overpass+Mono:wght@400;600&family=Zilla+Slab:wght@600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=VT323&family=IBM+Plex+Mono:wght@400;500&family=Jost:wght@500;600&family=Karla:wght@400;600&family=Cormorant:ital,wght@1,500;1,600&family=Spectral:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800&family=Public+Sans:wght@400;600;800&family=Overpass:wght@400;700&family=Overpass+Mono:wght@400;600&family=Zilla+Slab:wght@600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=VT323&family=IBM+Plex+Mono:wght@400;500&family=Jost:wght@500;600&family=Karla:wght@400;600&family=Cormorant:ital,wght@1,500;1,600&family=Spectral:wght@400;500&family=IM+Fell+English:ital@0;1&family=Cedarville+Cursive&family=Permanent+Marker&display=swap">
 <style>
 /* Layout: one column on phones (look tabs, the generated scene, its encounter card); scene and card side by side on wide screens.
    Single dark chrome by choice, so each look's own palette carries the page. */
@@ -68,7 +68,35 @@ canvas#scene{display:block;width:100%;height:100%;cursor:pointer;touch-action:ma
 .mod span{font-size:13px;color:var(--c-muted)}
 
 .card[data-look="print"]{--c-bg:#25273f;--c-fg:#f2e4c6;--c-muted:#c9a98d;--c-accent:#e57b4f;--c-line:rgba(242,228,198,.28);--c-head:var(--f-display);--c-hsize:40px;--c-hweight:800;--c-htrans:uppercase;box-shadow:6px 6px 0 #e57b4f;margin-right:6px;margin-bottom:6px}
-.card[data-look="print"] .choice{background:rgba(242,228,198,.07);border-color:transparent}
+.card[data-look="print"] .choice{background:var(--c-chip,rgba(242,228,198,.07));border-color:transparent}
+
+.card[data-look="plate"]{--c-bg:#e6d6b4;--c-fg:#2a1c11;--c-muted:#7a5e40;--c-accent:#7d5230;--c-line:rgba(42,28,17,.3);--c-head:"IM Fell English",Georgia,serif;--c-body:"Source Serif 4",Georgia,serif;--c-label:"IM Fell English",Georgia,serif;--c-hsize:36px;--c-hweight:400;
+  background:radial-gradient(130% 90% at 50% 40%,#efe2c4 40%,#cdb48a 100%);border:1px solid #2a1c11;outline:6px solid #2a1c11;outline-offset:-12px;padding:28px}
+.card[data-look="plate"] .place{font-style:italic;text-transform:none;letter-spacing:.02em;font-size:14px}
+.card[data-look="plate"] .choice{background:rgba(42,28,17,.05)}
+.card[data-look="trail"]{--c-bg:#0d0f0e;--c-fg:#e8eae6;--c-muted:#8b918a;--c-accent:#e8eae6;--c-line:#2e322e;--c-head:"IBM Plex Mono",ui-monospace,monospace;--c-body:"IBM Plex Mono",ui-monospace,monospace;--c-label:"IBM Plex Mono",ui-monospace,monospace;--c-hsize:26px;--c-hweight:500;--c-htrans:uppercase;border:1px solid #2e322e}
+.card[data-look="trail"]::before{content:"CAM 02 · IR · 01/01/2000";position:absolute;top:10px;right:14px;z-index:1;font:500 10.5px "IBM Plex Mono",monospace;letter-spacing:.08em;color:#8b918a}
+.card[data-look="trail"] .body{font-size:14px}
+.card[data-look="film"]{--c-bg:#ebe5d8;--c-fg:#23263f;--c-muted:#6c6a73;--c-accent:#e0662f;--c-line:rgba(35,38,63,.22);--c-head:"Permanent Marker","Marker Felt",cursive;--c-hsize:32px;--c-hweight:400;--c-radius:10px;
+  box-shadow:inset 0 0 0 1px rgba(35,38,63,.15),inset 0 -40px 60px -40px rgba(224,102,47,.25)}
+.card[data-look="film"] .choice{background:rgba(255,255,255,.45);border-color:transparent}
+
+.about .from{font-family:var(--f-mono);font-size:12px;letter-spacing:.02em;color:var(--accent)}
+.about .ed{border-top:1px dashed var(--line);padding-top:6px}
+.seg.small button{padding:8px 11px;font-size:13px}
+
+.quilts{display:flex;flex-direction:column;gap:16px;border-top:1px solid var(--line);padding-top:26px;margin-top:8px}
+.quilts h2{margin:0;font:800 34px/1 var(--f-display);letter-spacing:.03em;text-transform:uppercase}
+.quilts>p{margin:0;color:var(--muted);max-width:66ch;text-wrap:pretty}
+.legend{display:flex;flex-wrap:wrap;gap:8px 16px;font:12px var(--f-mono);color:var(--muted);letter-spacing:.04em;text-transform:uppercase}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{width:12px;height:12px;display:inline-block;border:1px solid rgba(255,255,255,.25)}
+.q-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:20px 16px}
+.qcard{display:flex;flex-direction:column;gap:6px;min-width:0}
+.qcard canvas{width:100%;max-width:100%;aspect-ratio:1/1;display:block;border-radius:2px}
+.qcard b{font:800 19px/1.05 var(--f-display);letter-spacing:.03em;text-transform:uppercase}
+.qcard .fx{font-size:14px;line-height:1.35;margin:0}
+.qcard .meta{font:11px/1.4 var(--f-mono);letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
 
 .card[data-look="lino"]{--c-bg:#e7e2d3;--c-fg:#171613;--c-muted:#5d5950;--c-accent:#b8432c;--c-line:#171613;--c-head:"Zilla Slab",Rockwell,Georgia,serif;--c-body:"Source Serif 4",Georgia,serif;--c-hsize:34px;--c-hweight:700;border:3px solid #171613}
 .card[data-look="lino"] .choice{border-width:2px}
@@ -111,6 +139,10 @@ canvas#scene{display:block;width:100%;height:100%;cursor:pointer;touch-action:ma
       <div class="seg" id="biomes" role="group" aria-label="Place"></div>
       <div class="seg" id="times" role="group" aria-label="Time of day"></div>
     </div>
+    <div class="row" id="edition-row" hidden>
+      <span class="label">Edition</span>
+      <div class="seg small" id="editions" role="group" aria-label="Screen print edition"></div>
+    </div>
     <div class="row">
       <button class="btn" id="reroll" type="button">New scene</button>
       <span class="seed" id="seed"></span>
@@ -120,7 +152,7 @@ canvas#scene{display:block;width:100%;height:100%;cursor:pointer;touch-action:ma
   <div class="stage">
     <div class="canvas-box"><canvas id="scene" tabindex="0" aria-label="Generated scene. Tap for a new one."></canvas></div>
     <div class="side">
-      <div class="about"><h3 id="about-name"></h3><p id="about-good"></p><p class="risk" id="about-risk"></p></div>
+      <div class="about"><h3 id="about-name"></h3><p class="from" id="about-from"></p><p id="about-good"></p><p class="risk" id="about-risk"></p><p class="ed" id="about-ed" hidden></p></div>
       <article class="card" id="card" data-look="print">
         <div class="place" id="c-place"></div>
         <h2 id="c-title"></h2>
@@ -132,6 +164,13 @@ canvas#scene{display:block;width:100%;height:100%;cursor:pointer;touch-action:ma
       <p class="hint">The encounter is sample text. Its choices aren't playable yet. Tap the scene or press N for a new seed.</p>
     </div>
   </div>
+
+  <section class="quilts" aria-labelledby="q-h">
+    <h2 id="q-h">Barn quilt modifiers</h2>
+    <p>Each modifier is a painted barn quilt. Common ones use traditional blocks. Rarer ones get a block generated from the modifier itself, and the rarest hang on point, turned 45° the way some barns show them. The paint colors tell you which event the modifier listens for, in any minigame.</p>
+    <div class="legend" id="legend"></div>
+    <div class="q-grid" id="quilts"></div>
+  </section>
 </div>
 
 <script>
@@ -233,19 +272,35 @@ function crane(x,b,s,R){const d=R()<.5?-1:1,by=b-s*.55,ps=[],body=[];
   ps.push(Pp(body),Lp([[x+d*s*.18,by-s*.04],[x+d*s*.26,by-s*.3],[x+d*s*.3,by-s*.42]],Math.max(.4,s*.05)),Cp(x+d*s*.31,by-s*.44,Math.max(.4,s*.05)),
     Lp([[x+d*s*.33,by-s*.44],[x+d*s*.43,by-s*.4]],Math.max(.3,s*.025)),Lp([[x-s*.03,by+s*.08],[x-s*.06,b]],Math.max(.3,s*.025)),Lp([[x+s*.05,by+s*.08],[x+s*.07,b]],Math.max(.3,s*.025)));
   return ps}
+function sodHouse(x,b,h,R){const w=h*2.4,wt=b-h*.55,ps=[];
+  ps.push(Pp([[x-w/2,b],[x-w/2,wt],[x+w/2,wt],[x+w/2,b]]),Pp([[x-w/2-h*.1,wt+h*.02],[x-w/2+h*.12,b-h*.8],[x+w/2-h*.12,b-h*.8],[x+w/2+h*.1,wt+h*.02]]));
+  for(let i=1;i<5;i++){const y=lerp(b,wt,i/5);ps.push(Lp([[x-w/2,y],[x+w/2,y]],Math.max(.3,h*.012)))}
+  for(let i=0;i<14;i++){const gx=x-w/2+h*.15+R()*(w-h*.3);ps.push(Lp([[gx,b-h*.8],[gx+(R()-.5)*h*.12,b-h*(.86+R()*.08)]],Math.max(.3,h*.015)))}
+  ps.push(Lp([[x+w*.3,b-h*.8],[x+w*.3,b-h*1.02]],Math.max(.4,h*.035)));
+  return{parts:ps,light:[x+w*.18,b-h*.3]}}
+function family(x,b,h,R){const n=4+(R()*4|0),g=(R()*n)|0,parts=[],ghost=[],sp=h*.3;let gx=x;
+  for(let i=0;i<n;i++){const fx=x+(i-(n-1)/2)*sp+(R()-.5)*sp*.2,adult=R()<.55,hh=h*(adult?range(R,.88,1):range(R,.45,.65)),dress=R()<.5,arr=i===g?ghost:parts,hw=hh*.09;
+    if(i===g)gx=fx;arr.push(Cp(fx,b-hh*.92,hh*.075));
+    if(dress)arr.push(Pp([[fx-hw,b-hh*.82],[fx+hw,b-hh*.82],[fx+hw*2.1,b-hh*.06],[fx-hw*2.1,b-hh*.06]]));
+    else arr.push(Pp([[fx-hw*1.1,b-hh*.82],[fx+hw*1.1,b-hh*.82],[fx+hw,b-hh*.45],[fx-hw,b-hh*.45]]),Lp([[fx-hw*.5,b-hh*.46],[fx-hw*.6,b]],Math.max(.4,hw*.7)),Lp([[fx+hw*.5,b-hh*.46],[fx+hw*.6,b]],Math.max(.4,hw*.7)));
+    if(adult&&R()<.5)arr.push(Lp([[fx-hw*1.6,b-hh*.97],[fx+hw*1.6,b-hh*.97]],Math.max(.3,hh*.025)),Pp([[fx-hw*.8,b-hh*.97],[fx+hw*.8,b-hh*.97],[fx+hw*.7,b-hh*1.07],[fx-hw*.7,b-hh*1.07]]))}
+  if(R()<.6){const cx=x+(n/2+1.2)*sp*(R()<.5?-1:1),ch=h*.55,cw=h*.9;
+    parts.push(Pp([[cx-cw/2,b-ch*.95],[cx+cw/2,b-ch],[cx+cw/2,b-ch*.5],[cx-cw/2,b-ch*.48]]),Pp([[cx+cw/2,b-ch],[cx+cw*.72,b-ch*.9],[cx+cw*.7,b-ch*.72],[cx+cw/2,b-ch*.7]]));
+    for(const lx of[-.42,-.28,.3,.44])parts.push(Lp([[cx+cw*lx,b-ch*.5],[cx+cw*lx,b]],Math.max(.4,h*.03)))}
+  return{parts,ghost,gx}}
 function figure(x,b,h){const hw=h*.06;return[Pp([[x-hw*1.1,b],[x-hw*.7,b-h*.55],[x-hw*1.3,b-h*.78],[x-hw*.4,b-h*.86],[x+hw*.4,b-h*.86],[x+hw*1.3,b-h*.78],[x+hw*.7,b-h*.55],[x+hw*1.1,b]]),
   Cp(x,b-h*.92,hw*.95),Lp([[x-hw*1.2,b-h*.78],[x-hw*1.75,b-h*.42],[x-hw*1.6,b-h*.1]],hw*.35),Lp([[x+hw*1.2,b-h*.78],[x+hw*1.75,b-h*.42],[x+hw*1.6,b-h*.1]],hw*.35)]}
 
 /* ================= scene generation ================= */
 const BIOMES={
-  pines:{label:'Planted pines',caption:['THE PLANTED FOREST','Bessey Ranger District · near Halsey, Nebr.'],coords:'41.86°N 100.30°W'},
-  prairie:{label:'Open prairie',caption:['THE SANDHILLS','Hooker County · grass to every horizon'],coords:'42.04°N 101.04°W'},
-  river:{label:'The Platte',caption:['THE PLATTE','A mile wide and an inch deep · near Gibbon'],coords:'40.67°N 98.88°W'}
+  pines:{label:'Planted pines',caption:['THE PLANTED FOREST','Bessey Ranger District · near Halsey, Nebr.'],coords:'41.86°N 100.30°W',plate:'Planted forest nr. Halsey',film:'The rows, Halsey'},
+  prairie:{label:'Open prairie',caption:['THE SANDHILLS','Hooker County · grass to every horizon'],coords:'42.04°N 101.04°W',plate:'Sandhills, Hooker Co.',film:'Pivot 7!!'},
+  river:{label:'The Platte',caption:['THE PLATTE','A mile wide and an inch deep · near Gibbon'],coords:'40.67°N 98.88°W',plate:'Platte River nr. Gibbon',film:'Cranes came back'}
 };
 function genScene(seed,biome,time){
   const R=rng(seed*2654435761^({pines:0x9e37,prairie:0x51ed,river:0x2c1b})[biome]);
   const N=noise1(R),N2=noise1(R),N3=noise1(R);
-  const S={seed,biome,time,items:[],stars:[],notes:[],caption:BIOMES[biome].caption,coords:BIOMES[biome].coords};
+  const B=BIOMES[biome],S={seed,biome,time,items:[],stars:[],notes:[],caption:B.caption,coords:B.coords,plate:B.plate,film:B.film};
   const add=o=>{S.items.push(o);return o};
   ({pines:genPines,prairie:genPrairie,river:genRiver})[biome](S,R,N,N2,N3,add);
   const hz=S.hz;
@@ -309,6 +364,10 @@ function genPrairie(S,R,N,N2,N3,add){
   if(R()<.6){const x=range(R,40,360),y=profAt(L[1],x)+2,h=range(R,55,80),wm=windmill(x,y,h,R);add({type:'struct',kind:'windmill',depth:.385,parts:wm.parts});S.notes.push({x,y:wm.top,text:'WINDMILL · STILL PUMPING'})}
   if(R()<.5){const x=range(R,30,320),b=profAt(far,x)+2,h=range(R,22,32),el=elevator(x,b,h,R);add({type:'struct',kind:'elevator',depth:.013,parts:el.parts});
     if(R()<.6){add({type:'light',kind:'window',depth:.014,x:el.light[0],y:el.light[1],r:1.3});lit=true;S.notes.push({x:el.light[0],y:el.light[1],text:'ELEVATOR · LAMP LIT'})}else S.notes.push({x:x,y:el.top,text:'GRAIN ELEVATOR'})}
+  if(!lit&&R()<.75){const x=range(R,80,320),b=profAt(L[1],x)+3,h=range(R,24,30),sh=sodHouse(x,b,h,R),fam=family(x-h*.15,b+2,h*.62,R);
+    add({type:'struct',kind:'sod',depth:.383,parts:sh.parts});add({type:'light',kind:'window',depth:.3832,x:sh.light[0],y:sh.light[1],r:1.5});
+    add({type:'struct',kind:'people',depth:.384,parts:fam.parts});add({type:'struct',kind:'ghost',depth:.3845,parts:fam.ghost});lit=true;
+    S.notes.push({x,y:b-h*.8,text:'SOD HOUSE · LAMP LIT'},{x:fam.gx,y:b-h*.6,text:'ONE OF THEM MOVED'})}
   if(!lit&&R()<.7){const x=range(R,40,360),b=profAt(L[0],x)+2,h=range(R,7,10),hs=house(x,b,h);add({type:'struct',kind:'house',depth:.181,parts:hs.parts});
     add({type:'light',kind:'window',depth:.182,x:hs.light[0],y:hs.light[1],r:1.1});lit=true;S.notes.push({x,y:b-h,text:'HOUSE · OCCUPIED?'})}
   if(!lit){const x=range(R,60,340),y=profAt(L[1],x)+1;add({type:'light',kind:'fire',depth:.386,x,y,r:3});S.notes.push({x,y,text:'SIGNAL FIRE'})}
@@ -382,7 +441,7 @@ function paint(ctx,S,c){
       case'land':case'lane':case'bar':ctx.beginPath();poly(ctx,it.pts);ctx.fillStyle=c.fill(it);ctx.fill();c.afterLand&&c.afterLand(ctx,it,S);break;
       case'water':ctx.beginPath();poly(ctx,it.pts);ctx.fillStyle=c.fill(it);ctx.fill();c.ripples&&c.ripples(ctx,it,S);break;
       case'tree':shapePath(ctx,it);ctx.fillStyle=c.fill(it);ctx.fill();break;
-      case'struct':case'watcher':{const f=c.fill(it);drawParts(ctx,it.parts,f,f);break}
+      case'struct':case'watcher':{if(c.ghost&&(it.kind==='ghost'||(it.type==='watcher'&&c.ghostWatcher))){c.ghost(ctx,it);break}const f=c.fill(it);drawParts(ctx,it.parts,f,f);break}
       case'grass':drawGrass(ctx,it,c.fill(it));break}}
   c.post&&c.post(ctx,S);
 }
@@ -398,7 +457,7 @@ function spFill(p,it){const q=Math.round(clamp(it.depth,0,1)*4)/4;
     case'tree':return mix(p.far,p.near,Math.min(1,Math.pow(q,.8)+.18));
     default:return mix(p.far,p.near,Math.min(1,q+.3))}}
 const LOOK_PRINT={
-  static(ctx,S){const p=SP[S.time];
+  static(ctx,S){const ed=EDMAP[state.edition];if(ed&&ed.paper)return printEdition(ctx,S,ed);const p=SP[S.time];
     paint(ctx,S,{
       sky(ctx,S){const hz=S.hz+12,st=[0,.38,.64,.86,1].map(f=>f*hz);
         for(let i=0;i<4;i++){ctx.fillStyle=p.sky[i];ctx.fillRect(0,st[i],W,(i===3?H:st[i+1])-st[i]+1)}
@@ -415,7 +474,7 @@ const LOOK_PRINT={
         ctx.font='600 10.5px "Public Sans",sans-serif';ctx.fillText(S.caption[1].toUpperCase(),15,H-12);
         ctx.fillStyle=p.sky[2];ctx.fillRect(W-40,H-50,26,26);ctx.fillStyle=p.paper;ctx.font='800 15px "Big Shoulders Display",sans-serif';ctx.textAlign='center';ctx.fillText('NE',W-27,H-31);ctx.textAlign='left'}
     })},
-  overlay(ctx,S,t){const p=SP[S.time];
+  overlay(ctx,S,t){const ed=EDMAP[state.edition];if(ed&&ed.paper)return edOverlay(ctx,S,t,ed);const p=SP[S.time];
     for(const l of lights(S)){const f=flick(t,l.x);for(let k=3;k>=1;k--){ctx.fillStyle=rgba(p.light,.16*k);ctx.beginPath();ctx.arc(l.x,l.y,l.r*(1+k*2.4*f),0,TAU);ctx.fill()}ctx.fillStyle=p.light;ctx.beginPath();ctx.arc(l.x,l.y,l.r,0,TAU);ctx.fill()}
     if(eyesOn(t))for(const e of eyes(S)){ctx.fillStyle=p.light;for(const s of[-1,1]){ctx.beginPath();ctx.arc(e.x+s*e.gap/2,e.y,e.r,0,TAU);ctx.fill()}}
     drawBirds(ctx,S,t,p.near,1)}
@@ -588,6 +647,230 @@ const LOOK_FOG={
     drawBirds(ctx,S,t,rgba(p.near,.8),1)}
 };
 
+/* ================= screen print editions: ink separations on generated paper ================= */
+const BUFS={};function buf(n,w,h){let c=BUFS[n];if(!c)c=BUFS[n]=document.createElement('canvas');if(c.width!==w||c.height!==h){c.width=w;c.height=h}return c}
+const grainDark=(()=>{const c=document.createElement('canvas');c.width=c.height=160;const x=c.getContext('2d'),d=x.createImageData(160,160),R=rng(9);
+  for(let i=0;i<d.data.length;i+=4){const v=R();d.data[i]=d.data[i+1]=d.data[i+2]=0;d.data[i+3]=v>.8?Math.floor((v-.8)/.2*200):0}x.putImageData(d,0,0);return c})();
+const toothCv=(()=>{const s=document.createElement('canvas');s.width=s.height=80;const sx=s.getContext('2d'),d=sx.createImageData(80,80),R=rng(31);
+  for(let i=0;i<d.data.length;i+=4){d.data[i]=d.data[i+1]=d.data[i+2]=0;d.data[i+3]=R()*255}sx.putImageData(d,0,0);
+  const c=document.createElement('canvas');c.width=c.height=160;const x=c.getContext('2d');x.imageSmoothingEnabled=true;x.drawImage(s,0,0,160,160);
+  const im=x.getImageData(0,0,160,160),R2=rng(32);for(let i=0;i<im.data.length;i+=4){const v=im.data[i+3]/255*.7+R2()*.3;im.data[i+3]=v>.66?Math.min(255,(v-.66)/.34*380):0}x.putImageData(im,0,0);return c})();
+const PAPERS={
+  rag:{base:'#f0e8d6',dark:'#c6b797',light:'#fffaf0',mottle:.1,fiber:'#c4b596',fiber2:'#fffdf6',fibers:6000,fleck:['#8a7a5e','#b9a982'],flecks:260,grain:.12,through:['soft-light',.3]},
+  cover:{base:'#f7f4ee',dark:'#d8d1c4',light:'#ffffff',mottle:.06,fiber:'#d8d0c0',fiber2:'#ffffff',fibers:1600,fleck:['#9a9080'],flecks:50,grain:.08,through:['soft-light',.35]},
+  speckle:{base:'#eee1c6',dark:'#c9b48a',light:'#fbf3e1',mottle:.1,fiber:'#c4ae84',fiber2:'#fff8e8',fibers:2600,fleck:['#5d4a32','#8b6f48','#2f2a24','#a05a3a'],flecks:1100,grain:.1,through:['soft-light',.3]},
+  black:{base:'#1c1c1f',dark:'#0d0d0f',light:'#303036',mottle:.3,fiber:'#3a3a41',fiber2:'#29292e',fibers:3000,fleck:['#45454c'],flecks:220,grain:.1,through:['screen',.12]},
+  news:{base:'#d8d0ba',dark:'#b0a27e',light:'#e8e1cf',mottle:.14,fiber:'#a69a7e',fiber2:'#ebe4d2',fibers:7000,fleck:['#5a5548','#7d7560'],flecks:520,grain:.14,yellow:'#c2a866',through:['multiply',.35]}};
+const paperCache=new Map();
+function makePaper(kind,cw,ch){const key=kind+cw+'x'+ch;if(paperCache.has(key))return paperCache.get(key);
+  const P=PAPERS[kind],c=document.createElement('canvas');c.width=cw;c.height=ch;const x=c.getContext('2d'),R=rng(1903),k=cw/W,area=cw*ch/(800*1000);
+  x.fillStyle=P.base;x.fillRect(0,0,cw,ch);
+  for(let i=0;i<140;i++){const px=R()*cw,py=R()*ch,r=(20+R()*110)*k,col=R()<.5?P.dark:P.light,g=x.createRadialGradient(px,py,0,px,py,r);g.addColorStop(0,rgba(col,P.mottle));g.addColorStop(1,rgba(col,0));x.fillStyle=g;x.fillRect(px-r,py-r,2*r,2*r)}
+  x.lineCap='round';for(let i=0,n=Math.round(P.fibers*area);i<n;i++){const px=R()*cw,py=R()*ch,len=(1.5+R()*R()*12)*k,a=R()*TAU,bend=(R()-.5)*len*.8;
+    x.strokeStyle=rgba(R()<.6?P.fiber:P.fiber2,.08+R()*.24);x.lineWidth=Math.max(.5,(.25+R()*.5)*k);x.beginPath();x.moveTo(px,py);x.quadraticCurveTo(px+Math.cos(a)*len/2-Math.sin(a)*bend,py+Math.sin(a)*len/2+Math.cos(a)*bend,px+Math.cos(a)*len,py+Math.sin(a)*len);x.stroke()}
+  for(let i=0,n=Math.round(P.flecks*area);i<n;i++){x.fillStyle=rgba(P.fleck[(R()*P.fleck.length)|0],.35+R()*.5);x.beginPath();x.arc(R()*cw,R()*ch,Math.max(.4,(.25+R()*R()*1.3)*k),0,TAU);x.fill()}
+  x.save();x.globalAlpha=P.grain;x.fillStyle=x.createPattern(grainCv,'repeat');x.fillRect(0,0,cw,ch);x.globalCompositeOperation='multiply';x.fillStyle=x.createPattern(grainDark,'repeat');x.fillRect(0,0,cw,ch);x.restore();
+  if(P.yellow){const g=x.createRadialGradient(cw/2,ch/2,Math.min(cw,ch)*.3,cw/2,ch/2,Math.max(cw,ch)*.75);g.addColorStop(0,rgba(P.yellow,0));g.addColorStop(1,rgba(P.yellow,.6));x.fillStyle=g;x.fillRect(0,0,cw,ch)}
+  paperCache.set(key,c);return c}
+function dotPattern(ctx,c,cell,angle,k){const P=Math.max(3,Math.round(cell*k)),cv=document.createElement('canvas');cv.width=cv.height=P;const x=cv.getContext('2d');x.fillStyle='#fff';
+  if(c<=.78){x.beginPath();x.arc(P/2,P/2,P*Math.sqrt(c/Math.PI),0,TAU);x.fill()}
+  else{x.fillRect(0,0,P,P);x.globalCompositeOperation='destination-out';const r=P*Math.sqrt((1-c)/Math.PI);for(const[a,b]of[[0,0],[P,0],[0,P],[P,P]]){x.beginPath();x.arc(a,b,r,0,TAU);x.fill()}}
+  const p=ctx.createPattern(cv,'repeat');if(p.setTransform&&window.DOMMatrix)p.setTransform(new DOMMatrix().rotateSelf(angle).scaleSelf(1/k));return p}
+function skyTone(f,time){return time==='night'?lerp(.95,.58,f):time==='dawn'?lerp(.52,.03,Math.pow(f,.9)):lerp(.74,.06,Math.pow(f,.9))}
+function toneOf(it,S){const d=clamp(it.depth,0,1),sh=S.time==='night'?.1:S.time==='dawn'?-.05:0;let t;
+  switch(it.type){case'lane':t=.2+.25*d;break;case'bar':t=.24+.36*d;break;case'water':t=skyTone(.8,S.time)+.06;break;
+    case'land':t=it.tone==='floor'?.5:it.tone==='bank'?.95:it.tone==='forest'?.62:lerp(.3,.9,Math.pow(d,.8))+(it.tone==='grass2'?.04:0);break;
+    case'tree':t=lerp(.45,.97,Math.pow(d,.75));break;case'grass':t=.97;break;default:t=lerp(.55,.98,d)}
+  return clamp(t+sh,0,1)}
+function drawShape(x,it,st){if(it.type==='tree'){shapePath(x,it);x.fillStyle=st;x.fill()}else if(it.type==='struct'||it.type==='watcher')drawParts(x,it.parts,st,st);else if(it.type==='grass')drawGrass(x,it,st);else{x.beginPath();poly(x,it.pts);x.fillStyle=st;x.fill()}}
+const ink=(c,th,o={})=>({c,th,...o});
+const EDITIONS=[
+  {id:'classic',name:'First proof',note:'The first pass from last time: five flat inks with light grain, no paper.'},
+  {id:'rag',name:'Rag paper',note:'Five opaque inks on deckled cotton rag. The ink skips where the paper tooth runs deep, and each screen lands slightly off register.',paper:'rag',mode:'opaque',deckle:true,tooth:.34,misreg:1.5,skySoft:.09,capInk:4,light:'#ffe2a0',
+    inks:[ink('#e9b26c',.06),ink('#c7695b',.27),ink('#6c4a6b',.47),ink('#2e2f4e',.67),ink('#16131c',.86)],card:{fg:'#1d1a24',muted:'#6d5b5a',accent:'#c7695b'}},
+  {id:'overprint',name:'Overprint',note:'Three transparent inks that multiply where they overlap. Yellow over blue makes the green hills, and all three make the near-black. Loose registration on bright cover stock.',paper:'cover',mode:'multiply',tooth:.3,misreg:2.6,capInk:1,light:'#fff2b0',alpha:.92,
+    inks:[ink('#f3c22f',.08,{angle:0}),ink('#3a78c3',.38,{angle:15}),ink('#e2486f',.72,{angle:75})],
+    sky(i,f,time){const b=(x,m,w)=>Math.max(0,1-Math.abs(x-m)/w);if(time==='night')return[clamp(f*1.6-1.1,0,1)*.6,1,.35+.4*b(f,.9,.3)][i];if(time==='dawn')return[clamp(f*1.3-.25,0,1),clamp(.95-f,0,1),.3*b(f,.8,.3)][i];return[clamp((f-.3)/.45,0,1),clamp(1-f*1.35,0,1),b(f,.74,.3)][i]},
+    card:{fg:'#2a2140',muted:'#6a5f78',accent:'#e2486f'}},
+  {id:'fountain',name:'Split fountain',note:'One screen inked with three colors that blend as the squeegee pulls, under a black key plate in halftone. Printed on speckled cover stock.',paper:'speckle',mode:'opaque',tooth:.3,misreg:1.2,capInk:1,light:'#fff0c0',
+    inks:[{fountain:['#f4a43b','#e2476b','#6b3fa5'],f:(t,it)=>it.type==='cel'||it.type==='star'?0:1},ink('#1d1822',.52,{soft:.55,angle:45})],card:{fg:'#1d1822',muted:'#6a5550',accent:'#e2476b'}},
+  {id:'black',name:'Black stock',note:'Opaque teal and bone inks on black paper, with a gold spot ink for the sun, moon and lamps. The paper itself is the night.',paper:'black',mode:'opaque',tooth:.36,misreg:1.4,capInk:1,light:'#d9ac4c',
+    inks:[{c:'#2c6f7c',f:t=>1-t>=.1?1:0},{c:'#e8dec6',f:t=>clamp((1-t-.52)/.36,0,1),angle:45},{c:'#d4a74b',f:(t,it)=>it.type==='cel'?1:0}],card:{fg:'#e8dec6',muted:'#9aa3a0',accent:'#d4a74b'}},
+  {id:'news',name:'Newsprint',note:'One black ink in a coarse halftone on cheap newsprint gone yellow at the edges, like a photo in a county weekly.',paper:'news',mode:'multiply',tooth:.22,misreg:0,capInk:0,caption:'news',cell:3.6,light:'#ffffff',
+    inks:[{c:'#1e1c19',f:t=>Math.pow(t,1.1),angle:45}],card:{fg:'#1e1c19',muted:'#5f5a4f',accent:'#1e1c19'}}];
+const EDMAP=Object.fromEntries(EDITIONS.map(e=>[e.id,e]));
+function printEdition(ctx,S,ed){const cw=ctx.canvas.width,ch=ctx.canvas.height,k=cw/W,R=rng(S.seed*31+7),news=ed.caption==='news',img=[12,12,W-12,H-(news?80:70)];
+  const covOf=(ink,t,it,sky)=>{if(ink.f)return clamp(ink.f(t,it),0,1);const s=sky?(ink.soft??ed.skySoft??.08):ink.soft;return s?clamp((t-ink.th)/s+.5,0,1):(t>=ink.th?1:0)};
+  const masks=ed.inks.map((ink,i)=>{const m=buf('m'+i,cw,ch),x=m.getContext('2d');x.setTransform(1,0,0,1,0,0);x.globalCompositeOperation='source-over';x.clearRect(0,0,cw,ch);x.setTransform(k,0,0,k,0,0);
+    const pc={},ang=ink.angle??[15,75,0,45,30][i],pat=c=>{const q=Math.round(c*10)/10;return pc[q]||(pc[q]=dotPattern(x,q,ed.cell||4.5,ang,k))};
+    const stamp=(c,draw)=>{x.globalCompositeOperation='destination-out';draw('#000');x.globalCompositeOperation='source-over';if(c>=.97)draw('#fff');else if(c>.04)draw(pat(c))};
+    x.save();x.beginPath();x.rect(img[0],img[1],img[2]-img[0],img[3]-img[1]);x.clip();
+    for(let y=0;y<S.hz+16;y+=2){const f=clamp(y/S.hz,0,1),c=ed.sky?ed.sky(i,f,S.time):covOf(ink,skyTone(f,S.time),{type:'sky'},true);if(c<=.04)continue;x.fillStyle=c>=.97?'#fff':pat(c);x.fillRect(0,y,W,2.05)}
+    if(S.time!=='dawn'){const cs=covOf(ink,0,{type:'star'});for(const[sx,sy,b]of S.stars)if(b>.5)stamp(cs,st=>{x.fillStyle=st;x.fillRect(sx,sy,1.5,1.5)})}
+    const cel=S.cel;stamp(covOf(ink,0,{type:'cel'}),st=>{x.fillStyle=st;x.beginPath();x.arc(cel.x,cel.y,cel.r,0,TAU);x.fill()});
+    if(cel.moon){x.save();x.beginPath();x.arc(cel.x,cel.y,cel.r+.5,0,TAU);x.clip();const sc=ed.sky?ed.sky(i,clamp(cel.y/S.hz,0,1),S.time):covOf(ink,skyTone(clamp(cel.y/S.hz,0,1),S.time),{type:'sky'},true);
+      stamp(sc,st=>{x.fillStyle=st;x.beginPath();x.arc(cel.x+cel.r*.45,cel.y-cel.r*.15,cel.r*.9,0,TAU);x.fill()});x.restore()}
+    for(const it of S.items){if(!isStatic(it))continue;const c=(it.type==='water'&&ed.sky)?ed.sky(i,.9,S.time):covOf(ink,toneOf(it,S),it);stamp(c,st=>drawShape(x,it,st))}
+    x.restore();x.globalCompositeOperation='source-over';
+    if(i===ed.capInk){x.fillStyle='#fff';x.textBaseline='alphabetic';
+      if(news){x.fillRect(12,H-72,W-24,1.2);x.font='600 21px "Source Serif 4",Georgia,serif';x.fillText(S.caption[0].replace(/\w\S*/g,w=>w[0]+w.slice(1).toLowerCase()),14,H-48);x.font='italic 11px "Source Serif 4",Georgia,serif';x.fillText(`Fig. ${S.seed%9+1}. ${S.caption[1]}.`,14,H-30);x.font='600 8px "Public Sans",sans-serif';x.fillText('THE SANDHILLS COURIER · PRINTED IN HALSEY',14,H-14)}
+      else{x.font='800 36px "Big Shoulders Display","Arial Narrow",sans-serif';x.fillText(S.caption[0],14,H-28);x.font='600 10.5px "Public Sans",sans-serif';x.fillText(S.caption[1].toUpperCase(),15,H-12)}}
+    return m});
+  ctx.save();ctx.setTransform(1,0,0,1,0,0);ctx.globalCompositeOperation='source-over';const paper=makePaper(ed.paper,cw,ch);ctx.drawImage(paper,0,0);
+  const tmp=buf('tmp',cw,ch),tc=tmp.getContext('2d');
+  ed.inks.forEach((ink,i)=>{tc.setTransform(1,0,0,1,0,0);tc.globalAlpha=1;tc.globalCompositeOperation='copy';tc.drawImage(masks[i],0,0);tc.globalCompositeOperation='source-in';
+    if(ink.fountain){const g=tc.createLinearGradient(0,0,cw,0);ink.fountain.forEach((c,j)=>g.addColorStop(j/(ink.fountain.length-1),c));tc.fillStyle=g}else tc.fillStyle=ink.c;tc.fillRect(0,0,cw,ch);
+    tc.globalCompositeOperation='destination-out';tc.globalAlpha=ed.tooth;tc.fillStyle=tc.createPattern(toothCv,'repeat');tc.fillRect(0,0,cw,ch);tc.globalAlpha=1;
+    const a=R()<.5,g=tc.createLinearGradient(0,0,cw*.4,ch);g.addColorStop(a?0:1,'rgba(0,0,0,0)');g.addColorStop(a?1:0,'rgba(0,0,0,.16)');tc.fillStyle=g;tc.fillRect(0,0,cw,ch);tc.globalCompositeOperation='source-over';
+    const o=i===0?[0,0]:[(R()-.5)*2*ed.misreg,(R()-.5)*2*ed.misreg];ctx.globalCompositeOperation=ed.mode==='multiply'?'multiply':'source-over';ctx.globalAlpha=ed.alpha??.97;ctx.drawImage(tmp,o[0]*k,o[1]*k);ctx.globalAlpha=1});
+  const th=PAPERS[ed.paper].through;ctx.globalCompositeOperation=th[0];ctx.globalAlpha=th[1];ctx.drawImage(paper,0,0);ctx.globalAlpha=1;ctx.globalCompositeOperation='source-over';
+  if(ed.deckle){ctx.setTransform(k,0,0,k,0,0);const e=[],m=5,j=()=>(R()-.5)*2.4;for(let x=m;x<=W-m;x+=3)e.push([x,m+j()]);for(let y=m;y<=H-m;y+=3)e.push([W-m+j(),y]);for(let x=W-m;x>=m;x-=3)e.push([x,H-m+j()]);for(let y=H-m;y>=m;y-=3)e.push([m+j(),y]);
+    ctx.beginPath();ctx.rect(-2,-2,W+4,H+4);poly(ctx,e);ctx.fillStyle='#151412';ctx.fill('evenodd')}
+  ctx.restore()}
+function edOverlay(ctx,S,t,ed){const lc=ed.light;
+  for(const l of lights(S)){const f=flick(t,l.x);for(let k=3;k>=1;k--){ctx.fillStyle=rgba(lc,.14*k);ctx.beginPath();ctx.arc(l.x,l.y,l.r*(1+k*2.2*f),0,TAU);ctx.fill()}ctx.fillStyle=lc;ctx.beginPath();ctx.arc(l.x,l.y,l.r,0,TAU);ctx.fill()}
+  if(eyesOn(t))for(const e of eyes(S)){ctx.fillStyle=lc;for(const s of[-1,1]){ctx.beginPath();ctx.arc(e.x+s*e.gap/2,e.y,e.r,0,TAU);ctx.fill()}}
+  drawBirds(ctx,S,t,ed.inks[ed.capInk].c||'#1d1822',1)}
+const paperTiles={};function paperTile(kind){return paperTiles[kind]||(paperTiles[kind]=makePaper(kind,400,500).toDataURL('image/jpeg',.85))}
+
+/* ================= look 7: glass plate (after Solomon Butcher) ================= */
+const PLATE_LUT=(()=>{const st=['#140c07','#3b2616','#8c6640','#d9c29a','#f4e8cc'],r=new Uint8ClampedArray(256),g=new Uint8ClampedArray(256),b=new Uint8ClampedArray(256);
+  for(let i=0;i<256;i++){let l=i/255;l=l*l*(3-2*l)*.5+l*.5;const c=hexc(skyAt(st,l));r[i]=c[0];g[i]=c[1];b[i]=c[2]}return{r,g,b}})();
+function toneMap(ctx,lut){const c=ctx.canvas,im=ctx.getImageData(0,0,c.width,c.height),d=im.data;for(let i=0;i<d.length;i+=4){const l=(d[i]*.3+d[i+1]*.59+d[i+2]*.11)|0;d[i]=lut.r[l];d[i+1]=lut.g[l];d[i+2]=lut.b[l]}ctx.putImageData(im,0,0)}
+function plateFill(it){const d=clamp(it.depth,0,1);switch(it.type){case'lane':return gray(.86-.25*d);case'bar':return gray(.88-.2*d);case'water':return gray(.9-.12*d);
+  case'land':return gray(it.tone==='hill'?.8:it.tone==='forest'?.52:it.tone==='floor'?.66:it.tone==='bank'?.14:lerp(.74,.24,Math.pow(d,.9))+(it.tone==='grass2'?.04:0));
+  case'tree':return gray(lerp(.6,.1,Math.pow(d,.8)));case'grass':return gray(.12);default:return gray(lerp(.55,.12,d))}}
+function edgePoly(R,m,step,amp){const e=[],j=()=>(R()-.5)*amp;for(let x=m;x<=W-m;x+=step)e.push([x,m+j()]);for(let y=m;y<=H-m;y+=step)e.push([W-m+j(),y]);for(let x=W-m;x>=m;x-=step)e.push([x,H-m+j()]);for(let y=H-m;y>=m;y-=step)e.push([m+j(),y]);return e}
+const LOOK_PLATE={
+  static(ctx,S){const R=rng(S.seed+5);
+    paint(ctx,S,{sky(ctx,S){const g=ctx.createLinearGradient(0,0,0,S.hz);g.addColorStop(0,gray(.8));g.addColorStop(1,gray(.95));ctx.fillStyle=g;ctx.fillRect(0,0,W,H);const c=S.cel;glow(ctx,c.x,c.y,c.r*3,'#ffffff',.6);ctx.fillStyle=gray(1);ctx.beginPath();ctx.arc(c.x,c.y,c.r,0,TAU);ctx.fill()},
+      fill:plateFill,ghostWatcher:true,
+      ripples(ctx,it){ctx.strokeStyle=gray(.97);for(const[x,y,l,q]of it.ripples){ctx.lineWidth=.5+q;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x+l,y);ctx.stroke()}},
+      ghost(ctx,it){for(let k=0;k<6;k++){ctx.save();ctx.globalAlpha=.15;ctx.translate(k*.9-2.2,0);drawParts(ctx,it.parts,gray(.22),gray(.22));ctx.restore()}}});
+    toneMap(ctx,PLATE_LUT);
+    ctx.save();
+    for(let i=0;i<26;i++)glow(ctx,R()*W,R()*H,20+R()*80,R()<.5?'#2a170b':'#f6ead0',.08);
+    const v=ctx.createRadialGradient(W/2,H*.45,H*.2,W/2,H*.5,H*.78);v.addColorStop(0,'rgba(40,22,10,0)');v.addColorStop(1,'rgba(40,22,10,.62)');ctx.fillStyle=v;ctx.fillRect(0,0,W,H);
+    for(const[x0,y0,x1,y1]of[[0,0,0,46],[0,H,0,H-46],[0,0,46,0],[W,0,W-46,0]]){const g=ctx.createLinearGradient(x0,y0,x1,y1);g.addColorStop(0,'rgba(150,162,178,.5)');g.addColorStop(1,'rgba(150,162,178,0)');ctx.fillStyle=g;ctx.fillRect(0,0,W,H)}
+    ctx.lineCap='round';for(let i=0;i<14;i++){const x=R()*W,y=R()*H,a=R()*TAU,l=30+R()*160;ctx.strokeStyle=`rgba(250,240,220,${.25+R()*.4})`;ctx.lineWidth=.3+R()*.4;ctx.beginPath();ctx.moveTo(x,y);ctx.quadraticCurveTo(x+Math.cos(a)*l/2+R()*10,y+Math.sin(a)*l/2,x+Math.cos(a)*l,y+Math.sin(a)*l);ctx.stroke()}
+    for(let i=0;i<260;i++){ctx.fillStyle=R()<.6?`rgba(20,12,6,${.3+R()*.5})`:`rgba(250,240,220,${.4+R()*.5})`;ctx.beginPath();ctx.arc(R()*W,R()*H,.3+R()*R()*1.6,0,TAU);ctx.fill()}
+    ctx.beginPath();ctx.rect(-2,-2,W+4,H+4);poly(ctx,edgePoly(R,9,4,3));ctx.fillStyle='#0e0905';ctx.fill('evenodd');
+    const cx=R()<.5?0:W,cy=R()<.5?0:H,sx=cx?-1:1,sy=cy?-1:1;ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+sx*(30+R()*30),cy);ctx.lineTo(cx+sx*(14+R()*8),cy+sy*(10+R()*8));ctx.lineTo(cx,cy+sy*(28+R()*30));ctx.closePath();ctx.fill();
+    ctx.fillStyle='rgba(248,240,224,.9)';ctx.font='17px "Cedarville Cursive","Segoe Script",cursive';ctx.textBaseline='alphabetic';ctx.fillText(`No. ${1100+S.seed%2300}. ${S.plate}`,20,H-22);
+    ctx.restore()},
+  overlay(ctx,S,t){for(const l of lights(S))glow(ctx,l.x,l.y,l.r*6,'#fff6e2',.75);if(eyesOn(t))for(const e of eyes(S))for(const s of[-1,1])glow(ctx,e.x+s*e.gap/2,e.y,e.r*2.6,'#fff6e2',.85)}
+};
+
+/* ================= look 8: trail cam (infrared) ================= */
+const flash=d=>clamp(Math.pow(clamp(d,0,1)+.04,1.7),0,1);
+function irFill(it){const d=clamp(it.depth,0,1),f=flash(d);switch(it.type){case'lane':return gray(.72*f+.02);case'bar':return gray(.62*f+.02);case'water':return gray(.04+.08*f);
+  case'land':return gray(it.tone==='floor'?.45*flash(.35):it.tone==='bank'?.5*f:(.5+(it.tone==='grass2'?.06:0))*f+.015);
+  case'tree':return gray((it.kind==='cedar'?.82:.95)*f+.02);case'grass':return gray(.98);case'watcher':return gray(.3*f+.04);default:return gray(.42*f+.02)}}
+const vigCache={};function vignette(w,h){const k=w+'x'+h;if(vigCache[k])return vigCache[k];const v=new Float32Array(w*h);for(let y=0;y<h;y++)for(let x=0;x<w;x++){const dx=(x/w-.5)*1.6,dy=(y/h-.48)*1.3;v[y*w+x]=clamp(1.05-(dx*dx+dy*dy)*.85,.25,1)}return vigCache[k]=v}
+const LOOK_TRAIL={lowres:true,smooth:true,
+  static(ctx,S){paint(ctx,S,{sky(ctx,S){ctx.fillStyle=gray(.02);ctx.fillRect(0,0,W,H);if(S.cel.moon){ctx.fillStyle=gray(.75);ctx.beginPath();ctx.arc(S.cel.x,S.cel.y,S.cel.r*.8,0,TAU);ctx.fill()}},fill:irFill})},
+  overlay(ctx,S,t){for(const l of lights(S)){glow(ctx,l.x,l.y,l.r*12,'#ffffff',.9);ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(l.x,l.y,l.r*1.5+1,0,TAU);ctx.fill()}
+    if(eyesOn(t))for(const e of eyes(S))for(const s of[-1,1]){glow(ctx,e.x+s*e.gap/2,e.y,Math.max(5,e.r*7),'#ffffff',.95);ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(e.x+s*e.gap/2,e.y,Math.max(1.5,e.r*1.6),0,TAU);ctx.fill()}
+    drawBirds(ctx,S,t,'#cfcfcf',1.5)},
+  process(src,dst,t){const w=src.canvas.width,h=src.canvas.height,im=src.getImageData(0,0,w,h),d=im.data,v=vignette(w,h),R=rng((t*15|0)+1);
+    for(let i=0,p=0;i<d.length;i+=4,p++){let l=(d[i]*.3+d[i+1]*.59+d[i+2]*.11)/255;l=clamp(l*v[p]+(R()-.5)*.15,0,1)*255;d[i]=l*.95;d[i+1]=l;d[i+2]=l*.96;d[i+3]=255}dst.putImageData(im,0,0)},
+  hud(ctx,S,t){ctx.fillStyle='rgba(0,0,0,.88)';ctx.fillRect(0,H-22,W,22);ctx.fillStyle='#f2f2ee';ctx.font='500 10px "IBM Plex Mono",ui-monospace,monospace';ctx.textBaseline='middle';
+    const s=Math.floor(t)+11564+S.seed%600,p2=n=>String(n).padStart(2,'0');ctx.fillText('CAM 02',8,H-11);ctx.fillText('28°F',70,H-11);ctx.textAlign='right';ctx.fillText(`01/01/2000 ${p2(Math.floor(s/3600)%24)}:${p2(Math.floor(s/60)%60)}:${p2(s%60)}`,W-8,H-11);
+    ctx.textAlign='left';ctx.textBaseline='top';ctx.fillText('IR   '+(1+Math.floor(t)%3)+'/3',8,8)}
+};
+
+/* ================= look 9: expired slide film ================= */
+const FILM={
+  dusk:{sky:['#30507e','#7d6a8a','#e0876a','#f6c27a'],far:'#8e8374',near:'#272a22',sand:'#d7b07a',water:'#8094ad',light:'#ffb25a',cel:'#fff0c8'},
+  night:{sky:['#0d1830','#1d2c4a','#33466a','#4e5f7c'],far:'#4b566c',near:'#0f1218',sand:'#6b7484',water:'#2b3b58',light:'#ffb25a',cel:'#f4f0dc'},
+  dawn:{sky:['#5d86a8','#9ab3bf','#e6cfa6','#f7dca0'],far:'#9aa58e',near:'#2e3a2c',sand:'#d9c49a',water:'#a7b7bd',light:'#ffb25a',cel:'#fffaf0'}};
+function filmGrade(ctx){const c=ctx.canvas,im=ctx.getImageData(0,0,c.width,c.height),d=im.data;
+  for(let i=0;i<d.length;i+=4){let r=16+d[i]*.98,g=10+d[i+1]*.9,b=26+d[i+2]*.84;if(r+g+b>500){r+=8;b+=5}const m=(r+g+b)/3;d[i]=m+(r-m)*1.14;d[i+1]=m+(g-m)*1.14;d[i+2]=m+(b-m)*1.14}ctx.putImageData(im,0,0)}
+function rrect(ctx,x,y,w,h,r){ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath()}
+const LOOK_FILM={
+  static(ctx,S){const p=FILM[S.time],R=rng(S.seed+11);
+    paint(ctx,S,{sky(ctx,S){const g=ctx.createLinearGradient(0,0,0,S.hz+10);p.sky.forEach((c,i)=>g.addColorStop(i/3,c));ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+        for(const[x,y,b]of S.stars)if(b>.6){ctx.fillStyle=rgba(p.cel,.6);ctx.fillRect(x,y,1,1)}const c=S.cel;glow(ctx,c.x,c.y,c.r*3.5,p.cel,.5);ctx.fillStyle=p.cel;ctx.beginPath();ctx.arc(c.x,c.y,c.r*.9,0,TAU);ctx.fill()},
+      fill(it){const d=clamp(it.depth,0,1),f=Math.pow(1-d,1.2),hz=mix(p.far,p.sky[3],.25);
+        switch(it.type){case'lane':return mix(p.sand,p.near,d*.5);case'bar':return mix(p.sand,p.near,d*.35);case'water':return p.water;
+          case'land':return it.tone==='floor'?mix(p.near,p.far,.5):it.tone==='bank'?p.near:mix(p.near,hz,f*.9);case'tree':return mix(p.near,hz,f*.75);case'grass':return p.near;default:return mix(p.near,hz,f*.7)}},
+      ripples(ctx,it){ctx.strokeStyle=rgba(p.sky[2],.5);for(const[x,y,l,q]of it.ripples){ctx.lineWidth=.5+q;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x+l,y);ctx.stroke()}}});
+    filmGrade(ctx);
+    ctx.save();ctx.globalCompositeOperation='screen';for(let i=0,n=1+(R()*2|0);i<n;i++){const sx=R()<.5?-20:W+20,y=R()*H,r=120+R()*200,g=ctx.createRadialGradient(sx,y,0,sx,y,r);g.addColorStop(0,'rgba(255,90,30,.75)');g.addColorStop(.4,'rgba(255,150,60,.32)');g.addColorStop(1,'rgba(255,150,60,0)');ctx.fillStyle=g;ctx.fillRect(0,0,W,H)}ctx.restore();
+    grain(ctx,.22,'overlay');grain(ctx,.08);
+    ctx.strokeStyle='rgba(20,16,12,.45)';ctx.lineWidth=.5;for(let i=0;i<3;i++){const x=R()*W,y=R()*H;ctx.beginPath();ctx.moveTo(x,y);ctx.bezierCurveTo(x+R()*30,y-R()*20,x-R()*20,y+R()*30,x+R()*25,y+R()*25);ctx.stroke()}
+    const wx=20,wy=24,ww=W-40,wh=H-82;ctx.beginPath();ctx.rect(0,0,W,H);rrect(ctx,wx,wy,ww,wh,11);ctx.fillStyle='#e8e2d4';ctx.fill('evenodd');
+    ctx.beginPath();rrect(ctx,wx,wy,ww,wh,11);ctx.strokeStyle='rgba(0,0,0,.28)';ctx.lineWidth=2;ctx.stroke();
+    ctx.save();ctx.globalAlpha=.5;ctx.beginPath();ctx.rect(0,0,W,H);rrect(ctx,wx,wy,ww,wh,11);ctx.clip('evenodd');grain(ctx,.25,'multiply');ctx.restore();
+    ctx.fillStyle='#8a8478';ctx.font='600 7.5px "Public Sans",sans-serif';ctx.textBaseline='middle';ctx.fillText(`SLIDE ${S.seed%36+1}   ·   ${S.coords}`,24,13);ctx.textAlign='right';ctx.fillText('PROCESSED',W-24,13);ctx.textAlign='left';
+    ctx.save();ctx.translate(28,H-30);ctx.rotate(-.025);ctx.fillStyle='#262a55';ctx.font='19px "Permanent Marker","Marker Felt",cursive';ctx.fillText(S.film,0,0);ctx.restore()},
+  overlay(ctx,S,t){const p=FILM[S.time];ctx.save();ctx.beginPath();rrect(ctx,20,24,W-40,H-82,11);ctx.clip();ctx.globalCompositeOperation='screen';
+    for(const l of lights(S)){const f=flick(t,l.x);glow(ctx,l.x,l.y,(20+l.r*10)*f,'#ff5a2a',.4);glow(ctx,l.x,l.y,l.r*4,p.light,.9)}
+    if(eyesOn(t))for(const e of eyes(S))for(const s of[-1,1])glow(ctx,e.x+s*e.gap/2,e.y,e.r*3,'#ffe9b0',.9);
+    ctx.restore();drawBirds(ctx,S,t,rgba(p.near,.85),1)}
+};
+
+/* ================= barn quilt modifiers ================= */
+const PAINT={red:'#a8352c',white:'#ece5d3',black:'#1e1c1a',gold:'#d9a23a',blue:'#4a79a5',navy:'#233558',green:'#57773c',rust:'#c4622c',sky:'#9fc4d6',cream:'#e6d7ad',plum:'#6e3d5e'};
+const FAM={Chain:['white','red','black'],Repeat:['cream','rust','navy'],Find:['navy','sky','white'],Spare:['cream','green','gold'],Risk:['black','gold','rust'],Season:['white','plum','green'],Water:['white','blue','navy']};
+const FAMTEXT={Chain:'Chain',Repeat:'Repeat',Find:'Find',Spare:'Spare',Risk:'Risk',Season:'Season',Water:'Hold'};
+const qt=(a,b,c,d)=>[a,b,c,d],so=a=>[a,a,a,a],arcc=(corner,inn,out)=>({arc:corner,inn,out});
+const rotC=c=>c.arc!=null?{...c,arc:(c.arc+1)%4}:[c[3],c[0],c[1],c[2]];
+const trC=c=>c.arc!=null?{...c,arc:[0,3,2,1][c.arc]}:[c[3],c[2],c[1],c[0]];
+function assemble(q,cells){const n=2*q,g=Array.from({length:n},()=>Array(n));for(let r=0;r<q;r++)for(let c=0;c<q;c++){let cell=cells[r][c],R0=r,C0=c;for(let k=0;k<4;k++){g[R0][C0]=cell;const nr=C0,nc=n-1-R0;R0=nr;C0=nc;cell=rotC(cell)}}return g}
+const BLOCKS={
+  pinwheel:{name:'Pinwheel',grid:()=>assemble(2,[[qt('a','a','b','b'),qt('a','c','c','a')],[qt('c','c','a','a'),qt('a','a','b','b')]])},
+  sawtooth:{name:'Sawtooth Star',grid:()=>assemble(2,[[so('a'),qt('a','b','b','a')],[qt('a','b','b','a'),so('c')]])},
+  dutchman:{name:'Dutchman’s Puzzle',grid:()=>assemble(2,[[qt('a','b','b','a'),qt('a','a','b','b')],[qt('a','c','c','a'),qt('a','a','c','c')]])},
+  dishes:{name:'Broken Dishes',grid:()=>assemble(2,[[qt('a','a','b','b'),qt('b','b','c','c')],[qt('b','c','c','b'),qt('a','b','b','a')]])},
+  millwheel:{name:'Mill Wheel',grid:()=>assemble(2,[[arcc(2,'b','a'),qt('a','c','c','a')],[qt('a','c','c','a'),arcc(2,'a','b')]])},
+  logcabin:{name:'Log Cabin',grid:()=>{const g=[];for(let r=0;r<8;r++){g.push([]);for(let c=0;c<8;c++){const dr=r-3.5,dc=c-3.5,ring=Math.max(Math.abs(dr),Math.abs(dc))-.5;
+    if(ring===0){g[r].push(so('hearth'));continue}const horiz=Math.abs(dr)>=Math.abs(dc),lite=horiz?dr<0:dc<0;g[r].push(so((lite?'L':'D')+(ring%2)))}}return g}}};
+function genBlock(seed,q){const R=rng(seed),cells=Array.from({length:q},()=>Array(q)),pk=()=>'abc'[(R()*3)|0];
+  for(let r=0;r<q;r++)for(let c=r;c<q;c++){let cell;const u=R();
+    if(r===c)cell=u<.35?so(pk()):u<.8?(()=>{const a=pk(),b=pk();return qt(a,b,b,a)})():arcc(R()<.5?0:2,pk(),pk());
+    else if(u<(q<4?.14:.28))cell=so(pk());else if(u<.75){const a=pk(),b=pk();cell=R()<.5?qt(a,a,b,b):qt(a,b,b,a)}else if(u<.88)cell=qt(pk(),pk(),pk(),pk());else cell=arcc((R()*4)|0,pk(),pk());
+    cells[r][c]=cell;if(r!==c)cells[c][r]=trC(cell)}
+  return assemble(q,cells)}
+function hashStr(s){let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}return h>>>0}
+const MODS=[
+  {name:'Whip-poor-will',fam:'Chain',effect:'+3 Mult on every third Chain',rarity:'common',block:'pinwheel'},
+  {name:'Sandhill Crane',fam:'Chain',effect:'Chains of three score twice',rarity:'uncommon',block:'dutchman'},
+  {name:'Rusted Gear',fam:'Repeat',effect:'Repeats count as Chains',rarity:'common',block:'dishes'},
+  {name:'Center Pivot',fam:'Repeat',effect:'Finish a full cycle of any pattern for ×1.5 Mult',rarity:'uncommon',block:'millwheel'},
+  {name:'Eyeshine',fam:'Find',effect:'+20 Base whenever you Find something hidden',rarity:'common',block:'sawtooth'},
+  {name:'Lookout Lamp',fam:'Find',effect:'Start each encounter with one hidden thing revealed',rarity:'uncommon',gen:2},
+  {name:'Root Cellar',fam:'Spare',effect:'Each unused move adds +5 Base',rarity:'common',gen:3},
+  {name:'Seed Library',fam:'Spare',effect:'Leftover provisions grow 10% each season',rarity:'uncommon',block:'logcabin'},
+  {name:'Grass Fire',fam:'Risk',effect:'×2 Mult, but lose 1 provision every turn',rarity:'uncommon',gen:3},
+  {name:'Hidebehind',fam:'Risk',effect:'×3 Mult. You can’t see the last thing you played.',rarity:'rare',gen:4},
+  {name:'Arbor Day',fam:'Season',effect:'Gains +1 Mult for every encounter you win',rarity:'rare',gen:4},
+  {name:'Kingsley Dam',fam:'Water',effect:'Hold up to 3 unused Chains for a later encounter',rarity:'rare',gen:3}];
+function drawQuilt(cv,mod){const s=cv.width,x=cv.getContext('2d'),R=rng(hashStr(mod.name)),fam=FAM[mod.fam];
+  const col=key=>PAINT[{a:fam[0],b:fam[1],c:fam[2],hearth:'red',L0:'cream',L1:'gold',D0:'green',D1:'navy'}[key]];
+  const grid=mod.block?BLOCKS[mod.block].grid():genBlock(hashStr(mod.name),mod.gen);
+  const wood='#6b5640';x.fillStyle=wood;x.fillRect(0,0,s,s);const pl=5;
+  for(let i=0;i<pl;i++){const px=i*s/pl;x.fillStyle=mix(wood,R()<.5?'#3e3122':'#8a7356',R()*.45);x.fillRect(px,0,s/pl+1,s);
+    for(let k=0;k<16;k++){x.strokeStyle=`rgba(30,20,10,${.1+R()*.22})`;x.lineWidth=Math.max(.6,s*.0025);x.beginPath();const gx=px+R()*s/pl;x.moveTo(gx,0);x.bezierCurveTo(gx+(R()-.5)*10,s*.3,gx+(R()-.5)*10,s*.7,gx+(R()-.5)*6,s);x.stroke()}
+    x.strokeStyle='rgba(15,10,6,.7)';x.lineWidth=s*.008;x.beginPath();x.moveTo(px,0);x.lineTo(px,s);x.stroke()}
+  x.save();x.translate(s/2,s/2);const onPoint=mod.rarity==='rare',side=onPoint?s*.68:s*.84;if(onPoint)x.rotate(Math.PI/4);
+  x.shadowColor='rgba(0,0,0,.45)';x.shadowBlur=s*.03;x.shadowOffsetY=s*.012;x.fillStyle=PAINT.white;x.fillRect(-side/2,-side/2,side,side);x.shadowColor='transparent';
+  const inner=side*.88,n=grid.length,cs=inner/n,o=-inner/2;
+  for(let r=0;r<n;r++)for(let c=0;c<n;c++){const cell=grid[r][c],X=o+c*cs,Y=o+r*cs;
+    if(cell.arc!=null){x.fillStyle=col(cell.out);x.fillRect(X,Y,cs+.6,cs+.6);x.save();x.beginPath();x.rect(X,Y,cs+.3,cs+.3);x.clip();const cn=[[X,Y],[X+cs,Y],[X+cs,Y+cs],[X,Y+cs]][cell.arc];x.fillStyle=col(cell.inn);x.beginPath();x.arc(cn[0],cn[1],cs,0,TAU);x.fill();x.restore();continue}
+    if(cell[0]===cell[1]&&cell[1]===cell[2]&&cell[2]===cell[3]){x.fillStyle=col(cell[0]);x.fillRect(X,Y,cs+.6,cs+.6);continue}
+    const m=[X+cs/2,Y+cs/2],tris=[[[X,Y],[X+cs,Y]],[[X+cs,Y],[X+cs,Y+cs]],[[X+cs,Y+cs],[X,Y+cs]],[[X,Y+cs],[X,Y]]];
+    tris.forEach(([a,b],k)=>{x.beginPath();x.moveTo(a[0],a[1]);x.lineTo(b[0],b[1]);x.lineTo(m[0],m[1]);x.closePath();x.fillStyle=x.strokeStyle=col(cell[k]);x.lineWidth=.8;x.fill();x.stroke()})}
+  x.globalAlpha=.06;x.strokeStyle='#fff';x.lineWidth=s*.004;for(let y=-side/2;y<side/2;y+=s*.012){x.beginPath();x.moveTo(-side/2,y+(R()-.5)*2);x.lineTo(side/2,y+(R()-.5)*2);x.stroke()}x.globalAlpha=1;
+  x.fillStyle='rgba(236,229,211,.08)';x.fillRect(-side/2,-side/2,side,side);
+  for(let i=0;i<34;i++){const cx=(R()-.5)*side,cy=(R()-.5)*side,r=s*(.004+R()*R()*.02);x.fillStyle=mix(wood,'#2b2117',R()*.5);x.beginPath();for(let k=0;k<6;k++){const a=k/6*TAU,rr=r*(.5+R());k?x.lineTo(cx+Math.cos(a)*rr,cy+Math.sin(a)*rr):x.moveTo(cx+Math.cos(a)*rr,cy+Math.sin(a)*rr)}x.closePath();x.fill()}
+  x.fillStyle='#2a2622';for(const[a,b]of[[-1,-1],[1,-1],[1,1],[-1,1]]){x.beginPath();x.arc(a*side*.46,b*side*.46,s*.008,0,TAU);x.fill()}
+  x.restore()}
+function renderQuilts(){
+  document.getElementById('legend').replaceChildren(...Object.keys(FAM).map(f=>{const s=el('span');const i=el('i');i.style.background=PAINT[FAM[f][1]];s.append(i,FAMTEXT[f]);return s}));
+  document.getElementById('quilts').replaceChildren(...MODS.map(m=>{const cv=el('canvas',{width:'360',height:'360','aria-label':`${m.name} barn quilt`});drawQuilt(cv,m);
+    return el('article',{class:'qcard'},[cv,el('b',{text:m.name}),el('p',{class:'fx',text:m.effect}),el('div',{class:'meta',text:`${FAMTEXT[m.fam]} · ${m.rarity}`}),el('div',{class:'meta',text:m.block?`Block: ${BLOCKS[m.block].name}`:'Block: drawn for this modifier'})])}))}
+
 /* ================= looks + copy ================= */
 const LOOKS=[
   {id:'print',name:'Screen print',style:LOOK_PRINT,good:'Five flat inks per scene with halftone sky bands and paper grain. Reads clearly at phone size, and game pieces could use the same inks.',risk:'Risk: it slides easily into national-park-poster nostalgia.'},
@@ -595,7 +878,11 @@ const LOOKS=[
   {id:'survey',name:'Survey plate',style:LOOK_SURVEY,good:'Cyanotype linework with field labels. The scene doubles as a map, so you learn the real geography while you play.',risk:'Risk: it can feel cold, and the scary parts read as data unless the labels do the scaring.'},
   {id:'signal',name:'Signal',style:LOOK_SIGNAL,good:'One-bit dither, as if seen on a salvaged radio screen. The eeriest of the six and the cheapest to run on an old phone.',risk:'Risk: tiring across an hour-long session, and with no color the mechanics have to read from shape alone.'},
   {id:'pieced',name:'Pieced',style:LOOK_PIECED,good:'Triangles and seams like a modern quilt, with hand stitching along the hills. Every modifier could be its own quilt block.',risk:'Risk: it is gentle by nature, so the dread has to come from the writing.'},
-  {id:'fog',name:'Fog',style:LOOK_FOG,good:'Layered atmosphere with warm lights in the murk. The strongest at eerie and hopeful together.',risk:'Risk: soft edges make small game pieces harder to read, and it is the least distinctive in a screenshot.'}];
+  {id:'fog',name:'Fog',style:LOOK_FOG,good:'Layered atmosphere with warm lights in the murk. The strongest at eerie and hopeful together.',risk:'Risk: soft edges make small game pieces harder to read, and it is the least distinctive in a screenshot.'},
+  {id:'plate',name:'Glass plate',style:LOOK_PLATE,from:'After Solomon Butcher’s glass-plate negatives of Custer County, 1886–1912.',good:'Albumen sepia, a blown-white sky, scratches, silvering at the plate edge and a caption written on the negative. Anyone who moved during the long exposure becomes a ghost.',risk:'Risk: it can read as nostalgia for homesteading, which was settlement on Pawnee and Lakota land. The writing has to carry that history honestly.'},
+  {id:'trail',name:'Trail cam',style:LOOK_TRAIL,from:'After the infrared game cameras strapped to fence posts and cottonwoods across rural Nebraska.',good:'Infrared night vision. The flash lights the near ground white and leaves everything past it black. Leaves glow, water goes dark and eyes blow out. The clock reset to 01/01/2000 when the power died.',risk:'Risk: it only works at night and has almost no color, so it suits a special view better than the whole game.'},
+  {id:'film',name:'Expired film',style:LOOK_FILM,from:'After family slide carousels, shot on film long past its date.',good:'Warm, faded slide color with light leaks, grain and a cardboard mount labeled in marker. It feels like a family album from a world that ended.',risk:'Risk: light leaks and mounts start to feel like a filter if every screen has them.'}];
+LOOKS[0].from='After WPA travel posters and county-fair gig prints.';
 const CARDS={
   pines:{place:'Bessey Ranger District · Thomas County',title:'Where the Rows End',body:'The pines here were planted by hand, in rows a mile long, back when there was a government to do it. The rows still run straight. Past the last one, the cedars grew however they wanted. Something has been walking the row line at night, keeping it clear.',
     choices:[['Follow the row line','Tracking puzzle'],['Step into the cedars','Push your luck'],['Leave something at the row’s end','Costs 1 salt']],prov:[340,600],season:'Fall · Year 2',mod:['Whip-poor-will','+3 Mult on every third Chain']},
@@ -607,7 +894,8 @@ const TIMES=[['dusk','Dusk'],['night','Night'],['dawn','Dawn']];
 
 /* ================= app ================= */
 const store={get(k,d){try{const v=localStorage.getItem('halsey.'+k);return v==null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem('halsey.'+k,JSON.stringify(v))}catch(e){}}};
-const state={look:store.get('look','print'),biome:store.get('biome','pines'),time:store.get('time','dusk'),seed:store.get('seed',1903)};
+const state={look:store.get('look','print'),biome:store.get('biome','pines'),time:store.get('time','dusk'),seed:store.get('seed',1903),edition:store.get('edition','rag')};
+if(!EDMAP[state.edition])state.edition='rag';
 if(!LOOKS.some(l=>l.id===state.look))state.look='print';if(!BIOMES[state.biome])state.biome='pines';if(!TIMES.some(t=>t[0]===state.time))state.time='dusk';
 const cv=document.getElementById('scene'),mctx=cv.getContext('2d'),cache=document.createElement('canvas'),LRW=200,LRH=250;
 const low=document.createElement('canvas');low.width=LRW;low.height=LRH;const lctx=low.getContext('2d',{willReadFrequently:true});
@@ -621,8 +909,8 @@ function buildCache(){const st=LOOKS.find(l=>l.id===state.look).style;
   else{const c=cache.getContext('2d');cache.width=cv.width;cache.height=cv.height;const k=cv.width/W;c.setTransform(k,0,0,k,0,0);st.static(c,scene)}
   dirty=false}
 function frame(t){if(!scene)return;if(dirty)buildCache();const st=LOOKS.find(l=>l.id===state.look).style,k=cv.width/W;
-  if(st.lowres){lctx.setTransform(1,0,0,1,0,0);lctx.drawImage(lowCache,0,0);lctx.setTransform(LRW/W,0,0,LRW/W,0,0);st.overlay(lctx,scene,t);dither(lctx,dctx);
-    mctx.setTransform(1,0,0,1,0,0);mctx.imageSmoothingEnabled=false;mctx.drawImage(dc,0,0,cv.width,cv.height);mctx.setTransform(k,0,0,k,0,0);st.hud(mctx,scene,t)}
+  if(st.lowres){lctx.setTransform(1,0,0,1,0,0);lctx.drawImage(lowCache,0,0);lctx.setTransform(LRW/W,0,0,LRW/W,0,0);st.overlay(lctx,scene,t);(st.process||dither)(lctx,dctx,t);
+    mctx.setTransform(1,0,0,1,0,0);mctx.imageSmoothingEnabled=!!st.smooth;mctx.drawImage(dc,0,0,cv.width,cv.height);mctx.setTransform(k,0,0,k,0,0);st.hud(mctx,scene,t)}
   else{mctx.setTransform(1,0,0,1,0,0);mctx.drawImage(cache,0,0);mctx.setTransform(k,0,0,k,0,0);st.overlay(mctx,scene,t)}}
 function resize(){const r=cv.getBoundingClientRect(),dpr=Math.min(2,window.devicePixelRatio||1),w=Math.max(200,Math.round(r.width*dpr));if(cv.width!==w){cv.width=w;cv.height=Math.round(w*H/W);dirty=true;frame(4)}}
 function regen(){scene=genScene(state.seed,state.biome,state.time);dirty=true;frame(4)}
@@ -634,7 +922,12 @@ function renderUI(){
   const ti=document.getElementById('times');ti.replaceChildren(...TIMES.map(([id,lab])=>{const e=el('button',{type:'button',id:'time-'+id,'aria-pressed':String(id===state.time),text:lab});e.onclick=()=>{state.time=id;store.set('time',id);renderUI();regen()};return e}));
   document.getElementById('seed').textContent='Seed '+state.seed;
   const L=LOOKS.find(l=>l.id===state.look);document.getElementById('about-name').textContent=L.name;document.getElementById('about-good').textContent=L.good;document.getElementById('about-risk').textContent=L.risk;
-  const C=CARDS[state.biome],card=document.getElementById('card');card.dataset.look=state.look;
+  const fr=document.getElementById('about-from');fr.textContent=L.from||'';fr.hidden=!L.from;
+  const isPrint=state.look==='print',ed=EDMAP[state.edition];document.getElementById('edition-row').hidden=!isPrint;
+  document.getElementById('editions').replaceChildren(...EDITIONS.map(e=>{const b=el('button',{type:'button',id:'ed-'+e.id,'aria-pressed':String(e.id===state.edition),text:e.name});b.onclick=()=>{state.edition=e.id;store.set('edition',e.id);dirty=true;renderUI();frame(4)};return b}));
+  const ae=document.getElementById('about-ed');ae.hidden=!isPrint;ae.textContent=isPrint?`${ed.name} edition: ${ed.note}`:'';
+  const C=CARDS[state.biome],card=document.getElementById('card');card.dataset.look=state.look;card.removeAttribute('style');
+  if(isPrint&&ed.paper){card.style.background=`url(${paperTile(ed.paper)}) center/cover`;const cs=ed.card;for(const[k,v]of[['--c-fg',cs.fg],['--c-muted',cs.muted],['--c-accent',cs.accent],['--c-line',rgba(cs.fg,.28)],['--c-chip',rgba(cs.fg,.07)]])card.style.setProperty(k,v);card.style.boxShadow=`6px 6px 0 ${cs.accent}`}
   document.getElementById('c-place').textContent=C.place;document.getElementById('c-title').textContent=C.title;document.getElementById('c-body').textContent=C.body;
   document.getElementById('c-choices').replaceChildren(...C.choices.map(([a,b])=>el('div',{class:'choice'},[el('b',{text:a}),el('span',{class:'tag',text:b})])));
   document.getElementById('c-prov').textContent=`${C.prov[0]} / ${C.prov[1]}`;document.getElementById('c-season').textContent=C.season;document.getElementById('c-fill').style.width=(C.prov[0]/C.prov[1]*100)+'%';
@@ -644,11 +937,11 @@ document.getElementById('reroll').onclick=reroll;cv.onclick=reroll;
 document.addEventListener('keydown',e=>{if(e.target.closest&&e.target.closest('input,textarea'))return;if(e.key==='n'||e.key==='N')reroll();const i=parseInt(e.key,10);if(i>=1&&i<=LOOKS.length){document.getElementById('look-'+LOOKS[i-1].id).click()}});
 new ResizeObserver(resize).observe(cv);
 let last=0;function loop(now){requestAnimationFrame(loop);if(reduce.matches||document.hidden)return;if(now-last<66)return;last=now;frame(now/1000)}
-renderUI();resize();regen();requestAnimationFrame(loop);
-const fontLoads=['800 36px "Big Shoulders Display"','600 10px "Public Sans"','italic 11px "Source Serif 4"','700 11px "Overpass"','600 8.5px "Overpass Mono"','20px VT323'].map(f=>document.fonts.load(f).catch(()=>{}));
+renderUI();resize();regen();requestAnimationFrame(loop);renderQuilts();
+const fontLoads=['800 36px "Big Shoulders Display"','600 10px "Public Sans"','italic 11px "Source Serif 4"','600 21px "Source Serif 4"','700 11px "Overpass"','600 8.5px "Overpass Mono"','20px VT323','500 10px "IBM Plex Mono"','17px "Cedarville Cursive"','19px "Permanent Marker"'].map(f=>document.fonts.load(f).catch(()=>{}));
 Promise.all(fontLoads).then(()=>{dirty=true;frame(4)});
 /* test hook: render a still of any combination into a canvas */
-window.__still=(look,biome,time,seed,width=400)=>{const S=genScene(seed,biome,time),st=LOOKS.find(l=>l.id===look).style,c=document.createElement('canvas');c.width=width;c.height=width*H/W;const x=c.getContext('2d'),k=width/W;
-  if(st.lowres){const a=document.createElement('canvas');a.width=LRW;a.height=LRH;const ax=a.getContext('2d',{willReadFrequently:true});ax.setTransform(LRW/W,0,0,LRW/W,0,0);st.static(ax,S);st.overlay(ax,S,4);const b=document.createElement('canvas');b.width=LRW;b.height=LRH;dither(ax,b.getContext('2d'));x.imageSmoothingEnabled=false;x.drawImage(b,0,0,c.width,c.height);x.setTransform(k,0,0,k,0,0);st.hud(x,S,4)}
+window.__still=(look,biome,time,seed,width=400,edition)=>{if(edition)state.edition=edition;const S=genScene(seed,biome,time),st=LOOKS.find(l=>l.id===look).style,c=document.createElement('canvas');c.width=width;c.height=width*H/W;const x=c.getContext('2d'),k=width/W;
+  if(st.lowres){const a=document.createElement('canvas');a.width=LRW;a.height=LRH;const ax=a.getContext('2d',{willReadFrequently:true});ax.setTransform(LRW/W,0,0,LRW/W,0,0);st.static(ax,S);st.overlay(ax,S,4);const b=document.createElement('canvas');b.width=LRW;b.height=LRH;(st.process||dither)(ax,b.getContext('2d'),4);x.imageSmoothingEnabled=!!st.smooth;x.drawImage(b,0,0,c.width,c.height);x.setTransform(k,0,0,k,0,0);st.hud(x,S,4)}
   else{x.setTransform(k,0,0,k,0,0);st.static(x,S);st.overlay(x,S,4)}return c};
 </script>
