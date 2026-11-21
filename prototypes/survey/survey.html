@@ -35,7 +35,7 @@ button.card:hover{background:rgba(255,255,255,.8)}
 .card .kind i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px;mix-blend-mode:multiply}
 .portrait{width:86px;height:104px;flex:none;background:var(--ink);-webkit-mask:var(--pm) center/contain no-repeat;mask:var(--pm) center/contain no-repeat}
 .summons{border:2px solid var(--ink);padding:16px;background:rgba(255,255,255,.5);position:relative}
-.summons::before{content:"";position:absolute;inset:-8px 8px 8px -8px;background:var(--pink);mix-blend-mode:multiply;opacity:.25;z-index:-1}
+.summons::before{content:"";position:absolute;inset:-8px 8px 8px -8px;background:var(--pink);mix-blend-mode:multiply;opacity:.12;z-index:-1}
 .ties{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:17px}
 .chip{display:inline-block;border:1.5px solid var(--ink);border-radius:999px;padding:1px 9px;font-size:16px}
 .map{width:100%;height:auto;display:block;background:rgba(255,255,255,.35);border:1.5px solid var(--line)}
@@ -72,13 +72,52 @@ input[type=range]{width:100%;accent-color:var(--blue)}
 .keep b{font-weight:400;color:var(--blue)}
 .toast{position:fixed;left:50%;bottom:max(20px,env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:8px 14px;border-radius:3px;font-size:18px;max-width:90vw;z-index:5}
 hr{border:0;border-top:1.5px solid var(--line);margin:14px 0}
+.scene{display:block;width:100%;height:auto;max-width:100%;border:1.5px solid var(--ink);box-shadow:5px 5px 0 rgba(31,27,46,.85);background:var(--paper2)}
+.strip{display:block;width:100%;max-width:100%;height:clamp(150px,44vw,240px);object-fit:cover;object-position:50% 38%;border:1.5px solid var(--ink);background:var(--paper2)}
+.hero{position:relative;margin:4px 0 14px}
+.hero .badge{position:absolute;left:10px;bottom:-14px;background:var(--paper);border:1.5px solid var(--ink);padding:3px 10px;font-size:17px;box-shadow:3px 3px 0 var(--ink)}
+.era{display:inline-flex;align-items:center;gap:6px;font-size:16px;color:var(--muted)}
+.era i{width:12px;height:12px;border-radius:50%;display:inline-block;border:1px solid var(--ink)}
+.opt{display:flex;gap:12px;align-items:stretch;text-align:left;width:100%;padding:8px;background:rgba(255,255,255,.55);border:1.5px solid var(--ink);border-radius:3px}
+.opt:hover{background:rgba(255,255,255,.85)}
+.opt canvas{width:84px;height:105px;flex:none;border:1px solid var(--ink);object-fit:cover}
+.opt .t{display:flex;flex-direction:column;gap:2px;min-width:0}
+.tbadge{position:absolute;left:10px;bottom:-20px;display:flex;align-items:flex-end;gap:10px}
+.tbadge .portrait{width:78px;height:94px;background:var(--ink);filter:drop-shadow(0 0 0 var(--paper))}
+.tbadge .pbox{background:var(--paper);border:1.5px solid var(--ink);padding:4px 6px 0;box-shadow:3px 3px 0 var(--ink)}
+.trust{display:flex;gap:4px;flex-wrap:wrap}.trust i{width:20px;height:20px;border:1.5px solid var(--ink);border-radius:2px;background:rgba(255,255,255,.5);transition:background .25s}
+.trust i.on{background:var(--pink);mix-blend-mode:multiply}
+.detail{position:relative;height:16px;border-bottom:2px solid var(--ink)}
+.detail b{position:absolute;bottom:-1px;height:10px;background:var(--blue);mix-blend-mode:multiply;left:0;transition:width .3s}
+.detail span{position:absolute;bottom:-4px;transform:translateX(-50%);font-size:18px}
+.q{background:#fbf8f1 repeating-linear-gradient(transparent 0 22px,rgba(58,120,195,.22) 22px 23px);box-shadow:2px 3px 0 rgba(31,27,46,.6)}
+.qhand .q:nth-child(odd){transform:rotate(-1.2deg)}.qhand .q:nth-child(even){transform:rotate(.9deg)}
+.qhand .q:hover{transform:rotate(0) translateY(-2px)}
+.board{position:relative;width:100%;max-width:100%;aspect-ratio:1/1}
+.board canvas{position:absolute;inset:0;width:100%;height:100%;border:1.5px solid var(--ink);box-shadow:5px 5px 0 rgba(31,27,46,.85)}
+.board .grid6{position:absolute;inset:0;gap:0}
+.board .cell{background:transparent!important;outline:none}
+.story{background:#fbf8f1 repeating-linear-gradient(transparent 0 19px,rgba(58,120,195,.2) 19px 20px);box-shadow:2px 2px 0 rgba(31,27,46,.55)}
+.story.sel{box-shadow:5px 5px 0 var(--pink)}
+.quilts{display:flex;gap:8px;flex-wrap:wrap}
+.qt{display:flex;flex-direction:column;align-items:center;gap:2px;width:84px;font-size:14px;text-align:center;line-height:1.1}
+.qt canvas{width:76px;height:76px;border-radius:2px}
+.kopt{display:flex;gap:12px;align-items:center;text-align:left;width:100%;padding:10px;background:rgba(255,255,255,.55);border:1.5px solid var(--ink);border-radius:3px}
+.kopt canvas{width:96px;height:96px;flex:none}
+.bigstamp{position:fixed;left:50%;top:42%;z-index:6;pointer-events:none;border:5px solid var(--pink);color:var(--pink);background:rgba(243,238,226,.35);font-size:56px;line-height:1;padding:8px 24px 4px;border-radius:8px;text-align:center;mix-blend-mode:multiply;animation:stampin .5s cubic-bezier(.2,1.6,.4,1) forwards}
+.bigstamp small{display:block;font-size:24px}
+@keyframes stampin{0%{opacity:0;transform:translate(-50%,-50%) rotate(-9deg) scale(2.4)}100%{opacity:.95;transform:translate(-50%,-50%) rotate(-9deg) scale(1)}}
+.notice{position:relative}.notice .rubber{position:absolute;right:12px;top:46px;border:3px solid var(--pink);color:var(--pink);font-size:22px;padding:0 8px;transform:rotate(8deg);mix-blend-mode:multiply;opacity:.85}
+@media (prefers-reduced-motion:reduce){.bigstamp{animation:none;transform:translate(-50%,-50%) rotate(-9deg)}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 
 <div class="wrap" id="app" aria-live="polite"></div>
 
+<script src="halsey-art.js"></script>
 <script>
 "use strict";
+(()=>{
 /* ================= utilities ================= */
 function mulberry(a){return()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
 let R=mulberry(Date.now()%1e9);
@@ -193,7 +232,7 @@ function newRun(){
   if(age>60&&!traits.includes('late'))traits.push('late');
   const nTies=traits.includes('everybody')?7:4,past=record.filter(r=>r.ending==='accept').map(r=>r.name);
   const ties=[];for(let i=0;i<nTies;i++){const nm=past.length&&R()<.3?past.splice(Math.floor(R()*past.length),1)[0]:person();ties.push({name:nm,rel:pick(RELS),home:pick(NODES.filter(n=>n.c>0&&n.c<11)).name})}
-  G={name,age,traits,ties,portrait:pick(PORTRAITS),at:'0-0',leg:0,journal:[],keeps:[],drift:0,met:[],closed:[],score:0,filed:0,log:[]};
+  G={name,age,traits,ties,seed:ri(1,999999),portrait:pick(PORTRAITS),at:'0-0',leg:0,journal:[],keeps:[],drift:0,met:[],closed:[],score:0,filed:0,log:[]};
   if(age<19)G.youth=true;
   const home=node('0-0');for(let i=0;i<3;i++){const t=G.ties[i%G.ties.length];G.journal.push(makeStory({teller:t.name,theme:pick(THEMES),place:'Halsey',era:'1903',quality:.5+R()*.8,extraPeople:i?[G.ties[(i+1)%G.ties.length].name]:[]}))}
   showSummons()}
@@ -208,53 +247,94 @@ function addStories(list){
   for(const s of list)G.journal.push(s);
   const cap=journalCap();if(G.journal.length>cap){G.overflow=true}}
 
+/* ================= printed scenes (the look book engine) ================= */
+window.renderQuilts=()=>{};window.renderJournal=()=>{}; // look-book pages the game doesn't have
+window.state={edition:'overprint',paper:'cover',light:'air',camera:'ground',texture:'worn',hand:true,mix:'',seed:1};
+const ERA_LOOK={'1888':['news','rag','air'],'1903':['rag','rag','air'],'1950':['overprint','cover','air'],'1974':['fountain','speckle','air'],'2000':['black','black','ir'],'Later':['black','black','air']};
+const ERA_INK={'1888':'#6b5a45','1903':'#c7695b','1950':'#3a78c3','1974':'#e2476b','2000':'#2c6f7c','Later':'#d4a74b'};
+const BIOME=k=>k==='pines'?'pines':(k==='river'||k==='city'||k==='crossing')?'river':'prairie';
+const timeFor=leg=>leg<=4?'dawn':leg<=8?'dusk':'night';
+const calm=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const sceneCache=new Map(),views=new Set();
+function hashS(t){let h=2166136261;for(let i=0;i<t.length;i++){h^=t.charCodeAt(i);h=Math.imul(h,16777619)}return h>>>0}
+function lookOf(o){const[edition,paper,light]=ERA_LOOK[o.era]||ERA_LOOK['1950'];return{edition,paper,light,camera:o.camera||'ground',texture:'worn',hand:true,mix:''}}
+function nodeScene(n,leg,extra={}){return{seed:(G?G.seed:1903)+hashS(n.id),biome:BIOME(n.kind),time:timeFor(leg),era:n.era,cap:[n.name.toUpperCase(),`Kept at ${n.era} · ${ERAS[n.era]}`],...extra}}
+function sceneEl(o,cls='scene',width=560){
+  const cv=document.createElement('canvas');cv.className=cls;const w=Math.round(Math.min(width,Math.max(240,innerWidth))*Math.min(2,devicePixelRatio||1));cv.width=w;cv.height=Math.round(w*H/W);
+  cv.setAttribute('role','img');cv.setAttribute('aria-label',`Printed view of ${o.cap?o.cap[0]:'the road'}`);
+  const v={cv,o,key:[o.seed,o.biome,o.time,o.era,o.camera,(o.cap||[]).join('/'),w].join('|')};views.add(v);setTimeout(()=>drawView(v),0);return cv}
+function drawView(v){
+  let c=sceneCache.get(v.key);
+  if(!c){const off=document.createElement('canvas');off.width=v.cv.width;off.height=v.cv.height;Object.assign(state,lookOf(v.o));const S=genScene(v.o.seed%999983,v.o.biome,v.o.time);if(v.o.cap)S.caption=v.o.cap;
+    const x=off.getContext('2d'),k=off.width/W;x.setTransform(k,0,0,k,0,0);try{LOOK_PRINT.static(x,S)}catch(e){console.error(e)}c={off,S};sceneCache.set(v.key,c);if(sceneCache.size>30)sceneCache.delete(sceneCache.keys().next().value)}
+  v.img=c.off;v.S=c.S;paintView(v,4)}
+function paintView(v,t){if(!v.img)return;const x=v.cv.getContext('2d');x.setTransform(1,0,0,1,0,0);x.drawImage(v.img,0,0);const k=v.cv.width/W;x.setTransform(k,0,0,k,0,0);Object.assign(state,lookOf(v.o));try{LOOK_PRINT.overlay(x,v.S,t)}catch(e){}}
+let lastT=0;(function tick(now){requestAnimationFrame(tick);if(calm||now-lastT<90)return;lastT=now;for(const v of[...views]){if(!v.cv.isConnected){views.delete(v);continue}paintView(v,now/1000)}})(0);
+window.regen=()=>{sceneCache.clear();for(const v of views)if(v.cv.isConnected)drawView(v)};
+function mount(id,el){const h=document.getElementById(id);if(h)h.replaceWith(el)}
+function quiltEl(k,size=76){const cv=document.createElement('canvas');cv.width=cv.height=size*2;const def=(typeof MODS!=='undefined'&&MODS.find(m=>m.name===KEEPS[k].name))||{name:KEEPS[k].name,fam:'Find',rarity:'common',block:'sawtooth'};try{drawQuilt(cv,def)}catch(e){}cv.setAttribute('aria-hidden','true');return cv}
+function eraTag(e){return`<span class="era"><i style="background:${ERA_INK[e]}"></i>Kept at ${e} · ${ERAS[e]}</span>`}
+function bigStamp(a,b){const d=document.createElement('div');d.className='bigstamp';d.innerHTML=`${esc(a)}${b?`<small>${esc(b)}</small>`:''}`;document.body.appendChild(d);setTimeout(()=>d.remove(),1500)}
+
 /* ================= screens ================= */
-function bar(){const n=node(G.at);return`<div class="bar"><span><b>${esc(G.name)}</b>, ${G.age}</span><span>${G.leg>=12?'At the river':`Leg ${Math.min(12,G.leg+1)} of 12`}</span><span>journal ${G.journal.length}/${journalCap()}</span></div>`}
+function bar(){return`<div class="bar"><span><b>${esc(G.name)}</b>, ${G.age}</span><span>${G.leg>=12?'At the river':`Leg ${Math.min(12,G.leg+1)} of 12`}</span><span>journal ${G.journal.length}/${journalCap()}</span></div>`}
 function title(){
   const r=record.slice(-6).reverse();
-  app.innerHTML=`<h1>Halsey, Nebraska</h1><p class="small">A prototype of the Survey. Rough, to see how it feels.</p>
-   <div class="stack" style="margin-top:18px">
-   <p>Every resident is called once to make the Survey: walk east to the Missouri, gather what people are willing to tell, and file it at the courthouses on the way. At the river you sign the agreement, or you don't.</p>
-   <p class="small">Twelve legs. At each courthouse your stories have to add up to the target, like poker hands: stories that share a theme, a place, an era, or the people in them score far more together.</p>
+  app.innerHTML=`<div class="hero"><span id="hero"></span></div><h1>Halsey, Nebraska</h1><p class="small">A prototype of the Survey.</p>
+   <div class="stack" style="margin-top:14px">
+   <p>Everyone in the preserve is called once to make the Survey: walk east to the Missouri, gather what people are willing to tell you, and file it at the courthouses on the way. At the river you sign the agreement, or you don't.</p>
+   <p class="small">Twelve legs. Stories that share a theme, a place, an era or the people in them count for much more when you file them together.</p>
    <button class="btn" id="go">Open your summons</button>
    ${r.length?`<hr><h3>Halsey’s record</h3><div class="stack small">${r.map(x=>`<div>${esc(x.name)}, ${x.age}: ${esc(x.outcome)} <span class="mono">${x.score} filed</span></div>`).join('')}</div>`:''}
    </div>`;
+  mount('hero',sceneEl({seed:1903,biome:'pines',time:'dusk',era:'1903',cap:['HALSEY, NEBRASKA','Bessey Ranger District · the planted forest']}));
   $('#go').onclick=newRun}
 function showSummons(){
   const T=G.traits.map(id=>TRAITS.find(t=>t.id===id));
-  app.innerHTML=`<div class="summons stack"><div class="mono">NOTICE OF SURVEY · THOMAS COUNTY</div>
+  app.innerHTML=`<div class="summons notice stack"><span class="rubber">SUMMONED</span><div class="mono">NOTICE OF SURVEY · THOMAS COUNTY · UNDER THE EASEMENT</div>
    <div class="row" style="align-items:flex-start;flex-wrap:nowrap"><div class="portrait" style="--pm:url(sketches/${G.portrait}.png)"></div>
    <div><h2>${esc(G.name)}</h2><p>Age ${G.age}, of Halsey. You are called to the Survey and will leave at once.</p></div></div>
    <div>${T.map(t=>`<p><span class="chip">${t.name}</span> <span class="small">${t.text}</span></p>`).join('')}</div>
    <div><h3>People you know</h3><div class="ties">${G.ties.map(t=>`<span>${esc(t.name)} <span class="small">(${t.rel}, ${esc(t.home)})</span></span>`).join('')}</div>
    <p class="small" style="margin-top:6px">Meeting someone who knows them helps: shared people tie stories into Threads.</p></div>
+   <div><h3>Carried from home</h3><div class="journal" style="margin-top:6px">${G.journal.map(s=>storyHTML(s)).join('')}</div></div>
    <button class="btn" id="go">Leave Halsey</button></div>`;
   $('#go').onclick=showMap}
-
 /* ---------- map ---------- */
 function proj(n){return[(n.lon+104.1)/(104.1-95.3)*560,(43.1-n.lat)/(43.1-39.9)*280]}
 const NE=[[-104.05,43],[-98.5,43],[-97.9,42.78],[-97.2,42.85],[-96.6,42.5],[-96.45,42.5],[-96.1,41.9],[-96,41.5],[-95.9,41.2],[-95.85,40.7],[-95.3,40],[-102.05,40],[-102.05,41],[-104.05,41]];
 const RIV={Platte:[[-104,41.85],[-102,41.15],[-100.75,41.13],[-99.3,40.68],[-98.35,40.85],[-97.4,41.4],[-96.5,41.4],[-96.1,41.05],[-95.88,41.03]],Niobrara:[[-103.6,42.75],[-102,42.8],[-100.5,42.82],[-99.4,42.78],[-98.4,42.72],[-98.05,42.77]],Loup:[[-101.2,42],[-100.3,41.9],[-99.4,41.35],[-98.4,41.15],[-97.35,41.4]]};
+const R0=k=>{const x=Math.sin(k*12.9898+(G?G.seed:0)*.001)*43758.5453;return x-Math.floor(x)};
 function mapSVG(choices=[]){
   const P=([lo,la])=>proj({lon:lo,lat:la}).map(v=>v.toFixed(1)).join(',');
-  let s=`<svg class="map" viewBox="-6 -6 572 292" role="img" aria-label="Map of Nebraska with your route">`;
-  s+=`<polygon points="${NE.map(P).join(' ')}" fill="rgba(243,194,47,.28)" stroke="#1f1b2e" stroke-width="1.6" stroke-linejoin="round"/>`;
-  for(const k in RIV)s+=`<polyline points="${RIV[k].map(P).join(' ')}" fill="none" stroke="#3a78c3" stroke-width="2.2" opacity=".75"/>`;
-  for(const n of NODES)for(const m of nextNodes(n)){const[a,b]=proj(n),[c,d]=proj(m);s+=`<line x1="${a}" y1="${b}" x2="${c}" y2="${d}" stroke="#1f1b2e" stroke-width=".6" opacity=".25"/>`}
-  const path=[...G.log.map(l=>l.at),G.at];for(let i=1;i<path.length;i++){const[a,b]=proj(node(path[i-1])),[c,d]=proj(node(path[i]));s+=`<line x1="${a}" y1="${b}" x2="${c}" y2="${d}" stroke="#e2486f" stroke-width="3" stroke-linecap="round"/>`}
-  for(const n of NODES){const[x,y]=proj(n),here=n.id===G.at,ch=choices.includes(n.id);
-    s+=`<circle cx="${x}" cy="${y}" r="${here?6:ch?5:2.6}" fill="${here?'#e2486f':ch?'#f3c22f':'#1f1b2e'}" stroke="#1f1b2e" stroke-width="${ch||here?1.5:0}"/>`;
-    if(here||ch)s+=`<text x="${x+7}" y="${y+4}" font-size="13" font-family="Halsey Hand, cursive" fill="#1f1b2e">${esc(n.name)}</text>`}
+  const sand=[[-102.6,42.65],[-99.3,42.7],[-98.25,41.75],[-99.1,41.12],[-101.6,41.1],[-102.7,41.75]];
+  const wob=(a,b,c,d,k)=>{const mx=(a+c)/2+(R0(k)-.5)*8,my=(b+d)/2+(R0(k+1)-.5)*8;return`M${a} ${b} Q${mx.toFixed(1)} ${my.toFixed(1)} ${c} ${d}`};
+  let s=`<svg class="map" viewBox="-8 -8 576 296" role="img" aria-label="Map of Nebraska with your route"><defs>
+   <pattern id="dots" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(15)"><circle cx="3" cy="3" r="1.25" fill="#f3c22f"/></pattern>
+   <pattern id="hatch" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(40)"><line x1="0" y1="0" x2="0" y2="5" stroke="#6d7d3f" stroke-width="1.1" opacity=".45"/></pattern></defs>`;
+  s+=`<polygon points="${NE.map(P).join(' ')}" fill="rgba(243,194,47,.22)"/><polygon points="${NE.map(P).join(' ')}" fill="url(#dots)"/>`;
+  s+=`<polygon points="${sand.map(P).join(' ')}" fill="url(#hatch)"/><text x="${proj({lon:-101.4,lat:42.3})[0]}" y="${proj({lon:-101.4,lat:42.3})[1]}" font-size="12" font-family="Halsey Hand, cursive" fill="#6d7d3f">the Sandhills</text>`;
+  s+=`<polygon points="${NE.map(P).join(' ')}" fill="none" stroke="#e2486f" stroke-width="1.4" stroke-linejoin="round" transform="translate(2,1.2)" opacity=".7"/>`;
+  s+=`<polygon points="${NE.map(P).join(' ')}" fill="none" stroke="#1f1b2e" stroke-width="1.8" stroke-linejoin="round"/>`;
+  for(const k in RIV){s+=`<polyline points="${RIV[k].map(P).join(' ')}" fill="none" stroke="#3a78c3" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity=".8"/>`;const m=RIV[k][Math.floor(RIV[k].length/2)],[mx,my]=proj({lon:m[0],lat:m[1]});s+=`<text x="${mx}" y="${my-6}" font-size="11" font-family="Halsey Hand, cursive" fill="#3a78c3">${k}</text>`}
+  for(const n of NODES)for(const m of nextNodes(n)){const[a,b]=proj(n),[c,d]=proj(m);s+=`<line x1="${a}" y1="${b}" x2="${c}" y2="${d}" stroke="#1f1b2e" stroke-width=".6" stroke-dasharray="2 3" opacity=".35"/>`}
+  const path=[...G.log.map(l=>l.at),G.at];
+  for(let i=1;i<path.length;i++){const[a,b]=proj(node(path[i-1])),[c,d]=proj(node(path[i]));s+=`<path d="${wob(a,b,c,d,i)}" fill="none" stroke="#e2486f" stroke-width="3.4" stroke-linecap="round" opacity=".9"/>`}
+  const visited=new Set(path),label=(n,x,y,sz,col)=>`<text x="${x+7}" y="${y+4}" font-size="${sz}" font-family="Halsey Hand, cursive" fill="${col}" stroke="#f3eee2" stroke-width="3" paint-order="stroke">${esc(n.name)}</text>`;
+  for(const n of NODES){const[x,y]=proj(n),here=n.id===G.at,ch=choices.includes(n.id),vis=visited.has(n.id);
+    s+=`<circle cx="${x}" cy="${y}" r="${here?6.5:ch?5.5:vis?3.4:2.4}" fill="${here?'#e2486f':ch?ERA_INK[n.era]:vis?'#e2486f':'#1f1b2e'}" stroke="#1f1b2e" stroke-width="${ch||here?1.6:0}"/>`;
+    if(here||ch)s+=label(n,x,y,14,'#1f1b2e');else if(vis||n.name==='Omaha'||n.name==='The Missouri')s+=label(n,x,y,10.5,'#6c6476')}
   return s+'</svg>'}
 function showMap(){
   const here=node(G.at),opts=nextNodes(here);
-  app.innerHTML=bar()+mapSVG(opts.map(o=>o.id))+`<div class="stack" style="margin-top:12px"><p>You're in <b>${esc(here.name)}</b>. Where next?</p>
-   ${opts.map(o=>`<button class="card" data-id="${o.id}"><span class="kind">${ERAS[o.era]} · ${o.era}</span><h3>${esc(o.name)}</h3><span class="small">Courthouse target ${target(G.leg+1)}. ${placeHint(o)}</span></button>`).join('')}
+  app.innerHTML=bar()+mapSVG(opts.map(o=>o.id))+`<div class="stack" style="margin-top:12px"><p>You're in <b>${esc(here.name)}</b>. ${eraTag(here.era)}</p><p class="small">Where next? Each town is kept at a different time.</p>
+   ${opts.map(o=>`<button class="opt" data-id="${o.id}"><span id="th-${o.id}"></span><span class="t"><h3>${esc(o.name)}</h3>${eraTag(o.era)}<span class="small">${placeHint(o)} Courthouse target ${target(G.leg+1)}.</span></span></button>`).join('')}
    ${keepBar()}</div>`;
+  for(const o of opts)mount('th-'+o.id,sceneEl(nodeScene(o,G.leg+1),'',170));
   app.querySelectorAll('[data-id]').forEach(b=>b.onclick=()=>{G.log.push({at:G.at});G.next=b.dataset.id;G.stop=0;showRoad()})}
 function placeHint(n){return{pines:'Planted rows.',bison:'Bison in the draws.',sod:'Sod houses, kept as they were.',hills:'Sandhills, wide open.',river:'Cranes on the bars.',town:'A Main Street, lamps lit.',pivots:'Ghost pivot circles.',city:'A city kept by somebody’s memory.',crossing:'The river.'}[n.kind]||''}
-function keepBar(){return G.keeps.length?`<div><h3>Keepsakes</h3><div class="keeps">${G.keeps.map(k=>`<div class="keep"><b>${KEEPS[k].name}</b> <span class="small">${KEEPS[k].text}</span></div>`).join('')}</div></div>`:''}
-
+function keepBar(){if(!G.keeps.length)return'';setTimeout(()=>{const h=document.getElementById('kq');if(h)G.keeps.forEach(k=>{const d=document.createElement('div');d.className='qt';d.title=KEEPS[k].text;d.appendChild(quiltEl(k));d.insertAdjacentHTML('beforeend',`<span>${KEEPS[k].name}</span>`);h.appendChild(d)})},0);
+  return`<div><h3>Keepsakes</h3><div class="quilts" id="kq"></div><div class="small" style="margin-top:4px">${G.keeps.map(k=>`<div><b style="font-weight:400;color:var(--blue)">${KEEPS[k].name}</b>: ${KEEPS[k].text}</div>`).join('')}</div></div>`}
 /* ---------- the road: two stops per leg ---------- */
 function tellerFor(dest){
   const knows=R()<(G.traits.includes('everybody')?.6:.35)?pick(G.ties):null;
@@ -284,12 +364,12 @@ function showRoad(){
   if(G.overflow)return showTrim(showRoad);
   if(G.stop>=2){G.at=G.next;G.leg++;return G.leg===12?showRiver():showFiling()}
   const dest=node(G.next),opts=roadOptions();G.opts=opts;
-  app.innerHTML=bar()+`<h2>On the road to ${esc(dest.name)}</h2><p class="small">Stop ${G.stop+1} of 2. Pick one.</p><div class="stack" style="margin-top:14px">`+
-   opts.map((o,i)=>o.type==='listen'?`<button class="card" data-i="${i}"><span class="kind"><i style="background:var(--pink)"></i>Listening</span><h3>${esc(o.t.name)}, ${esc(o.t.role)}</h3><span class="small">${esc(o.t.tell)}${o.t.knows?` <b>Knows ${esc(o.t.knows.name)}, ${o.t.knows.rel}.</b>`:''}${o.t.tie?` <b>This is ${o.t.tie.rel}.</b>`:''}</span></button>`
+  app.innerHTML=bar()+`<div class="hero"><span id="hero"></span><span class="badge">Stop ${G.stop+1} of 2</span></div><h2>On the road to ${esc(dest.name)}</h2><p>${eraTag(dest.era)}</p><div class="stack" style="margin-top:14px">`+
+   opts.map((o,i)=>o.type==='listen'?`<button class="card" data-i="${i}"><span class="kind"><i style="background:var(--pink)"></i>Listening</span><div class="row" style="flex-wrap:nowrap;align-items:flex-start"><div class="portrait" style="--pm:url(sketches/${PORTRAITS[o.t.name.length%3]}.png);width:54px;height:66px"></div><div><h3>${esc(o.t.name)}, ${esc(o.t.role)}</h3><span class="small">${esc(o.t.tell)}${o.t.knows?` <b>Knows ${esc(o.t.knows.name)}, ${o.t.knows.rel}.</b>`:''}${o.t.tie?` <b>This is ${o.t.tie.rel}.</b>`:''}</span></div></div></button>`
      :o.type==='tally'?`<button class="card" data-i="${i}"><span class="kind"><i style="background:var(--blue)"></i>Estimating</span><h3>Count the ${esc(o.site[0])}</h3><span class="small">Someone has to. The courthouse wants a number.</span></button>`
-     :`<button class="card" data-i="${i}"><span class="kind"><i style="background:var(--yellow)"></i>Gift</span><h3>Someone left something on a fence post</h3><span class="small">Choose a keepsake.</span></button>`).join('')+`</div>`;
+     :`<button class="card" data-i="${i}"><span class="kind"><i style="background:var(--yellow)"></i>Gift</span><h3>Someone left something on a fence post</h3><span class="small">A keepsake, and a note.</span></button>`).join('')+`</div>`;
+  mount('hero',sceneEl(nodeScene(dest,G.leg+1)));
   app.querySelectorAll('[data-i]').forEach(b=>b.onclick=()=>{const o=G.opts[+b.dataset.i];G.stop++;if(o.type==='listen')startListen(o.t);else if(o.type==='tally')startTally(o.site);else{const n=node(G.next),who=person();addStories([makeStory({teller:who,theme:pick(THEMES),place:n.name,era:n.era,quality:.6})]);toast(`A note from ${who} came with it.`);showKeepChoice(showRoad,2)}})}
-
 /* ================= Listening ================= */
 const QDECK=[['place',3],['wait',3],['follow',3],['press',2],['again',1],['share',1],['tie',1]];
 const QTXT={place:['Ask about the place','+2 detail, −1 trust'],wait:['Wait','+1 trust · Spare'],follow:['Follow up','detail grows each time in a row · Chain'],press:['Press','+4 detail, −3 trust · Risk'],again:['Ask again','repeat your last question · Repeat'],share:['Tell your own','+3 trust, +1 detail'],tie:['Name someone you know','+2 trust, +2 detail if they know them']};
@@ -334,17 +414,18 @@ function endListen(closed){
   app.innerHTML=bar()+`<h2>${esc(t.name)}</h2><p>${esc(msg)}</p><div class="stack">${L.earned.map(storyHTML).join('')||'<p class="small">No stories this time.</p>'}<button class="btn" id="go">Keep walking</button></div>`;
   $('#go').onclick=showRoad}
 function renderListen(){
-  const t=L.t,next=THRESH.find(x=>x>L.detail)||THRESH[2];
-  app.innerHTML=bar()+`<div class="row" style="flex-wrap:nowrap;align-items:flex-start"><div class="portrait" style="--pm:url(sketches/${PORTRAITS[(t.name.length)%3]}.png);width:70px;height:84px"></div><div><h2 style="margin-bottom:2px">${esc(t.name)}</h2><p class="small">${esc(t.role)}. ${esc(t.tell)}${t.knows?` Knows ${esc(t.knows.name)}.`:''}</p></div></div>
-   <div class="stack" style="gap:8px;margin:8px 0 12px">
-    <div><div class="row small" style="justify-content:space-between"><span>Trust</span><span>${Math.max(0,L.trust)}</span></div><div class="meter w"><i style="width:${clamp(L.trust,0,9)/9*100}%"></i></div></div>
-    <div><div class="row small" style="justify-content:space-between"><span>Detail · next story at ${next}</span><span>${L.detail} · ${L.earned.length} stories</span></div><div class="meter"><i style="width:${Math.min(100,L.detail/15*100)}%"></i></div></div>
+  const t=L.t,dest=node(G.next),marks=THRESH.map(x=>`<span style="left:${x/15*100}%">${L.detail>=x?'✶':'·'}</span>`).join('');
+  app.innerHTML=bar()+`<div class="hero" style="margin-bottom:30px"><span id="strip"></span><div class="tbadge"><div class="pbox"><div class="portrait" style="--pm:url(sketches/${PORTRAITS[t.name.length%3]}.png)"></div></div></div></div>
+   <h2 style="margin-bottom:2px">${esc(t.name)}</h2><p class="small">${esc(t.role)}. ${esc(t.tell)}${t.knows?` Knows ${esc(t.knows.name)}.`:''}</p>
+   <div class="stack" style="gap:10px;margin:8px 0 12px">
+    <div><div class="small">Trust</div><div class="trust">${Array.from({length:9},(_,i)=>`<i class="${i<L.trust?'on':''}"></i>`).join('')}</div></div>
+    <div><div class="row small" style="justify-content:space-between"><span>Detail ${L.detail}</span><span>${L.earned.length} ${L.earned.length===1?'story':'stories'}</span></div><div class="detail"><b style="width:${Math.min(100,L.detail/15*100)}%"></b>${marks}</div></div>
     <div class="small">${L.turns} questions before dark${L.trust<=2?' · <b>they’re close to done</b>':''}</div></div>
    <div class="log">${L.log.join('')}</div>
-   <div class="qhand" style="margin-top:12px">${L.hand.map((k,i)=>`<button class="q" data-q="${i}">${QTXT[k][0]}<small>${QTXT[k][1]}</small></button>`).join('')}</div>
-   <div class="row" style="margin-top:12px"><button class="btn quiet" id="stop">Thank them and go</button></div>`;
+   <div class="qhand" style="margin-top:14px">${L.hand.map((k,i)=>`<button class="q" data-q="${i}">${QTXT[k][0]}<small>${QTXT[k][1]}</small></button>`).join('')}</div>
+   <div class="row" style="margin-top:14px"><button class="btn quiet" id="stop">Thank them and go</button></div>`;
+  const st=sceneEl(nodeScene(dest,G.leg+1),'strip');mount('strip',st);
   app.querySelectorAll('[data-q]').forEach(b=>b.onclick=()=>playQ(+b.dataset.q));$('#stop').onclick=()=>endListen(false)}
-
 /* ================= Estimating ================= */
 let T=null;
 function startTally(site){
@@ -355,7 +436,7 @@ function startTally(site){
     cells.push({x,y,bar,v,seen:false})}
   let tot=cells.reduce((a,c)=>a+c.v,0);const want=ri(150,900);if(tot<20){cells.filter(c=>c.bar).forEach(c=>c.v+=ri(3,12));tot=cells.reduce((a,c)=>a+c.v,0)}
   cells.forEach(c=>c.v=Math.round(c.v*want/tot));
-  T={site,cells,looks,used:0,last:null,lastV:null,stamps:{},total:cells.reduce((a,c)=>a+c.v,0)};
+  T={site,cells,looks,used:0,last:null,lastV:null,stamps:{},seed:ri(1,99999),total:cells.reduce((a,c)=>a+c.v,0)};
   renderTally()}
 function look(i){
   const c=T.cells[i];if(c.seen||!c.bar||T.used>=T.looks)return;
@@ -364,16 +445,28 @@ function look(i){
   if(T.last&&Math.abs(T.last.x-c.x)+Math.abs(T.last.y-c.y)===1)T.stamps.Chain=(T.stamps.Chain||0)+1;
   if(T.lastV!=null&&Math.abs(T.lastV-c.v)<=Math.max(3,T.lastV*.1))T.stamps.Repeat=(T.stamps.Repeat||0)+1;
   T.last=c;T.lastV=c.v;renderTally()}
-function dots(cv,n){const x=cv.getContext('2d'),w=cv.width,h=cv.height,r=mulberry(n*7+3);x.clearRect(0,0,w,h);x.fillStyle='rgba(31,27,46,.75)';for(let i=0;i<Math.min(n,120);i++){x.beginPath();x.arc(4+r()*(w-8),4+r()*(h-14),1.3,0,6.28);x.fill()}}
+function dots(cv,n){}
+function drawBoard(cv){
+  const x=cv.getContext('2d'),S=cv.width,c=S/6,r=mulberry(T.seed||7);x.setTransform(1,0,0,1,0,0);
+  x.fillStyle='#a9c4dc';x.fillRect(0,0,S,S);
+  x.strokeStyle='rgba(58,120,195,.5)';x.lineWidth=S*.003;for(let y=4;y<S;y+=S*.035){x.beginPath();for(let xx=0;xx<=S;xx+=S*.05)x.lineTo(xx,y+Math.sin(xx*.05+y)*S*.004);x.stroke()}
+  for(const cell of T.cells){if(!cell.bar)continue;const X=cell.x*c,Y=cell.y*c;x.fillStyle='#e8d3a0';x.beginPath();const j=()=>(r()-.5)*c*.12;x.moveTo(X+j(),Y+j());x.lineTo(X+c+j(),Y+j());x.lineTo(X+c+j(),Y+c+j());x.lineTo(X+j(),Y+c+j());x.closePath();x.fill();
+    x.fillStyle='rgba(199,150,60,.35)';for(let i=0;i<14;i++){x.beginPath();x.arc(X+r()*c,Y+r()*c,c*.02+r()*c*.02,0,6.28);x.fill()}}
+  for(const cell of T.cells){const X=cell.x*c,Y=cell.y*c;if(cell.seen){const k=mulberry(cell.v*7+cell.x*13+cell.y);x.strokeStyle='#1f1b2e';x.lineWidth=Math.max(1,S*.0025);x.lineCap='round';
+      const n=Math.min(cell.v,90);for(let i=0;i<n;i++){const px=X+c*.1+k()*c*.8,py=Y+c*.12+k()*c*.62,sz=c*.035;x.beginPath();x.moveTo(px-sz,py-sz*.6);x.quadraticCurveTo(px-sz*.3,py-sz,px,py);x.quadraticCurveTo(px+sz*.3,py-sz,px+sz,py-sz*.6);x.stroke()}
+      x.font=`${c*.3}px "Halsey Hand",cursive`;x.textAlign='right';x.lineWidth=S*.008;x.strokeStyle='#f3eee2';x.strokeText(cell.v,X+c*.92,Y+c*.92);x.fillStyle='#1f1b2e';x.fillText(cell.v,X+c*.92,Y+c*.92);
+      x.strokeStyle='#e2486f';x.lineWidth=S*.005;x.strokeRect(X+2,Y+2,c-4,c-4)}}
+  x.strokeStyle='rgba(31,27,46,.25)';x.lineWidth=1;for(let i=1;i<6;i++){x.beginPath();x.moveTo(i*c,0);x.lineTo(i*c,S);x.moveTo(0,i*c);x.lineTo(S,i*c);x.stroke()}}
 function renderTally(){
   const seen=T.cells.filter(c=>c.seen),bars=T.cells.filter(c=>c.bar).length,est=seen.length?Math.round(seen.reduce((a,c)=>a+c.v,0)/seen.length*bars/10)*10:0;
-  app.innerHTML=bar()+`<h2>Count the ${esc(T.site[0])}</h2><p class="small">Tap land to look closely (${T.looks-T.used} looks left). Water holds nothing. Then make your estimate.</p>
-   <div class="grid6" id="grid">${T.cells.map((c,i)=>`<button class="cell ${c.bar?'bar':'water'} ${c.seen?'seen':''}" data-c="${i}" aria-label="${c.bar?(c.seen?c.v+' counted':'unlooked land'):'water'}" ${c.bar?'':'disabled'}>${c.seen?`<canvas width="60" height="60"></canvas><span>${c.v}</span>`:''}</button>`).join('')}</div>
-   <div class="stack" style="margin-top:12px;gap:6px"><label for="est">Your estimate: <b id="ev">${est}</b></label>
+  app.innerHTML=bar()+`<h2>Count the ${esc(T.site[0])}</h2><p class="small">Tap sand to look closely (${T.looks-T.used} looks left). Water holds nothing. Then make your estimate.</p>
+   <div class="board"><canvas id="bd" width="900" height="900" aria-hidden="true"></canvas><div class="grid6" id="grid">${T.cells.map((c,i)=>`<button class="cell ${c.bar?'bar':'water'} ${c.seen?'seen':''}" data-c="${i}" aria-label="${c.bar?(c.seen?c.v+' counted':'unlooked sand'):'water'}" ${c.bar?'':'disabled'}></button>`).join('')}</div></div>
+   <div class="stack" style="margin-top:14px;gap:6px"><label for="est">Your estimate: <b id="ev" style="font-weight:400;font-size:30px">${est}</b></label>
    <input type="range" id="est" min="0" max="1500" step="5" value="${est}">
-   <p class="small">${seen.length?`From what you've seen, ${bars} patches of land would hold about ${est}.`:'Look before you guess, or don’t: guessing blind is a Risk.'}</p>
+   <p class="small">${seen.length?`From what you've seen, ${bars} patches of sand would hold about ${est}.`:'Look before you guess, or don’t: guessing blind is a Risk.'}</p>
    <button class="btn" id="go">File the number</button></div>`;
-  app.querySelectorAll('[data-c]').forEach((b,i)=>{b.onclick=()=>look(+b.dataset.c);const cv=b.querySelector('canvas');if(cv)dots(cv,T.cells[+b.dataset.c].v)});
+  drawBoard($('#bd'));
+  app.querySelectorAll('[data-c]').forEach(b=>b.onclick=()=>look(+b.dataset.c));
   const e=$('#est');e.oninput=()=>$('#ev').textContent=e.value;$('#go').onclick=()=>finishTally(+e.value)}
 function finishTally(est){
   const err=Math.abs(est-T.total)/T.total,n=node(G.next),spare=T.looks-T.used;
@@ -390,10 +483,10 @@ function finishTally(est){
 /* ================= keepsakes ================= */
 function showKeepChoice(next,n=3){
   const have=new Set(G.keeps),pool=shuffle(Object.keys(KEEPS).filter(k=>!have.has(k))).slice(0,n);
-  app.innerHTML=bar()+`<h2>Choose a keepsake</h2><p class="small">Keepsakes read the marks on your stories (Chain, Find, Risk, Spare, Repeat), whichever game earned them. You can carry five.</p><div class="stack" style="margin-top:12px">`+
-   pool.map(k=>`<button class="card" data-k="${k}"><span class="kind">${KEEPS[k].fam}</span><h3>${KEEPS[k].name}</h3><span class="small">${KEEPS[k].text}</span></button>`).join('')+`<button class="btn quiet" id="skip">Take nothing</button></div>`;
+  app.innerHTML=bar()+`<h2>Choose a keepsake</h2><p class="small">Each one is a barn quilt. It reads the marks on your stories (Chain, Find, Risk, Spare, Repeat), whichever game earned them. You can carry five.</p><div class="stack" style="margin-top:12px">`+
+   pool.map(k=>`<button class="kopt" data-k="${k}"><span id="kq-${k}"></span><span><span class="small">${KEEPS[k].fam}</span><h3>${KEEPS[k].name}</h3><span class="small">${KEEPS[k].text}</span></span></button>`).join('')+`<button class="btn quiet" id="skip">Take nothing</button></div>`;
+  for(const k of pool)mount('kq-'+k,quiltEl(k,96));
   app.querySelectorAll('[data-k]').forEach(b=>b.onclick=()=>{if(G.keeps.length>=5)G.keeps.shift();G.keeps.push(b.dataset.k);next()});$('#skip').onclick=next}
-
 /* ================= filing ================= */
 function storyHTML(s,sel){return`<div class="story ${s.partial?'partial':''} ${sel?'sel':''}"><span class="val">${s.value} · ✶${s.vivid}</span><div class="who">${esc(s.teller)}</div>${esc(s.title)}<div class="tags"><span>${s.theme}</span><span>${esc(s.place)}</span><span>${s.era}</span>${s.people.length>1?`<span>knows ${esc(s.people.slice(1).join(', '))}</span>`:''}${Object.entries(s.stamps).filter(e=>e[1]).map(([k,v])=>`<span class="stamp">${k}${v>1?'×'+v:''}</span>`).join('')}${s.embellished?'<span>embellished</span>':''}</div></div>`}
 let F=null;
@@ -402,20 +495,22 @@ function showFiling(){
   const n=node(G.at);F={target:target(G.leg),sum:0,left:filingsPer(),sel:[]};renderFiling()}
 function renderFiling(){
   const n=node(G.at),sel=F.sel.map(id=>G.journal.find(s=>s.id===id)),ev=evalHand(sel);
-  app.innerHTML=bar()+`<h2>${G.leg===12?'Testimony at the river':`Courthouse at ${esc(n.name)}`}</h2>
-   <p class="small">Register of Deeds. File up to five stories at a time. ${F.left} filing${F.left===1?'':'s'} left.</p>
+  app.innerHTML=bar()+`<div class="hero"><span id="strip"></span><span class="badge">Register of Deeds</span></div><h2>${G.leg===12?'Testimony at the river':`Courthouse at ${esc(n.name)}`}</h2>
+   <p class="small">File up to five stories at a time. ${F.left} filing${F.left===1?'':'s'} left. ${eraTag(n.era)}</p>
    <div class="stack" style="gap:6px;margin:8px 0 12px"><div class="row small" style="justify-content:space-between"><span>Filed ${F.sum}</span><span>Target ${F.target}</span></div><div class="meter t"><i style="width:${Math.min(100,F.sum/F.target*100)}%"></i></div></div>
    ${ev?`<div class="card"><span class="kind">If you file these</span><div class="hand">${ev.type}</div><div class="score">${ev.base} × ${ev.mult}${ev.x>1?` × ${ev.x}`:''} = ${ev.total}</div><span class="small">${ev.scoring.length} of ${sel.length} stories count.</span></div>`:'<p class="small">Tap stories to choose them. Stories sharing a theme, a place, an era, or people score together.</p>'}
    <div class="row" style="margin:10px 0"><button class="btn" id="file" ${sel.length?'':'disabled'}>File</button><button class="btn quiet" id="emb" ${sel.length===1?'':'disabled'}>Embellish one</button><span class="small">drift ${G.drift}</span></div>
    <div class="journal">${G.journal.map(s=>`<button style="all:unset;display:block;cursor:pointer" data-s="${s.id}" aria-pressed="${F.sel.includes(s.id)}">${storyHTML(s,F.sel.includes(s.id))}</button>`).join('')||'<p class="small">Your journal is empty.</p>'}</div>
    ${keepBar()}<details style="margin-top:12px"><summary class="small">Hands</summary><div class="small">${HANDS.map(h=>`<div>${h.name}: ${h.base} × ${h.mult}</div>`).join('')}<p class="small">Pair, Three or Four Witnesses: stories with the same theme. Thread: stories linked by people (a teller who knows someone in another story). One Era: four from the same era. Full Account: three from one place and two from another. Whole Story: five linked and from one era.</p></div></details>`;
+  mount('strip',sceneEl(nodeScene(n,G.leg),'strip'));
   app.querySelectorAll('[data-s]').forEach(b=>b.onclick=()=>{const id=b.dataset.s,i=F.sel.indexOf(id);if(i>=0)F.sel.splice(i,1);else if(F.sel.length<5)F.sel.push(id);renderFiling()});
-  $('#file').onclick=()=>{const e=evalHand(F.sel.map(id=>G.journal.find(s=>s.id===id)));F.sum+=e.total;G.score+=e.total;G.filed+=F.sel.length;G.journal=G.journal.filter(s=>!F.sel.includes(s.id));F.sel=[];F.left--;toast(`${e.type}: ${e.total}`);
-    if(F.sum>=F.target)return passed();if(F.left<=0||!G.journal.length)return failed();renderFiling()};
+  $('#file').onclick=()=>{const e=evalHand(F.sel.map(id=>G.journal.find(s=>s.id===id)));F.sum+=e.total;G.score+=e.total;G.filed+=F.sel.length;G.journal=G.journal.filter(s=>!F.sel.includes(s.id));F.sel=[];F.left--;bigStamp('FILED',`${e.type} · ${e.total}`);
+    if(F.sum>=F.target)return setTimeout(passed,calm?0:700);if(F.left<=0||!G.journal.length)return setTimeout(failed,calm?0:700);renderFiling()};
   $('#emb').onclick=()=>{const s=G.journal.find(x=>x.id===F.sel[0]);if(s.embellished)return toast('Already embellished.');s.embellished=true;s.vivid+=2;G.drift++;toast('A better story than what happened. Drift +1.');renderFiling()}}
 function passed(){
   if(G.leg===12)return showEnding();
-  app.innerHTML=bar()+`<h2>Filed</h2><p>${esc(node(G.at).name)} takes your testimony. ${F.sum} against ${F.target}.</p><button class="btn" id="go">Go on</button>`;
+  app.innerHTML=bar()+`<div class="hero"><span id="hero"></span></div><h2>Filed</h2><p>${esc(node(G.at).name)} takes your testimony. ${F.sum} against ${F.target}.</p><button class="btn" id="go">Go on</button>`;
+  mount('hero',sceneEl(nodeScene(node(G.at),G.leg)));
   $('#go').onclick=()=>showKeepChoice(showMap,3)}
 function failed(){
   const n=node(G.at);finishRun(`Survey unfinished at ${n.name}`);
@@ -428,7 +523,9 @@ function showTrim(next){
 
 /* ================= the river ================= */
 function showRiver(){
-  app.innerHTML=bar()+mapSVG([])+`<h2>The Missouri</h2><p>Brown water, wide, and on the far side nothing you can make out. People are waiting their turn at a table by the bank. Nobody there looks at you directly.</p><button class="btn" id="go">Give your testimony</button>`;
+  const n=node(G.at);
+  app.innerHTML=bar()+`<div class="hero"><span id="hero"></span></div><h2>The Missouri</h2><p>Brown water, wide, and on the far side nothing you can make out. People are waiting their turn at a table by the bank. Nobody there looks at you directly.</p><button class="btn" id="go">Give your testimony</button>`;
+  mount('hero',sceneEl({...nodeScene(n,12),time:'night',cap:['THE MISSOURI','Where the Survey ends']}));
   $('#go').onclick=showFiling}
 function showEnding(){
   app.innerHTML=bar()+`<h2>Your testimony is taken</h2><p>${F.sum} filed at the river, ${G.score} across the Survey. Now the agreement.</p><div class="stack">
@@ -440,6 +537,8 @@ function showEnding(){
 function finishRun(outcome,ending='unfinished'){record.push({name:G.name,age:G.age,outcome,ending,score:G.score,drift:G.drift});store.set('record',record.slice(-30))}
 
 /* test hooks */
-window.__G=()=>G;window.__evalHand=evalHand;
+window.__G=()=>G;window.__evalHand=evalHand;Object.assign(window,{startListen,startTally,showFiling,showMap,showKeepChoice});
+document.fonts.load('30px "Halsey Hand"').catch(()=>{}).then(()=>{if(window.regen)window.regen()});
 title();
+})();
 </script>

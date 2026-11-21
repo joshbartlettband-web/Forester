@@ -13,9 +13,9 @@ const res=await p.evaluate(async(runs)=>{
    const need=+((document.body.innerText.match(/Target (\d+)/)||[0,0])[1])-+((document.body.innerText.match(/Filed (\d+)/)||[0,0])[1]);let cheap=null;
    for(const c of combos){const e=__evalHand(c.map(i=>J[i]));if(!best||e.total>best.e.total)best={e,c};if(e.total>=need&&(!cheap||c.length<cheap.c.length||(c.length===cheap.c.length&&e.total<cheap.e.total)))cheap={e,c}}return cheap||best}
  for(let r=0;r<runs;r++){
-  document.querySelector('#go').click();await sleep(5);document.querySelector('#go').click();
+  while(!document.querySelector('h1'))await sleep(50);document.querySelector('#go').click();await sleep(30);document.querySelector('#go').click();
   let guard=0,info={legs:0,fails:null,filings:[]};
-  while(guard++<3000){await sleep(1);
+  while(guard++<20000){await sleep(1);
    const h2=document.querySelector('h2')?.textContent||'';const txt=document.body.innerText;
    if(document.querySelector('h1')){break}
    if(/Where next/.test(txt)){const cs=[...document.querySelectorAll('[data-id]')];cs[Math.floor(Math.random()*cs.length)].click();continue}
@@ -33,7 +33,7 @@ const res=await p.evaluate(async(runs)=>{
      if(!info.legs||info.lastLeg!==__G().leg){info.legs=__G().leg;info.lastLeg=__G().leg;const t=+(txt.match(/Target (\d+)/)||[0,0])[1];info.filings.push({leg:__G().leg,target:t,journal:__G().journal.length})}
      const bh=bestHand();if(!bh){break}
      for(const i of bh.c)document.querySelector(`[data-s="${__G().journal[i].id}"]`).click();
-     await sleep(1);document.querySelector('#file').click();continue}
+     await sleep(1);document.querySelector('#file').click();await sleep(900);continue}
    if(/Not enough/.test(h2)){info.fails=__G().leg;document.querySelector('#go').click();continue}
    if(/Your testimony is taken/.test(h2)){info.done=true;document.querySelector('[data-e="accept"]').click();continue}
    if(/The Missouri/.test(h2)){document.querySelector('#go').click();continue}
