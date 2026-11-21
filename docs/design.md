@@ -1,4 +1,4 @@
-# Halsey: design notes
+# Halsey, Nebraska: design notes
 
 Working title **Halsey** (the repo is still named Forester). This is a living document of decisions made so far. Open questions are marked **Open**.
 
@@ -101,3 +101,13 @@ Modifier art is a painted barn quilt.
 - Name collision: "Halsey" is also a well-known musician's stage name. A subtitle may be needed for store search and trademark.
 - Which 4–6 minigames come first.
 - Who to consult on Native histories, and how.
+
+
+## World (in discussion)
+
+- **Title:** *Halsey, Nebraska* (short form *Halsey NE*). The comma and the state set it apart from the singer.
+- **The Easement** (working name): the larger order that holds humanity in a preserve. Consensual: people travel freely and live with a certain abundance. It is never shown directly; its upkeep is the evidence (the pivot that turned with no power, the row line kept clear, lamps with no fuel). Individual agents or creatures inside it may get stranger names.
+- **Era pockets:** places are preserved at different moments, including future eras. They may line up with the art styles (glass plate, screen print, expired film, trail cam).
+- **Travel:** on foot. Vehicles exist only if they are safe for people and animals (slow, stop for any living thing). No horses. No trains: freight and shipping don't matter here, and rail doesn't fit the safety rule.
+- **The journey:** east to the Missouri River, through Omaha's preserved city. Several routes cross the state: north (Niobrara, Valentine), central (Platte), south (Republican valley). Starting towns unlock over time (Scottsbluff, Alliance, Chadron, Ogallala), and errands can pull a run west first, such as picking someone or something up.
+- **Open:** the concrete reason to reach the river.
