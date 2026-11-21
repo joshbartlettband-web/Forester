@@ -133,4 +133,10 @@ Modifier art is a painted barn quilt.
   - Each run is one person's Survey. Across runs, different people from Halsey make it; the journal and the archive carry over between generations.
   - The ethical tension: is consent real when abundance depends on it? People who refuse, or never go, live outside the abundance. Among them, scarcity and real survival stakes still exist.
   - The name ties to the Public Land Survey grid of section lines, the survey-plate look, and the Forester's craft.
-- **Open:** the Survey age; whether it can be delayed or failed; what happens to those who refuse.
+- **The Survey is a summons,** like jury duty or a draft. It comes when it comes, and you drop everything. Society consents enthusiastically, and people who bring back rich testimony are heroes, because they preserve.
+  - The player character is different each seed: any age, any background. Some bring their kids; some aren't called until they're old. Dying before your Survey is a tragedy.
+  - **Narrative constellation:** characters are generated with ties (family, neighbors, old friends). Meeting someone on the road who knows someone you know is significant, and those links can carry between runs (earlier Surveyors reappear later as heroes, or are mourned).
+  - Real ancestor: the WPA's Federal Writers' Project, which sent interviewers across the country in the 1930s to collect testimony and wrote the American Guide books, Nebraska's included.
+  - Buy-in is the cultural baseline, with friction at the edges: the cost of preservation (held places never change), stories that would hurt someone if told, private people, and the dead, who can't consent.
+- **Omaha's flag:** a white circle on a gray field.
+- **Open:** what happens to people who refuse at the river.
