@@ -125,4 +125,8 @@ Modifier art is a painted barn quilt.
   - Eerie events can be the agreement being honored in odd ways (an upkeep clause turning a dead pivot), or loopholes and breaches.
   - It's filed like a real easement, with the county Register of Deeds. The player's role may be closer to a witness or recorder than an adventurer.
   - The full text could be a found document, uncovered clause by clause across runs.
+- **Inherited:** the agreement was signed generations ago. Nobody alive consented to it themselves, and that is the world's central tension: a consensual order that the living only inherited.
+  - Copies, memories and interpretations of the text differ. People disagree about what was agreed and whether it still binds them.
+  - Real inherited agreements (the treaties signed by Nebraska's Native nations, still binding today) make a serious parallel. Treat it with care and consultation.
+  - Candidate for the river: the place where the living can affirm or refuse the agreement for themselves, in person, with their testimony.
 - **Open:** what happens at the river.
