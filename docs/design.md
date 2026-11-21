@@ -139,4 +139,8 @@ Modifier art is a painted barn quilt.
   - Real ancestor: the WPA's Federal Writers' Project, which sent interviewers across the country in the 1930s to collect testimony and wrote the American Guide books, Nebraska's included.
   - Buy-in is the cultural baseline, with friction at the edges: the cost of preservation (held places never change), stories that would hurt someone if told, private people, and the dead, who can't consent.
 - **Omaha's flag:** a white circle on a gray field.
-- **Open:** what happens to people who refuse at the river.
+- **At the river, three endings:**
+  1. **Accept:** sign, deliver your testimony, come home a hero. Your stories become part of how the preserve is kept.
+  2. **Refuse and stay:** live outside the agreement but still inside the preserve, without the abundance. Holdouts can't be recorded, so they are blind spots to the Easement. A refusing character may turn up as a holdout in later runs.
+  3. **Take the water:** go down the Missouri to parts unknown. Nobody knows what's there. "Taking the water" is something people say.
+  - Each ending changes the world for later runs. None of them is a failure screen.
