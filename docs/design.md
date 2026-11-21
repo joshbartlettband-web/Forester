@@ -144,3 +144,16 @@ Modifier art is a painted barn quilt.
   2. **Refuse and stay:** live outside the agreement but still inside the preserve, without the abundance. Holdouts can't be recorded, so they are blind spots to the Easement. A refusing character may turn up as a holdout in later runs.
   3. **Take the water:** go down the Missouri to parts unknown. Nobody knows what's there. "Taking the water" is something people say.
   - Each ending changes the world for later runs. None of them is a failure screen.
+
+
+## Mechanics (first prototype: `prototypes/survey/`)
+
+- **Run:** a summons (character with age, traits, ties), then 12 legs across real Nebraska towns on north, central and south lanes that cross, ending at Omaha and the Missouri. Each leg has two stops on the road and a courthouse filing.
+- **Stories are cards:** teller, theme, place, era, people, value, vivid, plus the event marks earned while getting them (Chain, Find, Risk, Spare, Repeat). Stories told reluctantly are worth half.
+- **Filing:** up to 5 stories at a time, up to 3 filings per courthouse. Hands: Account, Pair, Two Pair, Three Witnesses (theme), Thread (people links), Long Thread, One Era, Full Account (3 + 2 places), Four Witnesses, Whole Story. Score = Base × Mult. Falling short ends the Survey early.
+- **Listening:** play question cards (ask about the place, wait, follow up, press, ask again, tell your own, name someone) against trust and detail. Each teller has a "door" that works best. Trust at zero closes them for good ("a no is a no").
+- **Estimating:** look closely at a few of 36 patches of land, then estimate the total. Accuracy sets how many stories you get.
+- **Keepsakes:** cross-game modifiers that read the event marks on scoring stories; five slots.
+- **Embellishing:** +2 vivid on a story for drift, which raises later targets.
+- **Endings:** sign, refuse and stay, or take the water. Halsey's record persists in the browser.
+- **Balance:** targets 140 × 1.36 per leg, ×1.35 at the river. A bot that files just enough finishes about 60% of runs, mostly failing at legs 10 to 12 (`tools/playtest/survey-bot.js`).
