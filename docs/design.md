@@ -161,3 +161,13 @@ Modifier art is a painted barn quilt.
 ### Icons
 
 `tools/make-icons.py` draws the mechanic icons into `art/icons/` (SVG, 48×48, wobbly ink over one off-register quilt color; `icons.json` lists each one's meaning). The events: Chain (linked rings), Find (a lantern, not an eye, for a culture that won't watch), Risk (a lit match), Spare (a canning jar), Repeat (a center pivot). Also trust (coffee cup), detail (pencil), vivid (star), story, drift (feather), era (a clock with no hands), place (a surveyed section), ties, thread (needle), witnesses (quote marks), filing (rubber stamp), sign (pen nib), holdout (shut gate), keepsake (quilt block). `tools/build-art-engine.py` copies them into the Survey prototype.
+
+## Collisions: mixing sources on one screen
+
+The direction: Gemini-rendered photographs, hand drawings from the notebooks, and code-drawn print share every screen and react to each other and to play, rather than living in separate looks. First test: `prototypes/collision/`.
+
+- **Places are Gemini photographs** (`tools/gemini-render.py`, prompts in `art/rendered/prompts.json`), pre-rendered, never generated at play time. Code reprints each as a four-plate overprint halftone with loose registration; the photograph only shows where something develops it.
+- **Tellers start as your drawing.** Gemini renders a photograph from each portrait drawing at the same framing. At low trust the drawing's lines are made of the photograph; as trust rises the photograph develops outward from the lines.
+- **Drawings live in the scene,** boil slightly, cut a paper halo out of the print, throw a shadow away from the lantern, and turn chalk-white where the photograph shows through.
+- **Every story told pastes a torn scrap** (a crop of a rendered place, duotoned in its event's ink, with its drawing) into the scene, and its icon is stamped on top.
+- **Events have visual consequences:** Find develops the photograph for good; Chain ties a pink thread and develops along it; Risk burns a hole through to bare paper; Spare's scrap stays pasted in full color; Repeat sweeps a circle of the place into one ink, like a center pivot.

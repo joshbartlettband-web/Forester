@@ -1,0 +1,353 @@
+<title>Halsey Collisions</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+@font-face{font-family:"Halsey Hand";src:url(fonts/HalseyHand.woff2) format("woff2");font-display:swap}
+/* Layout: one column. The place is the hero; the teller and your hand of stories sit under it.
+   Single printed-paper theme by choice: every surface is paper, ink or photograph. */
+:root{
+  --paper:#f1ebdc;--paper2:#e4dccb;--ink:#1f1b2e;--muted:#675f70;--pink:#e2486f;--blue:#3a78c3;--yellow:#f3c22f;--green:#6f9148;--rust:#c4622c;
+  --line:rgba(31,27,46,.2);
+  --hand:"Halsey Hand","Bradley Hand","Segoe Print",cursive;--plain:ui-monospace,Menlo,Consolas,monospace;
+  color-scheme:light}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--paper);color:var(--ink);font-family:var(--hand);font-size:20px;line-height:1.3}
+.wrap{max-width:980px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:14px 48px;display:grid;gap:14px}
+header{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:6px 16px}
+h1{font-size:46px;line-height:1;margin:0;font-weight:400}
+h2{font-size:30px;line-height:1;margin:0;font-weight:400}
+p{margin:0;text-wrap:pretty}
+.small{font-family:var(--plain);font-size:11.5px;line-height:1.45;color:var(--muted);letter-spacing:.02em}
+.places{display:flex;flex-wrap:wrap;gap:6px}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,input:focus-visible+span{outline:2px solid var(--blue);outline-offset:2px}
+.places button{font-size:17px;background:transparent;border:1.5px solid var(--line);border-radius:3px;padding:2px 10px}
+.places button[aria-pressed="true"]{border-color:var(--ink);background:var(--yellow);mix-blend-mode:multiply}
+.stage{position:relative;max-width:100%}
+#scene{display:block;width:100%;height:auto;aspect-ratio:3/2;max-width:100%;touch-action:none;box-shadow:0 1px 0 var(--line),0 10px 24px -18px rgba(31,27,46,.6)}
+.cap{position:absolute;left:10px;bottom:8px;background:var(--paper);padding:1px 8px 0;font-size:18px;border:1.5px solid var(--ink);pointer-events:none}
+.hint{position:absolute;right:10px;top:8px;background:var(--ink);color:var(--paper);font-family:var(--plain);font-size:11px;padding:3px 7px;border-radius:2px;pointer-events:none}
+.layers{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center}
+.layers label{display:inline-flex;gap:6px;align-items:center;font-family:var(--plain);font-size:12px;cursor:pointer}
+.layers input{width:16px;height:16px;accent-color:var(--ink)}
+.layers .sw{width:12px;height:12px;border-radius:50%;display:inline-block;border:1.5px solid var(--ink)}
+.teller{display:grid;grid-template-columns:minmax(120px,190px) 1fr;gap:16px;align-items:start}
+#portrait{width:100%;height:auto;aspect-ratio:3/4;display:block;box-shadow:0 1px 0 var(--line),0 10px 24px -18px rgba(31,27,46,.6);max-width:100%}
+.tinfo{display:grid;gap:8px;min-width:0}
+.meter{display:flex;gap:4px;flex-wrap:wrap;align-items:center}
+.meter i{width:19px;height:19px;border:1.5px solid var(--ink);border-radius:2px;background:rgba(255,255,255,.4)}
+.meter i.on{background:var(--pink);mix-blend-mode:multiply}
+.ic{width:24px;height:24px;vertical-align:-6px}
+.det{position:relative;height:14px;border-bottom:2px solid var(--ink)}
+.det b{position:absolute;left:0;bottom:-1px;height:9px;background:var(--blue);mix-blend-mode:multiply;transition:width .3s}
+.log{font-size:18px;min-height:2.6em}
+.log em{font-style:normal;color:var(--rust)}
+.hand{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+.card{position:relative;text-align:left;background:#faf6ec;border:1.5px solid var(--ink);border-radius:4px;padding:0 0 8px;display:grid;gap:3px;box-shadow:2px 3px 0 rgba(31,27,46,.85);transition:transform .15s}
+.card:hover{transform:translateY(-3px) rotate(-.6deg)}
+.card[aria-pressed="true"]{transform:translateY(-10px) rotate(-1.4deg);box-shadow:4px 10px 0 rgba(31,27,46,.85);border-color:var(--pink)}
+.card canvas{width:100%;height:auto;aspect-ratio:3/2;display:block;border-bottom:1.5px solid var(--ink);border-radius:3px 3px 0 0;max-width:100%}
+.card .t{font-size:17px;line-height:1.05;padding:0 8px;min-height:2.1em}
+.card .m{display:flex;justify-content:space-between;align-items:center;padding:0 8px;font-family:var(--plain);font-size:11px}
+.card .ev{position:absolute;right:4px;top:4px;width:34px;height:34px;background:#faf6ec;border-radius:50%;padding:3px;border:1.5px solid var(--ink)}
+.card .ev img{width:100%;height:100%}
+.over{position:absolute;inset:0;display:grid;place-items:center;background:rgba(241,235,220,.72)}
+.over div{background:var(--paper);border:2px solid var(--ink);padding:16px 22px;display:grid;gap:10px;justify-items:start;max-width:min(90%,420px);box-shadow:4px 5px 0 var(--ink)}
+.btn{background:var(--yellow);border:1.5px solid var(--ink);border-radius:3px;padding:4px 14px;font-size:20px;box-shadow:2px 2px 0 var(--ink)}
+.key{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:8px 16px}
+.key div{display:flex;gap:8px;align-items:flex-start}
+.key img{width:30px;height:30px;flex:none}
+@media (max-width:640px){
+  h1{font-size:36px}
+  .hand{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .teller{grid-template-columns:120px 1fr}
+  .hint{font-size:9.5px;max-width:62%;top:6px;right:6px}
+  .cap{font-size:15px;left:6px;bottom:6px}
+}
+@media (prefers-reduced-motion:reduce){.card,.det b{transition:none}}
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>Halsey Collisions</h1>
+    <p class="small">Photographs rendered by Gemini · drawings from your notebooks · print, grid and stamps drawn by code</p>
+  </header>
+  <nav class="places" id="places" aria-label="Places"></nav>
+  <div class="stage">
+    <canvas id="scene" width="960" height="640" aria-label="The place, printed over a photograph, with drawings in it"></canvas>
+    <div class="cap" id="cap"></div>
+    <div class="hint" id="hint">Move the lantern. Pick a story, then tap where to tell it.</div>
+    <div class="over" id="over" hidden><div><h2 id="overT"></h2><p id="overP"></p><button class="btn" id="next">Next place</button></div></div>
+  </div>
+  <div class="layers" id="layers">
+    <label><input type="checkbox" id="L-photo" checked><span><span class="sw" style="background:#9a8f7c"></span> Photograph</span></label>
+    <label><input type="checkbox" id="L-print" checked><span><span class="sw" style="background:var(--pink)"></span> Code print</span></label>
+    <label><input type="checkbox" id="L-draw" checked><span><span class="sw" style="background:var(--ink)"></span> Your drawings</span></label>
+    <label><input type="checkbox" id="L-marks" checked><span><span class="sw" style="background:var(--blue)"></span> Code marks</span></label>
+  </div>
+  <section class="teller">
+    <canvas id="portrait" width="360" height="480" aria-label="The teller: your drawing, developing into a photograph as they trust you"></canvas>
+    <div class="tinfo">
+      <div><h2 id="tname"></h2><p class="small" id="trole"></p></div>
+      <div class="meter" id="trust" aria-label="Trust"></div>
+      <div><div class="small" style="display:flex;justify-content:space-between"><span><img class="ic" src="icons/detail.svg" alt=""> Detail <span id="dnum"></span></span><span id="earned"></span></div><div class="det"><b id="dbar"></b></div></div>
+      <p class="small" id="day"></p>
+      <p class="log" id="log"></p>
+    </div>
+  </section>
+  <section aria-label="Your stories"><div class="hand" id="hand"></div></section>
+  <section class="key small" aria-label="What each event does">
+    <div><img src="icons/find.svg" alt=""><span><b>Find</b> +3 detail. The lantern develops the photograph there for good.</span></div>
+    <div><img src="icons/chain.svg" alt=""><span><b>Chain</b> Grows when it shares a theme or place with the last story. A thread ties them.</span></div>
+    <div><img src="icons/risk.svg" alt=""><span><b>Risk</b> +6 detail, −3 trust unless they already trust you. It burns through the print.</span></div>
+    <div><img src="icons/spare.svg" alt=""><span><b>Spare</b> Little now; your next story counts double. The scrap stays pasted down.</span></div>
+    <div><img src="icons/repeat.svg" alt=""><span><b>Repeat</b> Copies the last event. The pivot sweeps a circle into one ink.</span></div>
+    <div><img src="icons/trust.svg" alt=""><span><b>Trust</b> The teller's want gets +2. As trust grows, your drawing of them develops into a photograph.</span></div>
+  </section>
+</div>
+
+<script>
+(()=>{
+"use strict";
+const $=s=>document.querySelector(s);
+const mk=(w,h)=>{const c=document.createElement('canvas');c.width=w;c.height=h;return c};
+const R=(a=0,b=1)=>a+Math.random()*(b-a),pick=a=>a[Math.floor(Math.random()*a.length)];
+const rng=seed=>{let s=(seed>>>0)||1;return()=>(s=(Math.imul(s,1664525)+1013904223)>>>0)/4294967296};
+const hex=h=>[parseInt(h.slice(1,3),16),parseInt(h.slice(3,5),16),parseInt(h.slice(5,7),16)];
+const RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const W=960,H=640,PAPER='#f1ebdc';
+const INK={pink:'#e2486f',blue:'#3a78c3',yellow:'#f3c22f',green:'#6f9148',rust:'#c4622c',ink:'#1f1b2e'};
+const EVENTS={Find:'yellow',Chain:'pink',Risk:'rust',Spare:'green',Repeat:'blue'};
+
+const SCENES=[
+ {id:'halsey',name:'The planted forest, Halsey',img:'halsey-rows',teller:0,draw:[{k:'tower',x:.86,y:.36,h:.22},{k:'critter',x:.36,y:.8,h:.16},{k:'grass',x:.0,y:.83,h:.2}]},
+ {id:'sandhills',name:'A windmill in the Sandhills',img:'sandhills-windmill',teller:1,draw:[{k:'stars',x:.04,y:.02,h:.26},{k:'critter',x:.72,y:.74,h:.14}]},
+ {id:'platte',name:'The Platte at dusk',img:'platte-cranes',teller:2,draw:[{k:'cranes',x:.58,y:.02,h:.42,drift:1},{k:'grass',x:.55,y:.84,h:.18}]},
+ {id:'courthouse',name:'Register of Deeds',img:'courthouse',teller:1,draw:[{k:'bulb',x:.47,y:-.02,h:.24,light:1},{k:'traveler',x:.4,y:.5,h:.46}]},
+ {id:'mainstreet',name:'Main Street',img:'mainstreet',teller:0,draw:[{k:'mainstreet',x:.52,y:.62,h:.1},{k:'traveler',x:.62,y:.64,h:.3}]},
+];
+const TELLERS=[
+ {face:'face1',name:'Walt Okamoto',role:'Keeps the seed library',want:'Weather'},
+ {face:'face2',name:'Arne Lindqvist',role:'Retired lineman. Still climbs.',want:'Work'},
+ {face:'face3',name:'Deshawn Price',role:'Runs the ferry at the Loup',want:'Water'},
+];
+const THEMES={
+ Water:{sk:'cranes',t:['The year the Dismal came up to the porch','Ice on the Loup thick enough to drive','My father’s boat, and where it went','The well that went sweet again']},
+ Weather:{sk:'stars',t:['The hail that flattened the rows','Three days the wind never stopped','A green sky over Thedford','The winter we burned the fence posts']},
+ Work:{sk:'mainstreet',t:['Setting poles on the Ord line','The last day at the elevator','Planting the rows by hand','What the nursery foreman said']},
+ Strange:{sk:'critter',t:['The thing under the Halsey bridge','Lights in the trees past the tower','Something walked the rows at night','My aunt heard it count']},
+ Leaving:{sk:'traveler',t:['How my brother went east','Taking the water at Brownville','The chair my mother rode to Omaha','The survey that never came back']},
+ Light:{sk:'bulb',t:['When the power came to the ranch','The lamp they kept in the courthouse','Reading by the stock tank','The bulb that never burns out']},
+};
+const PLACES=['Halsey','Thedford','Dunning','Broken Bow','the Loup','the Dismal'];
+
+/* ---------- loading ---------- */
+const cache={};
+const load=src=>cache[src]||(cache[src]=new Promise((res,rej)=>{const i=new Image();i.onload=()=>res(i);i.onerror=()=>rej(new Error('missing '+src));i.src=src}));
+const inked={};
+async function sketch(k,color=INK.ink){const key=k+color;if(inked[key])return inked[key];
+  const im=await load('sketches/'+k+'.png'),c=mk(im.width,im.height),x=c.getContext('2d');x.drawImage(im,0,0);
+  const d=x.getImageData(0,0,c.width,c.height),p=d.data,[r,g,b]=hex(color);
+  for(let i=0;i<p.length;i+=4){const a=255-(p[i]*.3+p[i+1]*.59+p[i+2]*.11);p[i]=r;p[i+1]=g;p[i+2]=b;p[i+3]=a<14?0:Math.min(255,a*1.15)}
+  x.putImageData(d,0,0);return inked[key]=c}
+function cover(im,w,h,fx=.5,fy=.5,zoom=1){const c=mk(w,h),x=c.getContext('2d'),s=Math.max(w/im.width,h/im.height)*zoom;
+  x.drawImage(im,(w-im.width*s)*fx,(h-im.height*s)*fy,im.width*s,im.height*s);return c}
+
+/* ---------- code: paper, separation, duotone ---------- */
+function makePaper(w,h,seed){const c=mk(w,h),x=c.getContext('2d'),r=rng(seed);x.fillStyle=PAPER;x.fillRect(0,0,w,h);
+  const id=x.getImageData(0,0,w,h),p=id.data;for(let i=0;i<p.length;i+=4){const n=(r()-.5)*16;p[i]+=n;p[i+1]+=n;p[i+2]+=n*1.15}x.putImageData(id,0,0);
+  x.lineWidth=1;for(let i=0;i<w*h/1800;i++){x.strokeStyle=`rgba(${r()<.5?'120,96,70':'255,255,255'},${.05+r()*.08})`;const a=r()*w,b=r()*h;x.beginPath();x.moveTo(a,b);x.quadraticCurveTo(a+r()*24-12,b+r()*24-12,a+r()*36-18,b+r()*36-18);x.stroke()}
+  return c}
+function specks(w,h,seed){const c=mk(w,h),x=c.getContext('2d'),r=rng(seed);x.fillStyle=PAPER;
+  for(let i=0;i<w*h/90;i++){x.globalAlpha=.25+r()*.6;x.fillRect(r()*w,r()*h,r()*1.8+.4,r()*1.8+.4)}return c}
+function separate(src,paper,seed){
+  const w=src.width,h=src.height,d=src.getContext('2d').getImageData(0,0,w,h).data,out=mk(w,h),o=out.getContext('2d'),r=rng(seed);
+  o.drawImage(paper,0,0);const cell=Math.max(4,Math.round(w/165)),diag=Math.hypot(w,h)/2+cell;
+  const plates=[['yellow',0],['blue',15],['pink',75],['ink',45]];
+  for(const[ink,ang]of plates){const a=ang*Math.PI/180,ca=Math.cos(a),sa=Math.sin(a),L=mk(w,h),l=L.getContext('2d');l.fillStyle=INK[ink];l.beginPath();
+    for(let v=-diag;v<diag;v+=cell)for(let u=-diag;u<diag;u+=cell){const x=w/2+u*ca-v*sa,y=h/2+u*sa+v*ca;if(x<-cell||y<-cell||x>w+cell||y>h+cell)continue;
+      const i=(Math.min(h-1,Math.max(0,y|0))*w+Math.min(w-1,Math.max(0,x|0)))*4,c=1-d[i]/255,m=1-d[i+1]/255,yy=1-d[i+2]/255,k=Math.min(c,m,yy);
+      let val=ink==='blue'?c-k*.7:ink==='pink'?m-k*.78:ink==='yellow'?yy-k*.6:(k-.34)*1.5;
+      val=Math.min(1,val*(ink==='ink'?1:.95));if(val<.05)continue;const rad=cell*.66*Math.sqrt(val);l.moveTo(x+rad,y);l.arc(x,y,rad,0,6.2832)}
+    l.fill();o.globalCompositeOperation='multiply';o.globalAlpha=ink==='ink'?.8:.88;o.drawImage(L,(r()-.5)*5,(r()-.5)*4)}
+  o.globalCompositeOperation='source-over';o.globalAlpha=1;o.drawImage(specks(w,h,seed+7),0,0);return out}
+function duotone(src,inkHex,paperHex=PAPER){const w=src.width,h=src.height,c=mk(w,h),x=c.getContext('2d');x.drawImage(src,0,0);
+  const id=x.getImageData(0,0,w,h),p=id.data,[ir,ig,ib]=hex(inkHex),[pr,pg,pb]=hex(paperHex),K=hex(INK.ink);
+  for(let i=0;i<p.length;i+=4){const t=1-(p[i]*.3+p[i+1]*.59+p[i+2]*.11)/255,u=Math.min(1,t*1.5),deep=Math.max(0,t-.62)*1.6;
+    p[i]=pr+(ir-pr)*u+(K[0]-ir)*deep;p[i+1]=pg+(ig-pg)*u+(K[1]-ig)*deep;p[i+2]=pb+(ib-pb)*u+(K[2]-ib)*deep}
+  x.putImageData(id,0,0);return c}
+function torn(w,h,seed){const r=rng(seed),pts=[],e=6;const side=(x0,y0,x1,y1,n)=>{for(let i=0;i<n;i++){const t=i/n;pts.push([x0+(x1-x0)*t+(r()-.5)*e,y0+(y1-y0)*t+(r()-.5)*e])}};
+  side(e,e,w-e,e,14);side(w-e,e,w-e,h-e,10);side(w-e,h-e,e,h-e,14);side(e,h-e,e,e,10);return pts}
+
+/* ---------- state ---------- */
+const sc=$('#scene'),ctx=sc.getContext('2d');
+const maskC=mk(W,H),mctx=maskC.getContext('2d'),maskF=mk(W,H),mf=maskF.getContext('2d'),photoT=mk(W,H),pt=photoT.getContext('2d'),skT=mk(W,H),sk=skT.getContext('2d');
+let paperC=makePaper(W,H,11);
+const layers={photo:true,print:true,draw:true,marks:true};
+let S=null,scene=null,cur=0,lantern=null,armed=null,fx=[],dirty=true;
+const icons={};for(const k of['find','chain','risk','spare','repeat','vivid','story','trust'])load('icons/'+k+'.svg').then(i=>{icons[k]=i;dirty=true});
+
+async function enterScene(i){
+  cur=i;const s=SCENES[i];$('#cap').textContent=s.name;
+  document.querySelectorAll('#places button').forEach((b,j)=>b.setAttribute('aria-pressed',j===i));
+  const im=await load('img/'+s.img+'.jpg'),photo=cover(im,W,H);
+  const items=await Promise.all(s.draw.map(async d=>({...d,ink:await sketch(d.k),paper:await sketch(d.k,PAPER),over:await sketch(d.k,INK.pink)})));
+  scene={...s,im,photo,print:separate(photo,paperC,i*31+5),duo:Object.fromEntries(Object.entries(INK).map(([k,v])=>[k,null])),items,scraps:[],stamps:[],threads:[],rings:[],burns:[]};
+  scene.duoOf=k=>scene.duo[k]||(scene.duo[k]=duotone(photo,INK[k]));
+  mctx.clearRect(0,0,W,H);fx=[];
+  const T=TELLERS[s.teller];
+  S={teller:T,trust:3,detail:0,earned:0,daylight:7,last:null,lastEvent:null,chain:0,spare:false,hand:[]};
+  for(let k=0;k<5;k++)S.hand.push(await makeCard());
+  await setPortrait(T);
+  $('#over').hidden=true;log(`<b>${T.name}</b> looks up. ${pick(['“Survey, huh.”','“I figured somebody would come.”','“Sit, if you’re staying.”'])} They want to hear about <em>${T.want}</em>.`);
+  renderHUD();renderHand();dirty=true}
+
+/* ---------- cards: procedural stories with a drawing and a crop of a rendered place ---------- */
+let cardSeed=1;
+async function makeCard(){
+  const theme=pick(Object.keys(THEMES)),ev=pick(Object.keys(EVENTS)),src=pick(SCENES),seed=cardSeed++;
+  const card={id:'c'+seed,theme,event:ev,title:pick(THEMES[theme].t),place:pick(PLACES),value:6+Math.floor(R(0,12)),vivid:1+Math.floor(R(0,3)),seed,src};
+  const im=await load('img/'+src.img+'.jpg'),w=300,h=200,crop=cover(im,w,h,R(.1,.9),R(.2,.8),R(1.6,2.6));
+  const art=mk(w,h),a=art.getContext('2d');a.drawImage(duotone(crop,INK[EVENTS[ev]]),0,0);
+  const s=await sketch(THEMES[theme].sk),k=Math.min(w*.9/s.width,h*.86/s.height),sw=s.width*k,sh=s.height*k;
+  a.globalCompositeOperation='multiply';a.drawImage(s,(w-sw)/2,(h-sh)/2+4,sw,sh);
+  a.globalCompositeOperation='source-over';card.art=art;card.sketch=THEMES[theme].sk;return card}
+function renderHand(){
+  const h=$('#hand');h.innerHTML='';
+  S.hand.forEach(c=>{const b=document.createElement('button');b.className='card';b.setAttribute('aria-pressed',armed===c);
+    b.setAttribute('aria-label',`${c.title}. ${c.theme}, ${c.event}. Value ${c.value}, vivid ${c.vivid}.`);
+    const cv=mk(300,200);cv.getContext('2d').drawImage(c.art,0,0);b.appendChild(cv);
+    b.insertAdjacentHTML('beforeend',`<span class="ev"><img src="icons/${c.event.toLowerCase()}.svg" alt=""></span><span class="t">${c.title}</span><span class="m"><span>${c.theme} · ${c.place}</span><span>${c.value} <img class="ic" style="width:16px;height:16px;vertical-align:-3px" src="icons/vivid.svg" alt="vivid">${c.vivid}</span></span>`);
+    b.onclick=()=>{armed=armed===c?null:c;renderHand();$('#hint').textContent=armed?`Tap the place to tell “${c.title}”.`:'Move the lantern. Pick a story, then tap where to tell it.';dirty=true};
+    h.appendChild(b)})}
+
+/* ---------- telling: mechanics and the collisions they cause ---------- */
+const near=(x,y)=>scene.items.some(d=>{const b=box(d,0);return x>b.x-30&&x<b.x+b.w+30&&y>b.y-30&&y<b.y+b.h+30});
+async function tell(card,x,y){
+  if(!S||S.daylight<=0)return;
+  S.daylight--;const notes=[];let dt=1,dd=Math.round(card.value/4)+card.vivid-1;
+  if(card.theme===S.teller.want){dt+=2;notes.push('they lean in')}
+  if(near(x,y)){dd+=2;notes.push('it ties to something here')}
+  let ev=card.event;if(ev==='Repeat'){if(S.lastEvent&&S.lastEvent!=='Repeat'){ev=S.lastEvent;notes.push('again, like the last one');fxRepeat(x,y,EVENTS[ev])}else{notes.push('nothing to repeat yet');fxRepeat(x,y,'blue')}}
+  if(ev==='Find'){dd+=3;fxFind(x,y)}
+  if(ev==='Chain'){if(S.last&&(S.last.theme===card.theme||S.last.place===card.place)){S.chain++;dd+=2*S.chain;notes.push(`chain ×${S.chain}`)}else S.chain=1;fxChain(x,y)}
+  if(ev==='Risk'){dd+=6;if(S.trust<6){dt-=3;notes.push('<em>too far</em>')}fxRisk(x,y)}
+  if(S.spare&&card.event!=='Spare'){dd*=2;S.spare=false;notes.push('the jar opens: double')}
+  if(card.event==='Spare'){S.spare=true;dd=Math.max(1,dd-2);notes.push('held back for later')}
+  paste(card,x,y,card.event==='Spare');stamp(card.event,x,y);
+  const before=Math.floor(S.detail/8);S.trust=Math.max(0,Math.min(9,S.trust+dt));S.detail+=dd;const got=Math.floor(S.detail/8)-before;S.earned+=got;
+  S.last=card;S.lastEvent=card.event;S.hand=S.hand.filter(c=>c!==card);armed=null;
+  log(`<b>${card.title}.</b> ${dd>0?'+'+dd+' detail':''}${dt?`, ${dt>0?'+':''}${dt} trust`:''}${notes.length?' · '+notes.join(' · '):''}${got?` · <em>a story for the record</em>`:''}`);
+  renderHUD();renderHand();$('#hint').textContent='Move the lantern. Pick a story, then tap where to tell it.';
+  S.hand.push(await makeCard());renderHand();
+  if(S.trust===0||S.daylight===0)setTimeout(()=>endScene(S.trust===0),1400)}
+function endScene(left){const T=S.teller;$('#overT').textContent=left?`${T.name} is done talking.`:'Dark.';
+  $('#overP').textContent=S.earned?`You leave with ${S.earned} ${S.earned===1?'story':'stories'} from ${T.name}.`:`Nothing for the record from ${T.name} this time.`;$('#over').hidden=false}
+$('#next').onclick=()=>enterScene((cur+1)%SCENES.length);
+
+function addFx(dur,draw,done){fx.push({t0:performance.now(),dur:RM?1:dur,draw,done});dirty=true}
+function soft(c,x,y,r,a=1){const g=c.createRadialGradient(x,y,0,x,y,r);g.addColorStop(0,`rgba(255,255,255,${a})`);g.addColorStop(.6,`rgba(255,255,255,${a*.7})`);g.addColorStop(1,'rgba(255,255,255,0)');c.fillStyle=g;c.beginPath();c.arc(x,y,r,0,6.2832);c.fill()}
+function fxFind(x,y){addFx(900,(c,p)=>{soft(mctx,x,y,40+120*p,.08);c.strokeStyle=INK.yellow;c.globalAlpha=1-p;c.lineWidth=6;c.beginPath();c.arc(x,y,30+150*p,0,6.2832);c.stroke();c.globalAlpha=1})}
+function fxChain(x,y){const prev=scene.stamps.length?scene.stamps[scene.stamps.length-1]:null;if(!prev)return;
+  const r=rng(x*7+y),pts=[];const n=18;for(let i=0;i<=n;i++){const t=i/n;pts.push([prev.x+(x-prev.x)*t+(r()-.5)*10,prev.y+(y-prev.y)*t+Math.sin(t*Math.PI)*-40+(r()-.5)*8])}
+  const th={pts,len:0};scene.threads.push(th);
+  addFx(800,(c,p)=>{th.len=p;mctx.lineCap='round';mctx.strokeStyle='rgba(255,255,255,.12)';mctx.lineWidth=34;mctx.beginPath();const k=Math.max(1,Math.floor(p*n));mctx.moveTo(...pts[0]);for(let i=1;i<=k;i++)mctx.lineTo(...pts[i]);mctx.stroke()},()=>th.len=1)}
+function fxRisk(x,y){const r=rng(x+y*3),edge=[];for(let i=0;i<28;i++){const a=i/28*6.2832;edge.push(.75+r()*.35)}
+  const b={x,y,edge,r:0};scene.burns.push(b);
+  addFx(1100,(c,p)=>{b.r=70*Math.min(1,p*1.6);c.globalCompositeOperation='screen';c.globalAlpha=Math.max(0,1-p*1.3);const g=c.createRadialGradient(x,y,0,x,y,220);g.addColorStop(0,'#fff6c8');g.addColorStop(1,'rgba(255,200,80,0)');c.fillStyle=g;c.fillRect(0,0,W,H);c.globalAlpha=1;c.globalCompositeOperation='source-over'})}
+function fxRepeat(x,y,ink){const ring={x,y,ink,a:0,r:150};scene.rings.push(ring);
+  addFx(1500,(c,p)=>{ring.a=p*6.2832;c.strokeStyle=INK.ink;c.lineWidth=3;c.beginPath();c.moveTo(x,y);c.lineTo(x+Math.cos(ring.a-1.57)*ring.r,y+Math.sin(ring.a-1.57)*ring.r);c.stroke()},()=>ring.a=6.2832)}
+function paste(card,x,y,keep){const w=keep?230:170,h=w*2/3,pts=torn(w,h,card.seed),c=mk(w,h),k=c.getContext('2d');
+  k.beginPath();pts.forEach((p,i)=>i?k.lineTo(...p):k.moveTo(...p));k.closePath();k.save();k.clip();k.drawImage(card.art,0,0,w,h);k.restore();
+  k.strokeStyle='rgba(31,27,46,.35)';k.lineWidth=1.2;k.stroke();
+  const s={c,x,y,w,h,rot:R(-.14,.14),keep,born:performance.now()};scene.scraps.push(s);
+  addFx(500,(cc,p)=>{s.drop=1-p})}
+function stamp(ev,x,y){scene.stamps.push({ev,x,y,rot:R(-.3,.3),born:performance.now()})}
+
+/* ---------- portrait: the drawing develops into its photograph as trust grows ---------- */
+const pc=$('#portrait'),px=pc.getContext('2d'),PW=360,PH=480;
+let P=null;
+async function setPortrait(T){
+  const ink=await sketch(T.face),mask=await sketch(T.face,'#ffffff'),photo=cover(await load('img/'+T.face+'-photo.jpg'),PW,PH);
+  const pp=makePaper(PW,PH,3);P={ink,mask,photo,print:separate(photo,pp,9),paper:pp,r:0,target:0,maskC:mk(PW,PH),dirty:true};dirty=true}
+function fitDraw(c,im,w,h,dx=0,dy=0){const s=Math.min(w/im.width,h/im.height),iw=im.width*s,ih=im.height*s;c.drawImage(im,(w-iw)/2+dx,(h-ih)/2+dy,iw,ih)}
+function drawPortrait(){
+  if(!P)return;const goal=S?Math.max(0,S.trust-1)*6:0;P.r+=(goal-P.r)*(RM?1:.08);if(Math.abs(goal-P.r)<.2)P.r=goal;
+  const m=P.maskC.getContext('2d');m.clearRect(0,0,PW,PH);m.globalCompositeOperation='source-over';
+  const steps=P.r<1?0:12;for(let ring of[P.r,P.r*.5])for(let i=0;i<steps;i++){const a=i/steps*6.2832;m.globalAlpha=.5;fitDraw(m,P.mask,PW,PH,Math.cos(a)*ring,Math.sin(a)*ring)}
+  m.globalAlpha=1;fitDraw(m,P.mask,PW,PH);m.globalCompositeOperation='source-in';m.drawImage(P.photo,0,0);m.globalCompositeOperation='source-over';
+  const tr=S?S.trust:0;px.globalAlpha=1;px.drawImage(P.paper,0,0);
+  if(layers.print){px.globalAlpha=.12+tr*.07;px.drawImage(P.print,0,0);px.globalAlpha=1}
+  if(layers.photo)px.drawImage(P.maskC,0,0);
+  if(layers.draw){px.globalCompositeOperation='multiply';px.globalAlpha=Math.max(.25,1-(S?S.trust:0)/11);fitDraw(px,P.ink,PW,PH);px.globalAlpha=1;px.globalCompositeOperation='source-over'}
+  return P.r!==goal}
+
+/* ---------- the scene, every frame ---------- */
+function box(d,t){const s=d.ink,h=d.h*H,w=h*s.width/s.height;let x=d.x*W,y=d.y*H;if(d.drift&&!RM){x+=Math.sin(t/2600)*24;y+=Math.cos(t/3100)*10}return{x,y,w,h}}
+function boil(i,t){if(RM)return[0,0,0];const r=rng(Math.floor(t/130)*97+i*13);return[(r()-.5)*1.6,(r()-.5)*1.6,(r()-.5)*.012]}
+function drawItem(c,d,im,t,i,dx=0,dy=0){const b=box(d,t),[bx,by,br]=boil(i,t);c.save();c.translate(b.x+b.w/2+bx+dx,b.y+b.h/2+by+dy);c.rotate(br);c.drawImage(im,-b.w/2,-b.h/2,b.w,b.h);c.restore()}
+function frame(t){
+  if(!scene){requestAnimationFrame(frame);return}
+  const c=ctx;c.globalCompositeOperation='source-over';c.globalAlpha=1;
+  c.drawImage(layers.print?scene.print:(layers.photo?scene.photo:paperC),0,0);
+  // the mask of developed photograph: permanent patches plus the lantern
+  mf.clearRect(0,0,W,H);mf.drawImage(maskC,0,0);if(lantern)soft(mf,lantern.x,lantern.y,lantern.r,.95);
+  if(layers.photo&&layers.print){pt.clearRect(0,0,W,H);pt.drawImage(maskF,0,0);pt.globalCompositeOperation='source-in';pt.drawImage(scene.photo,0,0);pt.globalCompositeOperation='source-over';c.drawImage(photoT,0,0)}
+  // repeat rings: a circle swept into one ink
+  for(const g of scene.rings){c.save();c.beginPath();c.moveTo(g.x,g.y);c.arc(g.x,g.y,g.r,-1.57,-1.57+g.a);c.closePath();c.clip();c.globalCompositeOperation='multiply';c.drawImage(layers.photo||layers.print?scene.duoOf(g.ink):paperC,0,0);c.restore()}
+  // risk burns: a hole through everything to bare, scorched paper
+  for(const b of scene.burns){if(b.r<1)continue;c.save();c.beginPath();b.edge.forEach((e,i)=>{const a=i/b.edge.length*6.2832;c[i?'lineTo':'moveTo'](b.x+Math.cos(a)*b.r*e,b.y+Math.sin(a)*b.r*e)});c.closePath();c.fillStyle=PAPER;c.fill();c.clip();c.drawImage(paperC,0,0);c.restore();
+    c.save();c.beginPath();b.edge.forEach((e,i)=>{const a=i/b.edge.length*6.2832;c[i?'lineTo':'moveTo'](b.x+Math.cos(a)*b.r*e,b.y+Math.sin(a)*b.r*e)});c.closePath();c.strokeStyle='rgba(120,60,20,.75)';c.lineWidth=5;c.filter='none';c.stroke();c.strokeStyle='rgba(196,98,44,.5)';c.lineWidth=12;c.globalCompositeOperation='multiply';c.stroke();c.restore()}
+  // code marks: section grid with section numbers, registration marks
+  if(layers.marks){c.save();c.strokeStyle='rgba(58,120,195,.38)';c.lineWidth=1;c.setLineDash([2,5]);const cw=W/6,ch=H/4;
+    for(let i=1;i<6;i++){c.beginPath();c.moveTo(i*cw,0);c.lineTo(i*cw,H);c.stroke()}for(let j=1;j<4;j++){c.beginPath();c.moveTo(0,j*ch);c.lineTo(W,j*ch);c.stroke()}
+    c.setLineDash([]);c.fillStyle='rgba(58,120,195,.7)';c.font='11px ui-monospace,Menlo,monospace';
+    for(let j=0;j<4;j++)for(let i=0;i<6;i++){const n=j%2===0?j*6+(6-i):j*6+i+1;c.fillText(String(n),i*cw+6,j*ch+15)}
+    for(const[rx,ry]of[[18,18],[W-18,18],[18,H-18],[W-18,H-18]])['pink','blue','yellow'].forEach((k,q)=>{c.strokeStyle=INK[k];c.lineWidth=1.4;const ox=q*1.3,oy=q*.9;c.beginPath();c.arc(rx+ox,ry+oy,7,0,6.2832);c.moveTo(rx-12+ox,ry+oy);c.lineTo(rx+12+ox,ry+oy);c.moveTo(rx+ox,ry-12+oy);c.lineTo(rx+ox,ry+12+oy);c.stroke()});
+    c.restore()}
+  // pasted scraps from the stories you told
+  for(const s of scene.scraps){c.save();const drop=s.drop||0;c.translate(s.x,s.y-drop*30);c.rotate(s.rot);c.globalAlpha=s.keep?1:.82;c.shadowColor='rgba(31,27,46,.35)';c.shadowBlur=6+drop*14;c.shadowOffsetY=2+drop*10;c.drawImage(s.c,-s.w/2,-s.h/2);c.restore()}
+  // chain threads
+  for(const th of scene.threads){const k=Math.floor(th.len*(th.pts.length-1));if(k<1)continue;c.strokeStyle=INK.pink;c.lineWidth=2.4;c.lineCap='round';c.beginPath();c.moveTo(...th.pts[0]);for(let i=1;i<=k;i++)c.lineTo(...th.pts[i]);c.stroke()}
+  // drawings: ink, an off-register second ink, a shadow thrown by the lantern, and chalk-white where the photograph shows through
+  if(layers.draw){
+    scene.items.forEach((d,i)=>{if(d.light){const b=box(d,t),g=c.createRadialGradient(b.x+b.w/2,b.y+b.h*.7,10,b.x+b.w/2,b.y+b.h*.7,260+Math.sin(t/400)*14);g.addColorStop(0,'rgba(243,194,47,.55)');g.addColorStop(1,'rgba(243,194,47,0)');c.globalCompositeOperation='multiply';c.fillStyle=g;c.fillRect(0,0,W,H);c.globalCompositeOperation='source-over'}});
+    for(const[i,d]of scene.items.entries())for(let q=0;q<8;q++){const a=q/8*6.2832;c.globalAlpha=.5;drawItem(c,d,d.paper,t,i,Math.cos(a)*2.6,Math.sin(a)*2.6)}c.globalAlpha=1;
+    c.globalCompositeOperation='multiply';
+    scene.items.forEach((d,i)=>{if(lantern){const b=box(d,t),cx=b.x+b.w/2,cy=b.y+b.h/2,dx=cx-lantern.x,dy=cy-lantern.y,dist=Math.hypot(dx,dy)||1,f=Math.max(0,1-dist/420)*16;
+      if(f>.5){c.globalAlpha=.22;drawItem(c,d,d.ink,t,i,dx/dist*f,dy/dist*f)}}
+      c.globalAlpha=.6;drawItem(c,d,d.over,t,i+50,2.6,1.8);c.globalAlpha=1;drawItem(c,d,d.ink,t,i);drawItem(c,d,d.ink,t,i,.7,.5)});
+    c.globalCompositeOperation='source-over';
+    if(layers.photo&&layers.print){sk.clearRect(0,0,W,H);scene.items.forEach((d,i)=>drawItem(sk,d,d.paper,t,i));sk.globalCompositeOperation='destination-in';sk.drawImage(maskF,0,0);sk.globalCompositeOperation='source-over';c.drawImage(skT,0,0)}}
+  // stamps
+  if(layers.marks)for(const s of scene.stamps){const im=icons[s.ev.toLowerCase()];if(!im)continue;const age=Math.min(1,(t-s.born)/260),sz=58*(1.8-age*.8);c.save();c.translate(s.x,s.y);c.rotate(s.rot);c.globalAlpha=.92*age;c.globalCompositeOperation='multiply';c.drawImage(im,-sz/2,-sz/2,sz,sz);c.restore()}
+  // the lantern ring
+  if(lantern){c.strokeStyle='rgba(31,27,46,.55)';c.lineWidth=1.5;c.setLineDash([3,6]);c.beginPath();c.arc(lantern.x,lantern.y,lantern.r*.62,0,6.2832);c.stroke();c.setLineDash([])}
+  if(armed&&lantern){c.globalAlpha=.75;c.drawImage(armed.art,lantern.x-60,lantern.y-40,120,80);c.globalAlpha=1}
+  // effects
+  const now=performance.now();fx=fx.filter(f=>{const p=Math.min(1,(now-f.t0)/f.dur);c.save();f.draw(c,p);c.restore();if(p>=1){f.done&&f.done();return false}return true});
+  drawPortrait();
+  requestAnimationFrame(frame)}
+
+/* ---------- input ---------- */
+function toScene(e){const r=sc.getBoundingClientRect();return{x:(e.clientX-r.left)/r.width*W,y:(e.clientY-r.top)/r.height*H}}
+sc.addEventListener('pointermove',e=>{const p=toScene(e);lantern={...p,r:lantern?.r||175}});
+sc.addEventListener('pointerdown',e=>{const p=toScene(e);lantern={...p,r:175};if(armed)tell(armed,p.x,p.y)});
+sc.addEventListener('pointerleave',()=>{lantern=null});
+sc.addEventListener('pointerup',e=>{if(e.pointerType==='touch')setTimeout(()=>lantern=null,600)});
+for(const k of Object.keys(layers)){const el=$('#L-'+k);el.onchange=()=>{layers[k]=el.checked}}
+
+/* ---------- HUD ---------- */
+function log(h){$('#log').innerHTML=h}
+function renderHUD(){const T=S.teller;$('#tname').textContent=T.name;$('#trole').textContent=`${T.role} · wants ${T.want}`;
+  $('#trust').innerHTML=`<img class="ic" src="icons/trust.svg" alt="Trust">`+Array.from({length:9},(_,i)=>`<i class="${i<S.trust?'on':''}"></i>`).join('');
+  $('#dnum').textContent=S.detail;$('#dbar').style.width=Math.min(100,(S.detail%8)/8*100)+'%';$('#earned').innerHTML=`<img class="ic" src="icons/story.svg" alt=""> ${S.earned} for the record`;
+  $('#day').textContent=`${S.daylight} ${S.daylight===1?'story':'stories'} before dark${S.spare?' · a jar is waiting':''}`}
+
+$('#places').innerHTML=SCENES.map((s,i)=>`<button type="button" aria-pressed="false" data-i="${i}">${s.name}</button>`).join('');
+$('#places').onclick=e=>{const b=e.target.closest('button');if(b)enterScene(+b.dataset.i)};
+enterScene(0).catch(e=>{log('Could not load: '+e.message)});
+requestAnimationFrame(frame);
+window.__collide={tell:(i,x,y)=>tell(S.hand[i],x,y),get S(){return S},enterScene};
+})();
+</script>
