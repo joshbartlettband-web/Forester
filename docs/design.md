@@ -110,4 +110,9 @@ Modifier art is a painted barn quilt.
 - **Era pockets:** places are preserved at different moments, including future eras. They may line up with the art styles (glass plate, screen print, expired film, trail cam).
 - **Travel:** on foot. Vehicles exist only if they are safe for people and animals (slow, stop for any living thing). No horses. No trains: freight and shipping don't matter here, and rail doesn't fit the safety rule.
 - **The journey:** east to the Missouri River, through Omaha's preserved city. Several routes cross the state: north (Niobrara, Valentine), central (Platte), south (Republican valley). Starting towns unlock over time (Scottsbluff, Alliance, Chadron, Ogallala), and errands can pull a run west first, such as picking someone or something up.
-- **Open:** the concrete reason to reach the river.
+- **Testimony:** the Easement gathers stories, but it can't scan people. Data rights are part of the agreement, and everything has to be consented to. So knowledge reaches it only when someone tells it, in person, of their own will. The journey east carries testimony to the river.
+  - Consent is a mechanic. You can't take a story; people choose whether to tell you. A "no" is real and stays respected.
+  - The Easement knows only what it has been told. Things nobody has described are blind spots, which is where the eerie lives.
+  - Abundance may be what the Easement pays for the right to listen, the way a real easement is paid for.
+  - Records are kept by hand. Scanning and cameras are off-limits, which gives the journal and the handwriting font a reason to exist.
+- **Open:** why the Easement wants stories at all, and what happens at the river.
