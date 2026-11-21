@@ -120,4 +120,9 @@ Modifier art is a painted barn quilt.
   - Testimony delivered at the river could change the world for later runs.
   - Its agents may be ritually forbidden to look at people: averted, hooded, always behind you, like the hidebehind of logging-camp folklore.
   - Because it trusts what it's told, testimony can be embellished or false. Choosing between truth and a better story could be a core tension.
+- **The agreement is the center of the world.** The Easement may gather information only within the terms of a written agreement: rights granted, duties on both sides, consideration paid. Humanity's side is testimony. The Easement's side is upkeep and abundance.
+  - Clauses could be game rules: run-level terms (like Balatro decks and stakes) and riders negotiated along the way.
+  - Eerie events can be the agreement being honored in odd ways (an upkeep clause turning a dead pivot), or loopholes and breaches.
+  - It's filed like a real easement, with the county Register of Deeds. The player's role may be closer to a witness or recorder than an adventurer.
+  - The full text could be a found document, uncovered clause by clause across runs.
 - **Open:** what happens at the river.
