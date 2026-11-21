@@ -129,4 +129,8 @@ Modifier art is a painted barn quilt.
   - Copies, memories and interpretations of the text differ. People disagree about what was agreed and whether it still binds them.
   - Real inherited agreements (the treaties signed by Nebraska's Native nations, still binding today) make a serious parallel. Treat it with care and consultation.
   - Candidate for the river: the place where the living can affirm or refuse the agreement for themselves, in person, with their testimony.
-- **Open:** what happens at the river.
+- **The Survey:** to share in the abundance, every resident must, at a certain age, make the Survey: the journey east, gathering and giving testimony, ending at the river where they accept the agreement (or don't). It is a coming-of-age pilgrimage, drawing on the general shape of pilgrimages rather than any one faith's rite.
+  - Each run is one person's Survey. Across runs, different people from Halsey make it; the journal and the archive carry over between generations.
+  - The ethical tension: is consent real when abundance depends on it? People who refuse, or never go, live outside the abundance. Among them, scarcity and real survival stakes still exist.
+  - The name ties to the Public Land Survey grid of section lines, the survey-plate look, and the Forester's craft.
+- **Open:** the Survey age; whether it can be delayed or failed; what happens to those who refuse.
