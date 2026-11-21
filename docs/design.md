@@ -115,4 +115,9 @@ Modifier art is a painted barn quilt.
   - The Easement knows only what it has been told. Things nobody has described are blind spots, which is where the eerie lives.
   - Abundance may be what the Easement pays for the right to listen, the way a real easement is paid for.
   - Records are kept by hand. Scanning and cameras are off-limits, which gives the journal and the handwriting font a reason to exist.
-- **Open:** why the Easement wants stories at all, and what happens at the river.
+- **Why stories:** the entity behind the Easement comes from a culture that considers surveillance obscene. It wants to know, but watching is taboo, so it has to ask, and it can only know what it's told.
+  - It doesn't see the preserve. It may keep places up according to how they were last described, so era pockets are places held as someone once told them, and undescribed places drift or grow wild (the spreading forest).
+  - Testimony delivered at the river could change the world for later runs.
+  - Its agents may be ritually forbidden to look at people: averted, hooded, always behind you, like the hidebehind of logging-camp folklore.
+  - Because it trusts what it's told, testimony can be embellished or false. Choosing between truth and a better story could be a core tension.
+- **Open:** what happens at the river.
