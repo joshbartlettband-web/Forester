@@ -1,0 +1,97 @@
+{
+ "chain": {
+  "title": "Chain",
+  "group": "event",
+  "meaning": "Doing the same kind of thing again, right away"
+ },
+ "find": {
+  "title": "Find",
+  "group": "event",
+  "meaning": "Turning up something hidden"
+ },
+ "risk": {
+  "title": "Risk",
+  "group": "event",
+  "meaning": "Pushing when it could go wrong"
+ },
+ "spare": {
+  "title": "Spare",
+  "group": "event",
+  "meaning": "Holding back: unused turns, looks, patience"
+ },
+ "repeat": {
+  "title": "Repeat",
+  "group": "event",
+  "meaning": "Coming back around to the same thing"
+ },
+ "thread": {
+  "title": "Thread",
+  "group": "hand",
+  "meaning": "Stories linked by people who know each other"
+ },
+ "witnesses": {
+  "title": "Witnesses",
+  "group": "hand",
+  "meaning": "Stories on the same theme"
+ },
+ "era": {
+  "title": "Era",
+  "group": "hand",
+  "meaning": "When a place is kept; the clock stopped there"
+ },
+ "place": {
+  "title": "Place",
+  "group": "hand",
+  "meaning": "Where a story happened (a surveyed section)"
+ },
+ "ties": {
+  "title": "Ties",
+  "group": "people",
+  "meaning": "People you know, and who knows them"
+ },
+ "trust": {
+  "title": "Trust",
+  "group": "listening",
+  "meaning": "How willing someone is to keep talking"
+ },
+ "detail": {
+  "title": "Detail",
+  "group": "listening",
+  "meaning": "What you've managed to write down"
+ },
+ "vivid": {
+  "title": "Vivid",
+  "group": "story",
+  "meaning": "How well a story is told (adds Mult)"
+ },
+ "story": {
+  "title": "Story",
+  "group": "story",
+  "meaning": "A story card: what someone agreed to tell"
+ },
+ "drift": {
+  "title": "Drift",
+  "group": "story",
+  "meaning": "Embellishment: a better story than what happened"
+ },
+ "filing": {
+  "title": "Filing",
+  "group": "courthouse",
+  "meaning": "Filing testimony at a Register of Deeds"
+ },
+ "sign": {
+  "title": "Sign",
+  "group": "agreement",
+  "meaning": "Accepting the agreement at the river"
+ },
+ "holdout": {
+  "title": "Holdout",
+  "group": "agreement",
+  "meaning": "Living outside the agreement"
+ },
+ "keepsake": {
+  "title": "Keepsake",
+  "group": "modifier",
+  "meaning": "A barn quilt that changes the rules"
+ }
+}

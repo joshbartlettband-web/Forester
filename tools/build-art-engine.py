@@ -26,4 +26,5 @@ with open(os.path.join(OUT_DIR, "halsey-art.js"), "w", encoding="utf-8") as f:
 for sub in ("sketches", "fonts"):
     src, dst = os.path.join(ROOT, "prototypes", "look-book", sub), os.path.join(OUT_DIR, sub)
     shutil.copytree(src, dst, dirs_exist_ok=True)
+shutil.copytree(os.path.join(ROOT, "art", "icons"), os.path.join(OUT_DIR, "icons"), dirs_exist_ok=True)
 print("wrote", os.path.join(OUT_DIR, "halsey-art.js"), len(body) // 1024, "KB")

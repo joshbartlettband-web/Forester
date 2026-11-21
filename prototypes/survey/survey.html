@@ -66,7 +66,11 @@ input[type=range]{width:100%;accent-color:var(--blue)}
 .story.partial{border-style:dashed}
 .score{font-size:30px}
 .hand{font-size:24px;color:var(--blue)}
-.stamp{display:inline-block;font-family:var(--plain);font-size:10px;background:var(--ink);color:var(--paper);border-radius:2px;padding:0 3px;margin-right:2px}
+.stamp{display:inline-flex;align-items:center;gap:1px;font-family:var(--plain);font-size:10px;margin-right:3px}
+.story .tags span.stamp{border:0;padding:0}
+.ic{width:1.25em;height:1.25em;vertical-align:-.3em;flex:none}
+.stamp .ic{width:22px;height:22px}
+.q .ic{width:30px;height:30px;float:right;margin:-4px -4px 0 6px}
 .keeps{display:flex;gap:8px;flex-wrap:wrap}
 .keep{border:1.5px solid var(--ink);border-radius:3px;padding:6px 8px;font-size:16px;background:rgba(255,255,255,.6);max-width:100%}
 .keep b{font-weight:400;color:var(--blue)}
@@ -274,6 +278,8 @@ window.regen=()=>{sceneCache.clear();for(const v of views)if(v.cv.isConnected)dr
 function mount(id,el){const h=document.getElementById(id);if(h)h.replaceWith(el)}
 function quiltEl(k,size=76){const cv=document.createElement('canvas');cv.width=cv.height=size*2;const def=(typeof MODS!=='undefined'&&MODS.find(m=>m.name===KEEPS[k].name))||{name:KEEPS[k].name,fam:'Find',rarity:'common',block:'sawtooth'};try{drawQuilt(cv,def)}catch(e){}cv.setAttribute('aria-hidden','true');return cv}
 function eraTag(e){return`<span class="era"><i style="background:${ERA_INK[e]}"></i>Kept at ${e} · ${ERAS[e]}</span>`}
+const ICALIAS={season:'era',hold:'keepsake'};
+const ic=(k,t)=>`<img class="ic" src="icons/${ICALIAS[String(k).toLowerCase()]||String(k).toLowerCase()}.svg" alt="${t??k}" title="${t??k}">`;
 function bigStamp(a,b){const d=document.createElement('div');d.className='bigstamp';d.innerHTML=`${esc(a)}${b?`<small>${esc(b)}</small>`:''}`;document.body.appendChild(d);setTimeout(()=>d.remove(),1500)}
 
 /* ================= screens ================= */
@@ -334,7 +340,7 @@ function showMap(){
   app.querySelectorAll('[data-id]').forEach(b=>b.onclick=()=>{G.log.push({at:G.at});G.next=b.dataset.id;G.stop=0;showRoad()})}
 function placeHint(n){return{pines:'Planted rows.',bison:'Bison in the draws.',sod:'Sod houses, kept as they were.',hills:'Sandhills, wide open.',river:'Cranes on the bars.',town:'A Main Street, lamps lit.',pivots:'Ghost pivot circles.',city:'A city kept by somebody’s memory.',crossing:'The river.'}[n.kind]||''}
 function keepBar(){if(!G.keeps.length)return'';setTimeout(()=>{const h=document.getElementById('kq');if(h)G.keeps.forEach(k=>{const d=document.createElement('div');d.className='qt';d.title=KEEPS[k].text;d.appendChild(quiltEl(k));d.insertAdjacentHTML('beforeend',`<span>${KEEPS[k].name}</span>`);h.appendChild(d)})},0);
-  return`<div><h3>Keepsakes</h3><div class="quilts" id="kq"></div><div class="small" style="margin-top:4px">${G.keeps.map(k=>`<div><b style="font-weight:400;color:var(--blue)">${KEEPS[k].name}</b>: ${KEEPS[k].text}</div>`).join('')}</div></div>`}
+  return`<div><h3>Keepsakes</h3><div class="quilts" id="kq"></div><div class="small" style="margin-top:4px">${G.keeps.map(k=>`<div>${ic(KEEPS[k].fam)} <b style="font-weight:400;color:var(--blue)">${KEEPS[k].name}</b>: ${KEEPS[k].text}</div>`).join('')}</div></div>`}
 /* ---------- the road: two stops per leg ---------- */
 function tellerFor(dest){
   const knows=R()<(G.traits.includes('everybody')?.6:.35)?pick(G.ties):null;
@@ -372,6 +378,7 @@ function showRoad(){
   app.querySelectorAll('[data-i]').forEach(b=>b.onclick=()=>{const o=G.opts[+b.dataset.i];G.stop++;if(o.type==='listen')startListen(o.t);else if(o.type==='tally')startTally(o.site);else{const n=node(G.next),who=person();addStories([makeStory({teller:who,theme:pick(THEMES),place:n.name,era:n.era,quality:.6})]);toast(`A note from ${who} came with it.`);showKeepChoice(showRoad,2)}})}
 /* ================= Listening ================= */
 const QDECK=[['place',3],['wait',3],['follow',3],['press',2],['again',1],['share',1],['tie',1]];
+const QICON={place:'find',wait:'spare',follow:'chain',press:'risk',again:'repeat',share:'story',tie:'ties'};
 const QTXT={place:['Ask about the place','+2 detail, −1 trust'],wait:['Wait','+1 trust · Spare'],follow:['Follow up','detail grows each time in a row · Chain'],press:['Press','+4 detail, −3 trust · Risk'],again:['Ask again','repeat your last question · Repeat'],share:['Tell your own','+3 trust, +1 detail'],tie:['Name someone you know','+2 trust, +2 detail if they know them']};
 const THRESH=[4,9,15];
 let L=null;
@@ -418,11 +425,11 @@ function renderListen(){
   app.innerHTML=bar()+`<div class="hero" style="margin-bottom:30px"><span id="strip"></span><div class="tbadge"><div class="pbox"><div class="portrait" style="--pm:url(sketches/${PORTRAITS[t.name.length%3]}.png)"></div></div></div></div>
    <h2 style="margin-bottom:2px">${esc(t.name)}</h2><p class="small">${esc(t.role)}. ${esc(t.tell)}${t.knows?` Knows ${esc(t.knows.name)}.`:''}</p>
    <div class="stack" style="gap:10px;margin:8px 0 12px">
-    <div><div class="small">Trust</div><div class="trust">${Array.from({length:9},(_,i)=>`<i class="${i<L.trust?'on':''}"></i>`).join('')}</div></div>
-    <div><div class="row small" style="justify-content:space-between"><span>Detail ${L.detail}</span><span>${L.earned.length} ${L.earned.length===1?'story':'stories'}</span></div><div class="detail"><b style="width:${Math.min(100,L.detail/15*100)}%"></b>${marks}</div></div>
+    <div><div class="small">${ic('trust')} Trust</div><div class="trust">${Array.from({length:9},(_,i)=>`<i class="${i<L.trust?'on':''}"></i>`).join('')}</div></div>
+    <div><div class="row small" style="justify-content:space-between"><span>${ic('detail')} Detail ${L.detail}</span><span>${L.earned.length} ${L.earned.length===1?'story':'stories'}</span></div><div class="detail"><b style="width:${Math.min(100,L.detail/15*100)}%"></b>${marks}</div></div>
     <div class="small">${L.turns} questions before dark${L.trust<=2?' · <b>they’re close to done</b>':''}</div></div>
    <div class="log">${L.log.join('')}</div>
-   <div class="qhand" style="margin-top:14px">${L.hand.map((k,i)=>`<button class="q" data-q="${i}">${QTXT[k][0]}<small>${QTXT[k][1]}</small></button>`).join('')}</div>
+   <div class="qhand" style="margin-top:14px">${L.hand.map((k,i)=>`<button class="q" data-q="${i}">${ic(QICON[k],'')}${QTXT[k][0]}<small>${QTXT[k][1]}</small></button>`).join('')}</div>
    <div class="row" style="margin-top:14px"><button class="btn quiet" id="stop">Thank them and go</button></div>`;
   const st=sceneEl(nodeScene(dest,G.leg+1),'strip');mount('strip',st);
   app.querySelectorAll('[data-q]').forEach(b=>b.onclick=()=>playQ(+b.dataset.q));$('#stop').onclick=()=>endListen(false)}
@@ -484,11 +491,11 @@ function finishTally(est){
 function showKeepChoice(next,n=3){
   const have=new Set(G.keeps),pool=shuffle(Object.keys(KEEPS).filter(k=>!have.has(k))).slice(0,n);
   app.innerHTML=bar()+`<h2>Choose a keepsake</h2><p class="small">Each one is a barn quilt. It reads the marks on your stories (Chain, Find, Risk, Spare, Repeat), whichever game earned them. You can carry five.</p><div class="stack" style="margin-top:12px">`+
-   pool.map(k=>`<button class="kopt" data-k="${k}"><span id="kq-${k}"></span><span><span class="small">${KEEPS[k].fam}</span><h3>${KEEPS[k].name}</h3><span class="small">${KEEPS[k].text}</span></span></button>`).join('')+`<button class="btn quiet" id="skip">Take nothing</button></div>`;
+   pool.map(k=>`<button class="kopt" data-k="${k}"><span id="kq-${k}"></span><span><span class="small">${ic(KEEPS[k].fam)} ${KEEPS[k].fam}</span><h3>${KEEPS[k].name}</h3><span class="small">${KEEPS[k].text}</span></span></button>`).join('')+`<button class="btn quiet" id="skip">Take nothing</button></div>`;
   for(const k of pool)mount('kq-'+k,quiltEl(k,96));
   app.querySelectorAll('[data-k]').forEach(b=>b.onclick=()=>{if(G.keeps.length>=5)G.keeps.shift();G.keeps.push(b.dataset.k);next()});$('#skip').onclick=next}
 /* ================= filing ================= */
-function storyHTML(s,sel){return`<div class="story ${s.partial?'partial':''} ${sel?'sel':''}"><span class="val">${s.value} · ✶${s.vivid}</span><div class="who">${esc(s.teller)}</div>${esc(s.title)}<div class="tags"><span>${s.theme}</span><span>${esc(s.place)}</span><span>${s.era}</span>${s.people.length>1?`<span>knows ${esc(s.people.slice(1).join(', '))}</span>`:''}${Object.entries(s.stamps).filter(e=>e[1]).map(([k,v])=>`<span class="stamp">${k}${v>1?'×'+v:''}</span>`).join('')}${s.embellished?'<span>embellished</span>':''}</div></div>`}
+function storyHTML(s,sel){return`<div class="story ${s.partial?'partial':''} ${sel?'sel':''}"><span class="val">${s.value} · ${ic('vivid','vivid')}${s.vivid}</span><div class="who">${esc(s.teller)}</div>${esc(s.title)}<div class="tags"><span>${s.theme}</span><span>${esc(s.place)}</span><span>${s.era}</span>${s.people.length>1?`<span>knows ${esc(s.people.slice(1).join(', '))}</span>`:''}${Object.entries(s.stamps).filter(e=>e[1]).map(([k,v])=>`<span class="stamp">${ic(k)}${v>1?'×'+v:''}</span>`).join('')}${s.embellished?`<span class="stamp">${ic('drift','embellished')}</span>`:''}</div></div>`}
 let F=null;
 function showFiling(){
   if(G.overflow)return showTrim(showFiling);

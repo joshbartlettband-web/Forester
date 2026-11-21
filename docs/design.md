@@ -157,3 +157,7 @@ Modifier art is a painted barn quilt.
 - **Embellishing:** +2 vivid on a story for drift, which raises later targets.
 - **Endings:** sign, refuse and stay, or take the water. Halsey's record persists in the browser.
 - **Balance:** targets 140 × 1.36 per leg, ×1.35 at the river. A bot that files just enough finishes about 60% of runs, mostly failing at legs 10 to 12 (`tools/playtest/survey-bot.js`).
+
+### Icons
+
+`tools/make-icons.py` draws the mechanic icons into `art/icons/` (SVG, 48×48, wobbly ink over one off-register quilt color; `icons.json` lists each one's meaning). The events: Chain (linked rings), Find (a lantern, not an eye, for a culture that won't watch), Risk (a lit match), Spare (a canning jar), Repeat (a center pivot). Also trust (coffee cup), detail (pencil), vivid (star), story, drift (feather), era (a clock with no hands), place (a surveyed section), ties, thread (needle), witnesses (quote marks), filing (rubber stamp), sign (pen nib), holdout (shut gate), keepsake (quilt block). `tools/build-art-engine.py` copies them into the Survey prototype.
