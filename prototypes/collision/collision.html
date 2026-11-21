@@ -42,13 +42,20 @@ button:focus-visible,input:focus-visible+span{outline:2px solid var(--blue);outl
 .det b{position:absolute;left:0;bottom:-1px;height:9px;background:var(--blue);mix-blend-mode:multiply;transition:width .3s}
 .log{font-size:18px;min-height:2.6em}
 .log em{font-style:normal;color:var(--rust)}
-.hand{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+.hand{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px}
 .card{position:relative;text-align:left;background:#faf6ec;border:1.5px solid var(--ink);border-radius:4px;padding:0 0 8px;display:grid;gap:3px;box-shadow:2px 3px 0 rgba(31,27,46,.85);transition:transform .15s}
 .card:hover{transform:translateY(-3px) rotate(-.6deg)}
 .card[aria-pressed="true"]{transform:translateY(-10px) rotate(-1.4deg);box-shadow:4px 10px 0 rgba(31,27,46,.85);border-color:var(--pink)}
 .card canvas{width:100%;height:auto;aspect-ratio:3/2;display:block;border-bottom:1.5px solid var(--ink);border-radius:3px 3px 0 0;max-width:100%}
 .card .t{font-size:17px;line-height:1.05;padding:0 8px;min-height:2.1em}
 .card .m{display:flex;justify-content:space-between;align-items:center;padding:0 8px;font-family:var(--plain);font-size:11px}
+.card .back{position:absolute;inset:0;border-radius:3px;background:#faf6ec url(img/card-back.jpg) center/cover;border:5px solid #faf6ec;box-shadow:inset 0 0 0 1.5px var(--ink);opacity:0;pointer-events:none}
+.card.fresh{animation:flip .7s ease-in-out both}
+.card.fresh .back{animation:showback .7s step-end both}
+@keyframes flip{0%{transform:perspective(600px) rotateY(0)}50%{transform:perspective(600px) rotateY(90deg)}100%{transform:perspective(600px) rotateY(0)}}
+@keyframes showback{0%{opacity:1}50%{opacity:0}100%{opacity:0}}
+.deck{position:relative;border:0;background:none;padding:0;display:grid;gap:4px;align-content:start;text-align:left}
+.deck span{display:block;aspect-ratio:3/4.2;border-radius:4px;background:#faf6ec url(img/card-back.jpg) center/cover;border:5px solid #faf6ec;box-shadow:inset 0 0 0 1.5px var(--ink),2px 3px 0 rgba(31,27,46,.85),5px 6px 0 #faf6ec,6px 7px 0 rgba(31,27,46,.85)}
 .card .ev{position:absolute;right:4px;top:4px;width:34px;height:34px;background:#faf6ec;border-radius:50%;padding:3px;border:1.5px solid var(--ink)}
 .card .ev img{width:100%;height:100%}
 .over{position:absolute;inset:0;display:grid;place-items:center;background:rgba(241,235,220,.72)}
@@ -64,7 +71,7 @@ button:focus-visible,input:focus-visible+span{outline:2px solid var(--blue);outl
   .hint{font-size:9.5px;max-width:62%;top:6px;right:6px}
   .cap{font-size:15px;left:6px;bottom:6px}
 }
-@media (prefers-reduced-motion:reduce){.card,.det b{transition:none}}
+@media (prefers-reduced-motion:reduce){.card,.det b{transition:none}.card.fresh,.card.fresh .back{animation:none}}
 </style>
 
 <div class="wrap">
@@ -120,11 +127,15 @@ const INK={pink:'#e2486f',blue:'#3a78c3',yellow:'#f3c22f',green:'#6f9148',rust:'
 const EVENTS={Find:'yellow',Chain:'pink',Risk:'rust',Spare:'green',Repeat:'blue'};
 
 const SCENES=[
- {id:'halsey',name:'The planted forest, Halsey',img:'halsey-rows',teller:0,draw:[{k:'tower',x:.86,y:.36,h:.22},{k:'critter',x:.36,y:.8,h:.16},{k:'grass',x:.0,y:.83,h:.2}]},
- {id:'sandhills',name:'A windmill in the Sandhills',img:'sandhills-windmill',teller:1,draw:[{k:'stars',x:.04,y:.02,h:.26},{k:'critter',x:.72,y:.74,h:.14}]},
- {id:'platte',name:'The Platte at dusk',img:'platte-cranes',teller:2,draw:[{k:'cranes',x:.58,y:.02,h:.42,drift:1},{k:'grass',x:.55,y:.84,h:.18}]},
- {id:'courthouse',name:'Register of Deeds',img:'courthouse',teller:1,draw:[{k:'bulb',x:.47,y:-.02,h:.24,light:1},{k:'traveler',x:.4,y:.5,h:.46}]},
- {id:'mainstreet',name:'Main Street',img:'mainstreet',teller:0,draw:[{k:'mainstreet',x:.52,y:.62,h:.1},{k:'traveler',x:.62,y:.64,h:.3}]},
+ {id:'halsey',name:'The planted forest, Halsey',img:'halsey-rows',teller:0,arch:{k:'arch-red-blue',cx:.3,ground:.95,h:.42},draw:[{k:'tower',x:.86,y:.36,h:.22},{k:'critter',x:.36,y:.8,h:.16},{k:'grass',x:.0,y:.83,h:.2}]},
+ {id:'sandhills',name:'A windmill in the Sandhills',img:'sandhills-windmill',teller:1,arch:{k:'arch-black',cx:.27,ground:.86,h:.3},draw:[{k:'stars',x:.04,y:.02,h:.26},{k:'critter',x:.72,y:.74,h:.14}]},
+ {id:'platte',name:'The Platte at dusk',img:'platte-cranes',teller:2,arch:{k:'arch-celadon',cx:.2,ground:.97,h:.4},draw:[{k:'cranes',x:.58,y:.02,h:.42,drift:1},{k:'grass',x:.55,y:.84,h:.18}]},
+ {id:'courthouse',name:'Register of Deeds',img:'courthouse',teller:1,arch:{k:'arch-white',cx:.64,ground:.97,h:.48},draw:[{k:'bulb',x:.47,y:-.02,h:.24,light:1},{k:'traveler',x:.4,y:.5,h:.46}]},
+ {id:'mainstreet',name:'Main Street',img:'mainstreet',teller:0,arch:{k:'arch-red-hook',cx:.5,ground:.97,h:.4},draw:[{k:'mainstreet',x:.52,y:.62,h:.1},{k:'traveler',x:.7,y:.64,h:.3}]},
+ {id:'door',name:'The door in the hill',img:'painting-door-in-the-hill',fit:'contain',teller:2,arch:{k:'arch-red-hook',cx:.16,ground:.98,h:.36},draw:[{k:'critter',x:.74,y:.78,h:.14}],
+  note:'A painting of yours, standing in for an era pocket: something kept inside the hill.'},
+ {id:'country',name:'A country in the same place',img:'painting-same-place',fit:'contain',teller:0,arch:{k:'arch-celadon',cx:.84,ground:.98,h:.3},draw:[{k:'stars',x:.02,y:.0,h:.22}],
+  note:'“I moved to a different country once. It is in the same place as the one I left.”'},
 ];
 const TELLERS=[
  {face:'face1',name:'Walt Okamoto',role:'Keeps the seed library',want:'Weather'},
@@ -153,6 +164,8 @@ async function sketch(k,color=INK.ink){const key=k+color;if(inked[key])return in
 function cover(im,w,h,fx=.5,fy=.5,zoom=1){const c=mk(w,h),x=c.getContext('2d'),s=Math.max(w/im.width,h/im.height)*zoom;
   x.drawImage(im,(w-im.width*s)*fx,(h-im.height*s)*fy,im.width*s,im.height*s);return c}
 
+function contain(im,w,h){const c=mk(w,h),x=c.getContext('2d'),s=Math.min(w/im.width,h/im.height)*.94,iw=im.width*s,ih=im.height*s;
+  x.drawImage(paperC,0,0);x.save();x.shadowColor='rgba(31,27,46,.35)';x.shadowBlur=14;x.shadowOffsetY=5;x.drawImage(im,(w-iw)/2,(h-ih)/2,iw,ih);x.restore();return c}
 /* ---------- code: paper, separation, duotone ---------- */
 function makePaper(w,h,seed){const c=mk(w,h),x=c.getContext('2d'),r=rng(seed);x.fillStyle=PAPER;x.fillRect(0,0,w,h);
   const id=x.getImageData(0,0,w,h),p=id.data;for(let i=0;i<p.length;i+=4){const n=(r()-.5)*16;p[i]+=n;p[i+1]+=n;p[i+2]+=n*1.15}x.putImageData(id,0,0);
@@ -187,39 +200,61 @@ const layers={photo:true,print:true,draw:true,marks:true};
 let S=null,scene=null,cur=0,lantern=null,armed=null,fx=[],dirty=true;
 const icons={};for(const k of['find','chain','risk','spare','repeat','vivid','story','trust'])load('icons/'+k+'.svg').then(i=>{icons[k]=i;dirty=true});
 
-async function enterScene(i){
+/* ---------- your arches: photographed sculptures, cut out and stood in each place ---------- */
+const objMeta=fetch('objects/objects.json').then(r=>r.json());
+const OBJ={};
+async function archOf(k){if(OBJ[k])return OBJ[k];const[im,op,meta]=await Promise.all([load('objects/'+k+'.png'),load('objects/'+k+'-opening.png'),objMeta]);return OBJ[k]={im,op,o:meta[k].opening}}
+function bakeArch(photo,A,a){
+  const x=photo.getContext('2d'),h=a.h*H,w=h*A.im.width/A.im.height,left=a.cx*W-w/2,top=a.ground*H-h;
+  const sil=mk(A.im.width,A.im.height),s=sil.getContext('2d');s.drawImage(A.im,0,0);s.globalCompositeOperation='source-in';s.fillStyle=INK.ink;s.fillRect(0,0,sil.width,sil.height);
+  x.save();x.globalCompositeOperation='multiply';x.globalAlpha=.34;x.filter='blur(3px)';x.translate(a.cx*W,a.ground*H);x.transform(1,0,a.cx>.5?-.9:.9,-.2,0,0);x.drawImage(sil,-w/2,-h,w,h);x.restore();
+  x.save();const g=x.createRadialGradient(a.cx*W,a.ground*H,2,a.cx*W,a.ground*H,w*.6);g.addColorStop(0,'rgba(31,27,46,.45)');g.addColorStop(1,'rgba(31,27,46,0)');
+  x.globalCompositeOperation='multiply';x.fillStyle=g;x.beginPath();x.ellipse(a.cx*W,a.ground*H,w*.6,h*.05,0,0,6.2832);x.fill();x.restore();
+  x.drawImage(A.im,left,top,w,h);
+  const openC=mk(W,H);openC.getContext('2d').drawImage(A.op,left,top,w,h);
+  return{openC,ox:left+A.o[0]*w,oy:top+A.o[1]*h,ow:Math.max(40,A.o[2]*w),box:{x:left,y:top,w,h}}}
+async function buildScene(i){
+  const s=SCENES[i],im=await load('img/'+s.img+'.jpg'),photo=s.fit==='contain'?contain(im,W,H):cover(im,W,H,s.fx??.5,s.fy??.5);
+  const arch=bakeArch(photo,await archOf(s.arch.k),s.arch);
+  const items=await Promise.all(s.draw.map(async d=>({...d,ink:await sketch(d.k),paper:await sketch(d.k,PAPER),over:await sketch(d.k,INK.pink)})));
+  const sc2={...s,i,im,photo,arch,print:separate(photo,paperC,i*31+5),duo:{},items,scraps:[],stamps:[],threads:[],rings:[],burns:[]};
+  sc2.duoOf=k=>sc2.duo[k]||(sc2.duo[k]=duotone(photo,INK[k]));return sc2}
+let trans=null;
+async function walk(i){
+  if(trans)return;if(!scene)return enterScene(i);
+  $('#hint').textContent='Walking through the arch…';const next=await buildScene(i);
+  const snap=mk(W,H),x=snap.getContext('2d');x.drawImage(sc,0,0);x.globalCompositeOperation='destination-out';x.drawImage(scene.arch.openC,0,0);
+  $('#over').hidden=true;armed=null;trans={t0:performance.now(),dur:RM?1:2300,snap,next,i,cx:scene.arch.ox,cy:scene.arch.oy,ow:scene.arch.ow}}
+async function enterScene(i,built){
   cur=i;const s=SCENES[i];$('#cap').textContent=s.name;
   document.querySelectorAll('#places button').forEach((b,j)=>b.setAttribute('aria-pressed',j===i));
-  const im=await load('img/'+s.img+'.jpg'),photo=cover(im,W,H);
-  const items=await Promise.all(s.draw.map(async d=>({...d,ink:await sketch(d.k),paper:await sketch(d.k,PAPER),over:await sketch(d.k,INK.pink)})));
-  scene={...s,im,photo,print:separate(photo,paperC,i*31+5),duo:Object.fromEntries(Object.entries(INK).map(([k,v])=>[k,null])),items,scraps:[],stamps:[],threads:[],rings:[],burns:[]};
-  scene.duoOf=k=>scene.duo[k]||(scene.duo[k]=duotone(photo,INK[k]));
-  mctx.clearRect(0,0,W,H);fx=[];
+  scene=built||await buildScene(i);
+  mctx.clearRect(0,0,W,H);fx=[];$('#hint').textContent='Move the lantern. Pick a story, then tap where to tell it.';
   const T=TELLERS[s.teller];
   S={teller:T,trust:3,detail:0,earned:0,daylight:7,last:null,lastEvent:null,chain:0,spare:false,hand:[]};
   for(let k=0;k<5;k++)S.hand.push(await makeCard());
   await setPortrait(T);
-  $('#over').hidden=true;log(`<b>${T.name}</b> looks up. ${pick(['“Survey, huh.”','“I figured somebody would come.”','“Sit, if you’re staying.”'])} They want to hear about <em>${T.want}</em>.`);
+  $('#over').hidden=true;log(`<b>${T.name}</b> looks up. ${pick(['“Survey, huh.”','“I figured somebody would come.”','“Sit, if you’re staying.”'])} They want to hear about <em>${T.want}</em>.${s.note?`<br><span class="small">${s.note}</span>`:''}`);
   renderHUD();renderHand();dirty=true}
 
 /* ---------- cards: procedural stories with a drawing and a crop of a rendered place ---------- */
 let cardSeed=1;
 async function makeCard(){
   const theme=pick(Object.keys(THEMES)),ev=pick(Object.keys(EVENTS)),src=pick(SCENES),seed=cardSeed++;
-  const card={id:'c'+seed,theme,event:ev,title:pick(THEMES[theme].t),place:pick(PLACES),value:6+Math.floor(R(0,12)),vivid:1+Math.floor(R(0,3)),seed,src};
+  const card={fresh:true,id:'c'+seed,theme,event:ev,title:pick(THEMES[theme].t),place:pick(PLACES),value:6+Math.floor(R(0,12)),vivid:1+Math.floor(R(0,3)),seed,src};
   const im=await load('img/'+src.img+'.jpg'),w=300,h=200,crop=cover(im,w,h,R(.1,.9),R(.2,.8),R(1.6,2.6));
   const art=mk(w,h),a=art.getContext('2d');a.drawImage(duotone(crop,INK[EVENTS[ev]]),0,0);
   const s=await sketch(THEMES[theme].sk),k=Math.min(w*.9/s.width,h*.86/s.height),sw=s.width*k,sh=s.height*k;
   a.globalCompositeOperation='multiply';a.drawImage(s,(w-sw)/2,(h-sh)/2+4,sw,sh);
   a.globalCompositeOperation='source-over';card.art=art;card.sketch=THEMES[theme].sk;return card}
 function renderHand(){
-  const h=$('#hand');h.innerHTML='';
-  S.hand.forEach(c=>{const b=document.createElement('button');b.className='card';b.setAttribute('aria-pressed',armed===c);
+  const h=$('#hand');h.innerHTML=`<div class="deck" aria-hidden="true"><span></span><p class="small">Stories you could still tell</p></div>`;
+  S.hand.forEach(c=>{const b=document.createElement('button');b.className='card'+(c.fresh?' fresh':'');c.fresh=false;b.setAttribute('aria-pressed',armed===c);
     b.setAttribute('aria-label',`${c.title}. ${c.theme}, ${c.event}. Value ${c.value}, vivid ${c.vivid}.`);
     const cv=mk(300,200);cv.getContext('2d').drawImage(c.art,0,0);b.appendChild(cv);
     b.insertAdjacentHTML('beforeend',`<span class="ev"><img src="icons/${c.event.toLowerCase()}.svg" alt=""></span><span class="t">${c.title}</span><span class="m"><span>${c.theme} · ${c.place}</span><span>${c.value} <img class="ic" style="width:16px;height:16px;vertical-align:-3px" src="icons/vivid.svg" alt="vivid">${c.vivid}</span></span>`);
     b.onclick=()=>{armed=armed===c?null:c;renderHand();$('#hint').textContent=armed?`Tap the place to tell “${c.title}”.`:'Move the lantern. Pick a story, then tap where to tell it.';dirty=true};
-    h.appendChild(b)})}
+    b.insertAdjacentHTML('beforeend','<span class="back"></span>');h.appendChild(b)})}
 
 /* ---------- telling: mechanics and the collisions they cause ---------- */
 const near=(x,y)=>scene.items.some(d=>{const b=box(d,0);return x>b.x-30&&x<b.x+b.w+30&&y>b.y-30&&y<b.y+b.h+30});
@@ -243,7 +278,7 @@ async function tell(card,x,y){
   if(S.trust===0||S.daylight===0)setTimeout(()=>endScene(S.trust===0),1400)}
 function endScene(left){const T=S.teller;$('#overT').textContent=left?`${T.name} is done talking.`:'Dark.';
   $('#overP').textContent=S.earned?`You leave with ${S.earned} ${S.earned===1?'story':'stories'} from ${T.name}.`:`Nothing for the record from ${T.name} this time.`;$('#over').hidden=false}
-$('#next').onclick=()=>enterScene((cur+1)%SCENES.length);
+$('#next').onclick=()=>walk((cur+1)%SCENES.length);
 
 function addFx(dur,draw,done){fx.push({t0:performance.now(),dur:RM?1:dur,draw,done});dirty=true}
 function soft(c,x,y,r,a=1){const g=c.createRadialGradient(x,y,0,x,y,r);g.addColorStop(0,`rgba(255,255,255,${a})`);g.addColorStop(.6,`rgba(255,255,255,${a*.7})`);g.addColorStop(1,'rgba(255,255,255,0)');c.fillStyle=g;c.beginPath();c.arc(x,y,r,0,6.2832);c.fill()}
@@ -286,9 +321,15 @@ function drawPortrait(){
 function box(d,t){const s=d.ink,h=d.h*H,w=h*s.width/s.height;let x=d.x*W,y=d.y*H;if(d.drift&&!RM){x+=Math.sin(t/2600)*24;y+=Math.cos(t/3100)*10}return{x,y,w,h}}
 function boil(i,t){if(RM)return[0,0,0];const r=rng(Math.floor(t/130)*97+i*13);return[(r()-.5)*1.6,(r()-.5)*1.6,(r()-.5)*.012]}
 function drawItem(c,d,im,t,i,dx=0,dy=0){const b=box(d,t),[bx,by,br]=boil(i,t);c.save();c.translate(b.x+b.w/2+bx+dx,b.y+b.h/2+by+dy);c.rotate(br);c.drawImage(im,-b.w/2,-b.h/2,b.w,b.h);c.restore()}
+function drawWalk(c,now){
+  const T=trans,p=Math.min(1,(now-T.t0)/T.dur),e=p<.5?4*p*p*p:1-Math.pow(-2*p+2,3)/2,k=1+e*e*(W/T.ow*1.8-1);
+  c.save();const z=1.18-.18*e;c.translate(W/2,H/2);c.scale(z,z);c.translate(-W/2,-H/2);c.drawImage(layers.print?T.next.print:T.next.photo,0,0);c.restore();
+  c.save();c.globalAlpha=p>.86?1-(p-.86)/.14:1;c.translate(T.cx+(W/2-T.cx)*e,T.cy+(H/2-T.cy)*e);c.scale(k,k);c.translate(-T.cx,-T.cy);c.drawImage(T.snap,0,0);c.restore();
+  if(p>=1){const n=T.next,i=T.i;trans=null;enterScene(i,n)}}
 function frame(t){
   if(!scene){requestAnimationFrame(frame);return}
   const c=ctx;c.globalCompositeOperation='source-over';c.globalAlpha=1;
+  if(trans){drawWalk(c,performance.now());drawPortrait();requestAnimationFrame(frame);return}
   c.drawImage(layers.print?scene.print:(layers.photo?scene.photo:paperC),0,0);
   // the mask of developed photograph: permanent patches plus the lantern
   mf.clearRect(0,0,W,H);mf.drawImage(maskC,0,0);if(lantern)soft(mf,lantern.x,lantern.y,lantern.r,.95);
@@ -345,7 +386,7 @@ function renderHUD(){const T=S.teller;$('#tname').textContent=T.name;$('#trole')
   $('#day').textContent=`${S.daylight} ${S.daylight===1?'story':'stories'} before dark${S.spare?' · a jar is waiting':''}`}
 
 $('#places').innerHTML=SCENES.map((s,i)=>`<button type="button" aria-pressed="false" data-i="${i}">${s.name}</button>`).join('');
-$('#places').onclick=e=>{const b=e.target.closest('button');if(b)enterScene(+b.dataset.i)};
+$('#places').onclick=e=>{const b=e.target.closest('button');if(b&&+b.dataset.i!==cur)walk(+b.dataset.i)};
 enterScene(0).catch(e=>{log('Could not load: '+e.message)});
 requestAnimationFrame(frame);
 window.__collide={tell:(i,x,y)=>tell(S.hand[i],x,y),get S(){return S},enterScene};

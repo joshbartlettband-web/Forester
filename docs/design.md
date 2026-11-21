@@ -171,3 +171,11 @@ The direction: Gemini-rendered photographs, hand drawings from the notebooks, an
 - **Drawings live in the scene,** boil slightly, cut a paper halo out of the print, throw a shadow away from the lantern, and turn chalk-white where the photograph shows through.
 - **Every story told pastes a torn scrap** (a crop of a rendered place, duotoned in its event's ink, with its drawing) into the scene, and its icon is stamped on top.
 - **Events have visual consequences:** Find develops the photograph for good; Chain ties a pink thread and develops along it; Risk burns a hole through to bare paper; Spare's scrap stays pasted in full color; Repeat sweeps a circle of the place into one ink, like a center pivot.
+
+### The designer's own work in the collisions
+
+From @dochwah (see `art/instagram/`):
+- **Arches are thresholds.** The ceramic arch sculptures are cut out and stood in every place, baked into the photograph so the print, the lantern and every reaction treat them like the place itself. Going to the next place means walking through the arch: the camera pushes into its opening, where the next place already shows.
+- **Paintings are places.** "The door in the hill" and the framed mesa with the walking figure sit whole on the paper as era pockets, with an arch beside them.
+- **Card backs are the cracked panel from "technical desert."** New stories flip up from the deck.
+- **A line for the game.** The caption on the framed mesa reads like the Easement itself: "I moved to a different country once. It is in the same place as the one I left." Candidate for the summons or the title screen.
