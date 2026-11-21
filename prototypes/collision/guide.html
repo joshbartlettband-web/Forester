@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Halsey Field Guide</title>
+<style>
+@font-face{font-family:"Halsey Hand";src:url(fonts/HalseyHand.woff2) format("woff2");font-display:swap}
+/* Layout: a printed field guide. Sticky contents strip, then sections of tiles on paper.
+   Single printed-paper theme by choice, like the game. */
+:root{
+  --paper:#f1ebdc;--card:#faf6ec;--ink:#1f1b2e;--muted:#675f70;--pink:#e2486f;--blue:#3a78c3;--yellow:#f3c22f;--green:#6f9148;--rust:#c4622c;--plum:#8a4e7a;--night:#1d1830;
+  --line:rgba(31,27,46,.2);
+  --hand:"Halsey Hand","Bradley Hand","Segoe Print",cursive;--plain:ui-monospace,Menlo,Consolas,monospace;
+  color-scheme:light}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{margin:0}
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{background:var(--paper);color:var(--ink);font-family:var(--hand);font-size:19px;line-height:1.3}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--paper)}
+.wrap{max-width:1100px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:14px 60px;display:grid;gap:28px}
+header{display:grid;gap:6px}
+h1{font-size:54px;line-height:.95;margin:0;font-weight:400}
+h2{font-size:36px;line-height:1;margin:0;font-weight:400;text-wrap:balance}
+h3{font-size:24px;line-height:1.05;margin:0;font-weight:400}
+p{margin:0;text-wrap:pretty}
+a{color:var(--blue)}
+.small{font-family:var(--plain);font-size:11.5px;line-height:1.45;color:var(--muted);letter-spacing:.02em}
+.lede{max-width:62ch;font-size:20px}
+nav.toc{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--paper);border-bottom:1.5px solid var(--line);display:flex;flex-wrap:wrap;gap:4px 14px;padding-block:8px}
+nav.toc a{font-size:19px;color:var(--ink);text-decoration:none;border-bottom:2px solid transparent}
+nav.toc a:hover,nav.toc a:focus-visible{border-color:var(--pink);outline:none}
+section{display:grid;gap:14px;scroll-margin-top:60px}
+.sechead{display:flex;flex-wrap:wrap;gap:6px 16px;align-items:baseline;justify-content:space-between;border-bottom:2px solid var(--ink);padding-bottom:4px}
+.grid{display:grid;gap:16px}
+.people{grid-template-columns:repeat(auto-fill,minmax(200px,1fr))}
+.beasts{grid-template-columns:repeat(auto-fill,minmax(220px,1fr))}
+.places{grid-template-columns:repeat(auto-fill,minmax(300px,1fr))}
+.stories{grid-template-columns:repeat(auto-fill,minmax(190px,1fr))}
+.tile{background:var(--card);border:1.5px solid var(--ink);border-radius:4px;box-shadow:2px 3px 0 rgba(31,27,46,.85);display:grid;align-content:start;overflow:hidden;min-width:0}
+.tile canvas,.tile img{display:block;width:100%;height:auto;max-width:100%}
+.tile .body{padding:8px 10px 10px;display:grid;gap:4px}
+.tile q{quotes:none;font-size:17px}
+.tag{font-family:var(--plain);font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.chips{display:flex;flex-wrap:wrap;gap:4px}
+.chip{font-family:var(--plain);font-size:10px;border:1px solid var(--line);border-radius:2px;padding:0 4px}
+.tile img.ev,.ev{width:22px;height:22px;display:inline-block;vertical-align:-6px}
+.portrait canvas{aspect-ratio:3/4;cursor:crosshair;touch-action:none}
+.beast canvas{aspect-ratio:1/1;cursor:crosshair;touch-action:none}
+.place .pic{position:relative;aspect-ratio:3/2;background:var(--night)}
+.place .pic img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:opacity .5s}
+.place .pic img.n{opacity:0}
+.place.isnight .pic img.n{opacity:1}
+.place .tgl{position:absolute;right:6px;top:6px;font:11px var(--plain);background:var(--card);border:1.5px solid var(--ink);border-radius:2px;padding:2px 6px;cursor:pointer}
+.live{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:16px;align-items:start}
+.live canvas{width:100%;height:auto;aspect-ratio:3/2;display:block;box-shadow:0 10px 24px -18px rgba(31,27,46,.6);max-width:100%}
+.live select{font:inherit;font-size:18px;background:var(--card);border:1.5px solid var(--ink);border-radius:3px;padding:2px 6px;max-width:100%}
+.filters{display:flex;flex-wrap:wrap;gap:5px}
+.filters button{font:inherit;font-size:16px;background:transparent;border:1.5px solid var(--line);border-radius:3px;padding:1px 9px;cursor:pointer;color:inherit;display:inline-flex;gap:4px;align-items:center}
+.filters button[aria-pressed="true"]{border-color:var(--ink);background:var(--yellow);mix-blend-mode:multiply}
+.filters img{width:18px;height:18px}
+.story{position:relative}
+.story canvas{aspect-ratio:3/2;border-bottom:1.5px solid var(--ink)}
+.story .era{position:absolute;left:5px;top:5px;background:var(--card);border:1.2px solid var(--ink);font-family:var(--plain);font-size:9.5px;padding:0 4px;border-radius:2px}
+.story .evb{position:absolute;right:4px;top:4px;width:32px;height:32px;background:var(--card);border-radius:50%;padding:3px;border:1.5px solid var(--ink)}
+.story .evb img{width:100%;height:100%}
+.story.foil::after{content:"";position:absolute;inset:0;pointer-events:none;mix-blend-mode:screen;opacity:.45;background:linear-gradient(115deg,transparent 20%,rgba(255,90,190,.55) 38%,rgba(120,255,190,.5) 50%,rgba(255,90,190,.45) 62%,transparent 80%);background-size:260% 100%;animation:sheen 4.5s linear infinite}
+@keyframes sheen{0%{background-position:120% 0}100%{background-position:-120% 0}}
+.back{aspect-ratio:3/4.2;border-radius:4px;background:var(--card) url(img/card-back.jpg) center/cover;border:6px solid var(--card);box-shadow:inset 0 0 0 1.5px var(--ink),2px 3px 0 rgba(31,27,46,.85)}
+.road{grid-template-columns:repeat(auto-fill,minmax(280px,1fr))}
+.road .tile .body{gap:8px}
+.road ul{margin:0;padding-left:18px;font-size:17px}
+.road li small{display:block;font-family:var(--plain);font-size:11px;color:var(--muted)}
+.sources{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}
+.sources img{aspect-ratio:1/1;object-fit:cover}
+.demo{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.demo canvas{width:100%;height:auto;aspect-ratio:3/2;display:block;background:var(--paper);max-width:100%}
+@media (max-width:640px){h1{font-size:40px}.live{grid-template-columns:1fr}.stories{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (prefers-reduced-motion:reduce){.story.foil::after{animation:none}.place .pic img{transition:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <p class="tag">Halsey, Nebraska · a field guide to the Survey</p>
+    <h1>Halsey Field Guide</h1>
+    <p class="lede">Everyone you can meet, everything that lives out there, every place on the walk to the Missouri, and every story you can carry. Photographs are rendered by Gemini; the drawings, sculptures, paintings and auroras are yours; the print, the night sky, the flocks and the moths are drawn by code.</p>
+    <p class="small"><a href="collision.html">Back to Halsey Collisions</a></p>
+  </header>
+  <nav class="toc" aria-label="Contents"><a href="#people">People</a><a href="#creatures">Creatures</a><a href="#places">Places</a><a href="#stories">Stories</a><a href="#road">On the road</a><a href="#sources">Your work</a></nav>
+
+  <section id="people" aria-labelledby="h-people">
+    <div class="sechead"><h2 id="h-people">People</h2><p class="small">Move across a portrait to earn their trust: the drawing develops into the photograph.</p></div>
+    <div class="grid people" id="peopleGrid"></div>
+  </section>
+
+  <section id="creatures" aria-labelledby="h-creatures">
+    <div class="sechead"><h2 id="h-creatures">Creatures</h2><p class="small">Each is printed until your lantern finds it. Move across one to see it.</p></div>
+    <div class="grid beasts" id="beastGrid"></div>
+    <div class="demo">
+      <div class="tile"><canvas id="flockDemo" width="480" height="320" aria-label="Count birds: a murmuration drawn by code"></canvas><div class="body"><h3>Count birds</h3><p class="small" id="flockLine"></p></div></div>
+      <div class="tile"><canvas id="mothDemo" width="480" height="320" aria-label="Lamp moths: glowing specks drawn by code"></canvas><div class="body"><h3>Lamp moths</h3><p class="small" id="mothLine"></p></div></div>
+    </div>
+  </section>
+
+  <section id="places" aria-labelledby="h-places">
+    <div class="sechead"><h2 id="h-places">Places</h2><p class="small">Thirteen legs east to the Missouri, three errands west, two era pockets.</p></div>
+    <div class="live">
+      <canvas id="liveSky" width="960" height="640" aria-label="A place at night, printed in light inks, under your aurora"></canvas>
+      <div class="tile"><div class="body"><span class="tag">Live at night</span><label class="small" for="livePick">Choose a place</label><select id="livePick"></select><p id="liveNote"></p><p class="small">Gemini rendered the night. The sky is your aurora photograph, waving, with curtains and stars drawn by code, cut in by a sky mask. The land is printed in light inks on dark stock.</p></div></div>
+    </div>
+    <div class="grid places" id="placeGrid"></div>
+  </section>
+
+  <section id="stories" aria-labelledby="h-stories">
+    <div class="sechead"><h2 id="h-stories">Stories</h2><p class="small" id="storyCount"></p></div>
+    <div class="filters" id="themeFilters" aria-label="Filter by theme"></div>
+    <div class="filters" id="eventFilters" aria-label="Filter by event"></div>
+    <div class="grid stories" id="storyGrid"></div>
+  </section>
+
+  <section id="road" aria-labelledby="h-road">
+    <div class="sechead"><h2 id="h-road">On the road</h2><p class="small">Between places, after you walk through an arch.</p></div>
+    <div class="grid road" id="roadGrid"></div>
+  </section>
+
+  <section id="sources" aria-labelledby="h-sources">
+    <div class="sechead"><h2 id="h-sources">Your work in the game</h2><p class="small">From @dochwah. Each links to its post.</p></div>
+    <div class="grid sources" id="sourceGrid"></div>
+  </section>
+</div>
+
+<script src="engine.js"></script>
+<script src="data.js"></script>
+<script>
+(()=>{
+"use strict";
+const {mk,rng,RM,INK,EVENTS,load,tryLoad,sketch,cover,makePaper,separateNight,printCutout,duotone,soft,makeSky,makeFlock,makeMoths,makePortrait}=HE;
+const {TELLERS,PLACES,BEASTS,STORIES,THEME_SKETCH,ROAD}=HALSEY;
+const $=s=>document.querySelector(s),el=(h)=>{const t=document.createElement('template');t.innerHTML=h.trim();return t.content.firstChild};
+const placeName=id=>(PLACES.find(p=>p.id===id)||{}).name||id;
+const evIcon=e=>`<img class="ev" src="icons/${e.toLowerCase()}.svg" alt="${e}">`;
+/* draw things only while they're on screen */
+const onScreen=(node,start)=>{const io=new IntersectionObserver(es=>{for(const e of es)if(e.isIntersecting){io.disconnect();start()}},{rootMargin:'200px'});io.observe(node)};
+const visible=new Set();const vis=new IntersectionObserver(es=>{for(const e of es)e.isIntersecting?visible.add(e.target):visible.delete(e.target)});
+
+/* ---------- people ---------- */
+const lives=[];
+for(const T of Object.values(TELLERS)){
+  const places=PLACES.filter(p=>p.teller===T.id).map(p=>p.name);
+  const t=el(`<article class="tile portrait"><canvas width="360" height="480" aria-label="${T.name}, drawn and photographed"></canvas><div class="body"><span class="tag">${T.age} · wants ${T.want}${T.holdout?' · holdout':''}</span><h3>${T.name}</h3><p class="small">${T.role}</p><q>“${T.line}”</q><p class="small">Met at ${places.join(', ')||'—'}${T.knows.length?` · knows ${T.knows.map(k=>TELLERS[k].name).join(', ')}`:''}</p></div></article>`);
+  $('#peopleGrid').appendChild(t);const cv=t.querySelector('canvas'),x=cv.getContext('2d');
+  const L={cv,x,P:null,trust:1,goal:1};
+  const set=g=>L.goal=g;cv.addEventListener('pointerenter',()=>set(9));cv.addEventListener('pointerleave',()=>set(1));cv.addEventListener('pointerdown',()=>set(L.goal>5?1:9));
+  onScreen(cv,async()=>{L.P=await makePortrait(T);vis.observe(cv);lives.push(L)});
+}
+
+/* ---------- creatures ---------- */
+const beastLives=[];
+for(const B of Object.values(BEASTS)){
+  if(!B.img)continue;
+  const where=PLACES.filter(p=>p.beasts.includes(B.id)).map(p=>p.name);
+  const t=el(`<article class="tile beast"><canvas width="420" height="420" aria-label="${B.name}"></canvas><div class="body"><span class="tag">${B.kind==='strange'?'strange':'animal'} · ${evIcon(B.event)} ${B.event}</span><h3>${B.name}</h3><p>${B.line}</p>${B.from?`<p class="small">Grown from ${B.from}.</p>`:''}<p class="small">Lives at ${where.join(', ')}</p></div></article>`);
+  $('#beastGrid').appendChild(t);const cv=t.querySelector('canvas'),x=cv.getContext('2d');
+  const L={cv,x,B,lan:null};
+  cv.addEventListener('pointermove',e=>{const r=cv.getBoundingClientRect();L.lan={x:(e.clientX-r.left)/r.width*420,y:(e.clientY-r.top)/r.height*420}});
+  cv.addEventListener('pointerleave',()=>L.lan=null);
+  onScreen(cv,async()=>{const im=await load('objects/'+B.img+'.png');L.im=im;L.pr=printCutout(im,B.id.length*31+7,false);L.paper=makePaper(420,420,B.id.length);L.tmp=mk(420,420);vis.observe(cv);beastLives.push(L)});
+}
+function drawBeast(L,t){
+  const {x,im,pr}=L,s=Math.min(360/im.width,360/im.height),w=im.width*s,h=im.height*s,X=(420-w)/2,Y=400-h;
+  x.drawImage(L.paper,0,0);
+  x.save();x.globalCompositeOperation='multiply';const g=x.createRadialGradient(210,400,2,210,400,w*.5);g.addColorStop(0,'rgba(31,27,46,.35)');g.addColorStop(1,'rgba(31,27,46,0)');x.fillStyle=g;x.beginPath();x.ellipse(210,400,w*.5,10,0,0,6.28);x.fill();x.restore();
+  const br=RM?1:1+Math.sin(t/700)*.01;x.drawImage(pr,X,Y+h*(1-br),w,h*br);
+  const lan=L.lan||(RM?null:{x:210+Math.cos(t/1300)*110,y:230+Math.sin(t/900)*90});
+  if(lan){const m=L.tmp.getContext('2d');m.globalCompositeOperation='source-over';m.clearRect(0,0,420,420);soft(m,lan.x,lan.y,L.lan?120:80,.95);m.globalCompositeOperation='source-in';m.drawImage(im,X,Y+h*(1-br),w,h*br);x.drawImage(L.tmp,0,0)}
+}
+$('#flockLine').textContent=BEASTS.countbirds.line;$('#mothLine').textContent=BEASTS.lampmoths.line;
+let flock,moths,flockBg,mothBg;
+onScreen($('#flockDemo'),async()=>{flock=makeFlock(480,320,120,4);flockBg=makePaper(480,320,8);vis.observe($('#flockDemo'))});
+onScreen($('#mothDemo'),async()=>{moths=makeMoths(480,320,40,6);const im=await load('img/night-thedford.jpg');mothBg=cover(im,480,320);vis.observe($('#mothDemo'));
+  $('#mothDemo').addEventListener('pointerdown',e=>{const r=e.target.getBoundingClientRect();moths.callTo((e.clientX-r.left)/r.width*480,(e.clientY-r.top)/r.height*320)})});
+
+/* ---------- places ---------- */
+for(const p of PLACES){
+  const night=!p.noNight&&!p.indoor;
+  const t=el(`<article class="tile place"><div class="pic"><img src="img/${p.img}.jpg" alt="${p.name}, by day" loading="lazy">${night?`<img class="n" src="img/night-${p.img}.jpg" alt="${p.name}, at night under the aurora" loading="lazy"><button class="tgl" type="button" aria-pressed="false">Night</button>`:''}</div><div class="body"><span class="tag">${p.route==='east'?`Leg ${p.leg} of 13`:p.route==='west'?'Errand west':'Era pocket'} · ${p.county} · kept at ${p.era}</span><h3>${p.name}</h3>${p.note?`<p class="small">${p.note}</p>`:''}<div class="chips"><span class="chip">Teller: ${TELLERS[p.teller].name}</span><span class="chip">Arch: ${p.arch.k.replace('arch-','')}</span>${p.beasts.map(b=>`<span class="chip">${BEASTS[b].name}</span>`).join('')}</div></div></article>`);
+  const b=t.querySelector('.tgl');if(b)b.onclick=()=>{const on=t.classList.toggle('isnight');b.setAttribute('aria-pressed',on);b.textContent=on?'Day':'Night'};
+  $('#placeGrid').appendChild(t);
+}
+const live={cv:$('#liveSky'),sky:null,print:null};
+const nightPlaces=PLACES.filter(p=>!p.noNight&&!p.indoor);
+$('#livePick').innerHTML=nightPlaces.map(p=>`<option value="${p.id}">${p.name}</option>`).join('');
+async function setLive(id){const p=PLACES.find(q=>q.id===id),i=p.i;
+  const[im,au,mask]=await Promise.all([load('img/night-'+p.img+'.jpg'),load('img/aurora-'+(1+i%3)+'.jpg'),tryLoad('img/sky-'+p.img+'.png')]);
+  const photo=cover(im,960,640);live.print=separateNight(photo,i*31+5);live.sky=mask?makeSky(960,640,au,mask,i*13+1):null;live.moths=makeMoths(960,640,40,i);
+  $('#liveNote').textContent=`${p.name}. ${p.note||''}`}
+$('#livePick').onchange=e=>setLive(e.target.value);
+onScreen(live.cv,()=>{$('#livePick').value='thedford';setLive('thedford');vis.observe(live.cv)});
+
+/* ---------- stories ---------- */
+const THEMES=[...new Set(STORIES.map(s=>s.theme))],EVS=Object.keys(EVENTS);
+let fTheme=null,fEvent=null;
+$('#themeFilters').innerHTML=`<button type="button" data-t="" aria-pressed="true">All themes</button>`+THEMES.map(t=>`<button type="button" data-t="${t}" aria-pressed="false">${t}</button>`).join('');
+$('#eventFilters').innerHTML=`<button type="button" data-e="" aria-pressed="true">All events</button>`+EVS.map(e=>`<button type="button" data-e="${e}" aria-pressed="false"><img src="icons/${e.toLowerCase()}.svg" alt="">${e}</button>`).join('');
+$('#themeFilters').onclick=e=>{const b=e.target.closest('button');if(!b)return;fTheme=b.dataset.t||null;$('#themeFilters').querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));filter()};
+$('#eventFilters').onclick=e=>{const b=e.target.closest('button');if(!b)return;fEvent=b.dataset.e||null;$('#eventFilters').querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));filter()};
+async function cardArt(st,cv){
+  const place=PLACES.find(p=>p.id===st.place)||PLACES[0],im=await load('img/'+place.img+'.jpg'),w=300,h=200,r=rng(+st.id.slice(1)*97);
+  const crop=cover(im,w,h,.1+r()*.8,.2+r()*.6,1.5+r()),a=cv.getContext('2d');a.drawImage(duotone(crop,INK[EVENTS[st.event]]),0,0);
+  const T=st.teller&&TELLERS[st.teller],s=await sketch(T?T.drawing:THEME_SKETCH[st.theme]),k=Math.min(w*.92/s.width,h*.9/s.height)*(T?1.05:1),sw=s.width*k,sh=s.height*k;
+  a.globalCompositeOperation='multiply';a.drawImage(s,(w-sw)/2,T?h-sh+6:(h-sh)/2+4,sw,sh);a.globalCompositeOperation='source-over'}
+const storyEls=[];
+$('#storyGrid').appendChild(el(`<article class="tile" aria-label="The back of every card"><div class="back" role="img" aria-label="Card back: the cracked panel from your print technical desert"></div><div class="body"><span class="tag">The back</span><p class="small">Your cracked panel from “technical desert.”</p></div></article>`));
+for(const st of STORIES){
+  const T=st.teller&&TELLERS[st.teller];
+  const t=el(`<article class="tile story${st.rarity==='r'?' foil':''}"><canvas width="300" height="200" aria-hidden="true"></canvas><span class="era">${st.era}</span><span class="evb"><img src="icons/${st.event.toLowerCase()}.svg" alt="${st.event}"></span><div class="body"><span class="tag">${st.theme} · ${{c:'common',u:'uncommon',r:'rare'}[st.rarity]} · ${st.value} ✶${st.vivid}</span><h3>${st.title}</h3><q>“${st.quote}”</q><p class="small">${placeName(st.place)}${T?` · told by ${T.name}`:''}</p></div></article>`);
+  $('#storyGrid').appendChild(t);storyEls.push([st,t]);onScreen(t,()=>cardArt(st,t.querySelector('canvas')));
+}
+function filter(){let n=0;for(const[st,t]of storyEls){const on=(!fTheme||st.theme===fTheme)&&(!fEvent||st.event===fEvent);t.hidden=!on;n+=on}$('#storyCount').textContent=`${n} of ${STORIES.length} stories · rare ones are printed on foil`}
+filter();
+
+/* ---------- road ---------- */
+$('#roadGrid').innerHTML=ROAD.map(r=>`<article class="tile"><div class="body"><span class="tag">On the road</span><h3>${r.title}</h3><p>${r.text}</p><ul>${r.choices.map(c=>`<li>${c.text}<small>${c.note}${c.card?` Gain “${STORIES.find(s=>s.id===c.card).title}.”`:''}${c.double?' Next story counts double.':''}${c.trust?` Trust ${c.trust>0?'+':''}${c.trust}.`:''}${c.daylight?` Daylight ${c.daylight>0?'+':''}${c.daylight}.`:''}${c.detail?` Detail +${c.detail}.`:''}${c.lantern?' A wider lantern.':''}</small></li>`).join('')}</ul></div></article>`).join('');
+
+/* ---------- your work ---------- */
+fetch('sources.json').then(r=>r.json()).then(src=>{
+  const label={'arch-red-blue':'Arch, red and blue','arch-white':'Arch, white','arch-celadon':'Arch, celadon','arch-black':'Arch, black (also the Gatewalker)','arch-red-hook':'Arch, red hook','painting-door-in-the-hill':'The door in the hill','painting-same-place':'A country in the same place','technical-desert':'technical desert (card back)','aurora-1':'Aurora (night skies)','aurora-2':'Aurora (night skies)','sculpture-black-bloom':'Black bloom (the Listener)','sculpture-crumple':'Crumpled clay (the Folded)'};
+  $('#sourceGrid').innerHTML=Object.entries(label).filter(([k])=>src[k]).map(([k,l])=>`<a class="tile" href="${src[k].link}" target="_blank" rel="noopener"><img src="img/src-${k}.jpg" alt="${l}" loading="lazy"><div class="body"><span class="tag">${src[k].date}</span><span class="small">${l}</span></div></a>`).join('')}).catch(()=>{});
+
+/* ---------- one loop for everything that moves ---------- */
+let last=performance.now();
+function frame(t){
+  const dt=Math.min(60,t-last);last=t;
+  for(const L of lives){if(!visible.has(L.cv)||!L.P)continue;L.trust+=(L.goal-L.trust)*(RM?1:.06);L.P.draw(L.x,Math.round(L.trust*10)/10)}
+  for(const L of beastLives)if(visible.has(L.cv))drawBeast(L,t);
+  if(flock&&visible.has($('#flockDemo'))){const c=$('#flockDemo').getContext('2d');c.drawImage(flockBg,0,0);flock.step(dt,t);flock.draw(c)}
+  if(moths&&mothBg&&visible.has($('#mothDemo'))){const c=$('#mothDemo').getContext('2d');c.drawImage(mothBg,0,0);moths.step(dt,t);moths.draw(c,t)}
+  if(live.print&&visible.has(live.cv)){const c=live.cv.getContext('2d');c.drawImage(live.print,0,0);if(live.sky)c.drawImage(live.sky.draw(t),0,0);live.moths.step(dt,t);live.moths.draw(c,t)}
+  requestAnimationFrame(frame)}
+requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

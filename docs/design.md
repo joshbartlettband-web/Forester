@@ -179,3 +179,23 @@ From @dochwah (see `art/instagram/`):
 - **Paintings are places.** "The door in the hill" and the framed mesa with the walking figure sit whole on the paper as era pockets, with an arch beside them.
 - **Card backs are the cracked panel from "technical desert."** New stories flip up from the deck.
 - **A line for the game.** The caption on the framed mesa reads like the Easement itself: "I moved to a different country once. It is in the same place as the one I left." Candidate for the summons or the title screen.
+
+## The long run: people, creatures, places, nights, stories
+
+Everything below lives in `prototypes/collision/` (play: `collision.html`; browse: `guide.html`) and shares `engine.js` (drawing) and `data.js` (content).
+
+**Night is your aurora.** Every outdoor place has a Gemini night version, lit pink and green, and a sky mask. The sky shown is your own aurora photograph, cut in by the mask, waving in vertical strips, with code-drawn curtains and twinkling stars. At night the land prints in light inks (cream, pink, aurora green) on dark stock, your drawings turn to chalk, and lamp moths come out. Legs 9 to 13 and the western errands default to night; any outdoor place can be switched.
+
+**People (13).** Your three portrait drawings plus ten new tellers, each a Gemini photograph paired with a pen drawing in your manner (Gemini, with your face drawings as the style reference). Each has an age, a role, a want (theme), an opening line and ties to other tellers. Frank is a holdout: his stories can't be filed.
+
+**Creatures (12).** Six Nebraska animals (crane, coyote, owl, box turtle, bison, jackrabbit), four strange ones grown from your work: the Listener (your black bloom sculpture), the Folded (your crumpled clay), the Gatewalker (your black arch, which only moves when the lantern is elsewhere), and Long-legs (your critter drawing, rendered as a real animal). Plus two drawn entirely by code: count birds (a murmuration of ink ticks, day only) and lamp moths (night). Creatures are printed until the lantern finds them, and react when you tell a story with their event.
+
+**Places (18).** Thirteen legs east from Halsey to the Missouri (Thedford, the Dismal, the Sandhills, Broken Bow, the North Loup in fog, the Platte, the Archway at Kearney, the Loup–Platte confluence, Main Street, the Register of Deeds, Omaha with its gray flag and white circle, the bridge), three errands west (Scotts Bluff, the Niobrara, Kingsley Dam) and your two paintings as era pockets. Each has an arch, a teller, creatures and a note.
+
+**Stories (64).** Eight themes (Water, Weather, Work, Strange, Leaving, Light, Kin, Animals), each with a title and a one-line testimony, a place, an era, one of the five events and a rarity. Rare cards are printed on foil (an aurora sheen). A teller's deck is weighted toward their place, their own stories and their want. Telling earns more when the story happened here, is the teller's own, or involves someone they know.
+
+**On the road (10).** After each walk through an arch, a written encounter with two choices: a jar of peaches, a man who knows your cousin, the arch that moved, cranes in the road, a holdout's gate, a lamp on a fence post, a child on Survey, weather, the Listener, people at the river.
+
+**The end.** At the bridge over the Missouri: sign, refuse and stay, or take the water.
+
+Pipeline: `tools/gemini-render.py` (batches in `art/rendered/batch-*.json`), then `tools/prepare-assets.py` (keys creatures, cleans sky masks, lifts drawings, compresses photos into the prototype).
