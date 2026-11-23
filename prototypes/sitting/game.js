@@ -97,6 +97,34 @@ const CARDS = [
   C('cranes-lift', 'They lifted all at once', 'Furious and enormous.', 'Animals', 'platte', 'Later', 'Risk', 1, 8, 2, D('crane-dance')),
   C('culvert', 'Waiting out the storm', 'A stranger who keeps bees shared the culvert.', 'Weather', 'thedford', 'Later', 'Find', 1, 5, 2, R('thedford'), { people: ['priya'] }),
 ];
+/* ---------------- the value budget ----------------
+   Every card's Weight is set from a budget, so cards of the same rarity and cost are worth the same
+   per trust, and the event decides the shape of that value (the deckbuilder guide's per-energy baseline).
+   Solo value = Weight × Vivid, told alone.
+     budget (solo value):   cost 0   cost 1   cost 2
+       basic                  2        6       13      (6 per trust: the baseline)
+       uncommon               4       10       22
+       rare                   6       14       30
+   Event multipliers: Find ×0.65 (it draws 2: the cantrip penalty), Chain ×0.85 (+4 when it continues),
+   Risk ×0.9 (+5, may cost standing), Spare ×0.9 (Retain; +4 to the next telling), Repeat ×1, none ×1.
+   Vivid is the multiplicative axis, so it is capped by rarity: basic 1 (fog-cranes 2), uncommon 2, rare 3.
+   Weight = round(budget × event ÷ Vivid), at least 2. */
+const BUDGET = { basic: [2, 6, 13], uncommon: [4, 10, 22], rare: [6, 14, 30] };
+const EVMULT = { Find: .65, Chain: .85, Risk: .9, Spare: .9, Repeat: 1 };
+const START_IDS = new Set(['talk-weather', 'talk-kin', 'rows', 'hail', 'bridge-thing', 'tree-lights', 'walked-rows', 'fence-posts', 'turtle', 'stock-tank', 'fog-cranes', 'power']);
+for (const c of CARDS) {
+  if (c.small) continue;
+  c.rarity = START_IDS.has(c.id) ? 'basic' : c.rare ? 'rare' : 'uncommon';
+  c.v = Math.min(c.v, c.rarity === 'basic' ? (c.id === 'fog-cranes' ? 2 : 1) : c.rarity === 'uncommon' ? 2 : 3);
+  c.w = Math.max(2, Math.round(BUDGET[c.rarity][c.cost] * (EVMULT[c.event] ?? 1) / c.v));
+}
+CARDS.filter(c => c.small).forEach(c => { c.rarity = 'basic'; });
+/* bridges between people (the guide's 30% glue): stories that tie two tellers together */
+const GLUE = { 'tree-lights': ['ruth'], 'fog-cranes': ['ada'], 'power': ['arne'], 'priya-green': ['walt'], 'deshawn-well': ['tomas'], 'walt-aurora': ['arne'],
+  'tomas-pivot': ['ada'], 'gus-notebook': ['imani'], 'marisol-rivers': ['tomas'], 'arne-bulb': ['odette'], 'imani-brown': ['marisol'], 'priya-wind': ['deshawn'] };
+for (const [id, ps] of Object.entries(GLUE)) { const c = CARDS.find(c => c.id === id); if (c) c.people = [...new Set([...c.people, ...ps])]; }
+/* what a card is worth on its own, for comparing a draft to your deck's average */
+const strength = c => Math.round(c.w * c.v / (EVMULT[c.event] ?? 1) / Math.max(1, c.cost) * 10) / 10;
 const CARD = Object.fromEntries(CARDS.map(c => [c.id, c]));
 const START = ['talk-weather', 'talk-kin', 'rows', 'hail', 'bridge-thing', 'tree-lights', 'walked-rows', 'fence-posts', 'turtle', 'stock-tank', 'fog-cranes', 'power'];
 const PLACE = { halsey: 'Halsey', thedford: 'Thedford', sandhills: 'the Sandhills', dismal: 'the Dismal', brokenbow: 'Broken Bow', loup: 'the North Loup', platte: 'the Platte', archway: 'the Archway', columbus: 'Columbus', mainstreet: 'Main Street', courthouse: 'the Courthouse', omaha: 'Omaha', bridge: 'the bridge', door: 'the door in the hill', scottsbluff: 'Scotts Bluff' };
@@ -173,17 +201,23 @@ const TELLERS = [
 const TELLER = Object.fromEntries(TELLERS.map(t => [t.id, t]));
 
 /* ---------------- keepsakes: barn quilts that change the rules ---------------- */
+/* Keepsakes are relics: passive rules outside the deck. Each subscribes to hooks, and they resolve
+   left to right in the order you collected them (the order shown in the top bar).
+     weight(card, w, ctx) -> w        per card, before Weight is summed (additive)
+     vivid(v, ctx) -> v               after links (multiplicative axis: these are gated mid-run)
+     chain / risk / spare: replace an event's amount
+     cost(card, n) -> n;  firstDayTrust(n) -> n;  doubtCostsStanding -> false */
 const KEEPS = {
-  sawtooth:  { name: 'Sawtooth', text: 'Your first telling each day gets +1 Vivid.', block: 'sawtooth' },
-  ohiostar:  { name: 'Ohio Star', text: 'Threads give +2 Vivid instead of +1.', block: 'ohiostar' },
-  logcabin:  { name: 'Log Cabin', text: 'Held-back Spare stories give +7 Weight instead of +4.', block: 'logcabin' },
-  geese:     { name: 'Flying Geese', text: 'Chain gives +7 Weight instead of +4.', block: 'geese' },
-  pinwheel:  { name: 'Pinwheel', text: 'Repeat copies every other event in the telling.', block: 'pinwheel' },
-  bearpaw:   { name: 'Bear’s Paw', text: 'Unanswered doubts cost credibility, never standing.', block: 'bearpaw' },
-  lonestar:  { name: 'Lone Star', text: 'Rare stories cost 1 less trust.', block: 'lonestar' },
-  churndash: { name: 'Churn Dash', text: '+1 trust on the first day of every sitting.', block: 'churndash' },
-  dresden:   { name: 'Dresden Plate', text: 'Small talk gets +4 Weight.', block: 'dresden' },
-  drunkard:  { name: 'Drunkard’s Path', text: 'Risk never costs standing, but gives only +3 Weight.', block: 'drunkard' },
+  sawtooth:  { name: 'Sawtooth', text: 'Your first telling each day gets +1 Vivid.', block: 'sawtooth', vivid: (v, x) => x.firstToday ? v + 1 : v },
+  ohiostar:  { name: 'Ohio Star', text: 'Threads give +2 Vivid instead of +1.', block: 'ohiostar', vivid: (v, x) => x.thread ? v + 1 : v },
+  logcabin:  { name: 'Log Cabin', text: 'Retained Spare stories give +7 Weight instead of +4.', block: 'logcabin', spare: () => 7 },
+  geese:     { name: 'Flying Geese', text: 'Chain gives +7 Weight instead of +4.', block: 'geese', chain: () => 7 },
+  pinwheel:  { name: 'Pinwheel', text: 'Repeat copies every other event in the telling.', block: 'pinwheel', repeatAll: true },
+  bearpaw:   { name: 'Bear’s Paw', text: 'Unanswered doubts cost credibility, never standing.', block: 'bearpaw', doubtCostsStanding: false },
+  lonestar:  { name: 'Lone Star', text: 'Rare stories cost 1 less trust.', block: 'lonestar', cost: (c, n) => c.rare ? Math.max(0, n - 1) : n },
+  churndash: { name: 'Churn Dash', text: '+1 trust on the first day of every sitting.', block: 'churndash', firstDayTrust: n => n + 1 },
+  dresden:   { name: 'Dresden Plate', text: 'Small talk gets +4 Weight.', block: 'dresden', weight: (c, w) => c.small ? w + 4 : w },
+  drunkard:  { name: 'Drunkard’s Path', text: 'Risk never costs standing, but gives only +3 Weight.', block: 'drunkard', risk: () => 3, riskSafe: true },
 };
 
 /* ---------------- road events (a map node between sittings) ---------------- */
@@ -203,7 +237,7 @@ const ROAD = [
 ];
 
 const DAYS = 4, TRUST = 3, HAND = 5, MAX_TELL = 3, START_STANDING = 10, MAX_STANDING = 12, COLS = 8;
-const RANKS = [[0, 'Noted'], [1300, 'Entered'], [1900, 'Recorded'], [2400, 'Indexed'], [2800, 'Bound into the record']];
+const RANKS = [[0, 'Noted'], [1300, 'Entered'], [1800, 'Recorded'], [2200, 'Indexed'], [2550, 'Bound into the record']];
 const ENDINGS = {
   sign: { title: 'You sign', text: 'Your testimony goes into the record with everyone else’s. Somebody will read it in a hundred years and know exactly where the cranes stood.' },
   refuse: { title: 'You refuse, and stay', text: 'You keep your stories. You live outside the agreement but inside its presence, like Frank by the Dismal. People still wave.' },
@@ -218,13 +252,14 @@ const tagOf = (c, [k, v]) => (k === 'event' ? c.event === v : k === 'people' ? c
 let uid = 0;
 const inst = (id, mods = {}) => ({ uid: ++uid, ...CARD[id], people: [...CARD[id].people], ...mods });
 const has = (G, k) => G.keeps.includes(k);
-const costOf = (G, c) => Math.max(0, c.cost - (c.rare && has(G, 'lonestar') ? 1 : 0));
+const hooks = (G, name) => G.keeps.map(k => [k, KEEPS[k]]).filter(([, h]) => h[name] !== undefined);
+const costOf = (G, c) => hooks(G, 'cost').reduce((n, [, h]) => h.cost(c, n), c.cost);
 
 /* ---------------- the map ----------------
    columns west to east. Column 0 is Ruth at Halsey; column 7 is Imani at the bridge.
    kinds: sitting, holdout, road, arch, courthouse, bridge */
 function makeMap(r) {
-  const cols = [];
+  const cols = [], met = new Set(['ruth']);   // a teller appears once per run unless their columns run out
   cols.push([{ kind: 'sitting', teller: 'ruth' }]);
   for (let c = 1; c < COLS - 1; c++) {
     const n = 2 + (r() < .55 ? 1 : 0), col = [];
@@ -239,7 +274,7 @@ function makeMap(r) {
       if (kind === 'holdout' && (!TELLER.frank.cols.includes(c) || cols.some(cl => cl.some(n => n.kind === 'holdout')) || col.some(n => n.kind === 'holdout'))) kind = 'sitting';   // one holdout per run
       if (kind !== 'sitting' && col.some(n => n.kind === kind)) kind = 'sitting';   // no two of the same stop side by side
       const node = { kind };
-      if (kind === 'sitting') { const t = pool.filter(t => !used.has(t.id)); if (!t.length) node.kind = ['road', 'arch', 'courthouse'].find(k => !col.some(n => n.kind === k)) || 'road'; else { node.teller = pickR(t, r).id; used.add(node.teller); } }
+      if (kind === 'sitting') { const fresh = pool.filter(t => !used.has(t.id) && !met.has(t.id)), t = fresh.length ? fresh : pool.filter(t => !used.has(t.id)); if (!t.length) node.kind = ['road', 'arch', 'courthouse'].find(k => !col.some(n => n.kind === k)) || 'road'; else { node.teller = pickR(t, r).id; used.add(node.teller); met.add(node.teller); } }
       if (kind === 'holdout') node.teller = 'frank';
       if (node.kind === 'road') node.road = Math.floor(r() * ROAD.length);
       col.push(node);
@@ -264,8 +299,8 @@ function makeMap(r) {
 }
 const nodeById = (G, id) => { const [c, i] = id.split('-').map(Number); return G.map[c][i]; };
 function threshold(node) {
-  const base = Math.round((120 + 44 * node.c) / 10) * 10;
-  return node.kind === 'holdout' ? Math.round(base * 1.25 / 10) * 10 : node.kind === 'bridge' ? 350 : base;
+  const base = Math.round((120 + 48 * node.c) / 10) * 10;
+  return node.kind === 'holdout' ? Math.round(base * 1.25 / 10) * 10 : node.kind === 'bridge' ? 390 : base;
 }
 
 /* ---------------- a run ---------------- */
@@ -279,7 +314,7 @@ function goTo(G, id) { G.at = id; G.visited.push(id); return nodeById(G, id); }
 
 function startSitting(G, node) {
   const T = TELLER[node.teller], r = G.r;
-  const S = { T, node, threshold: threshold(node), cred: 0, day: 1, trustMax: TRUST, trust: TRUST + (has(G, 'churndash') ? 1 : 0), warm: false, reservation: true,
+  const S = { T, node, threshold: threshold(node), cred: 0, day: 1, trustMax: TRUST, trust: hooks(G, 'firstDayTrust').reduce((n, [, h]) => h.firstDayTrust(n), TRUST), warm: false, reservation: true,
     draw: shuffle(G.deck.map(c => ({ ...c })), r), hand: [], discard: [], last: null, spareBonus: 0, answered: false, toldToday: 0, intentI: 0, log: [], result: null, G };
   S.intent = T.intents[0];
   drawN(S, HAND, r); applyStartIntent(S, G);
@@ -306,12 +341,12 @@ function evaluate(S, cards) {
   const cost = cards.reduce((a, c) => a + costOf(G, c), 0);
   let weight = 0, asked = false;
   for (const c of cards) {
-    let w = c.w + (c.small && has(G, 'dresden') ? 4 : 0);
+    let w = hooks(G, 'weight').reduce((w, [, h]) => h.weight(c, w), c.w);
     if (S.intent.kind === 'ask' && tagOf(c, S.intent.tag)) { w *= 2; asked = true; }
     weight += w;
   }
   if (asked) parts.push({ k: 'w', label: S.intent.label + ': ×2 weight' });
-  if (cards.some(c => c.small) && has(G, 'dresden')) parts.push({ k: 'w', label: 'Dresden Plate: small talk +4' });
+  for (const [k, h] of hooks(G, 'weight')) if (cards.some(c => h.weight(c, c.w) !== c.w)) parts.push({ k: 'w', label: `${KEEPS[k].name}: ${KEEPS[k].text}` });
   let vivid = Math.max(...cards.map(c => c.v));
   const shared = key => cards.length > 1 && new Set(cards.map(c => c[key])).size < cards.length;
   if (shared('theme')) { vivid++; parts.push({ k: 'v', label: 'Witnesses: same theme +1' }); }
@@ -319,21 +354,22 @@ function evaluate(S, cards) {
   if (shared('era')) { vivid++; parts.push({ k: 'v', label: 'Kept: same era +1' }); }
   const thread = cards.length > 1 && cards.some((c, i) => cards.some((d, j) => j !== i && c.people.some(p => d.people.includes(p))));
   const theirs = cards.some(c => c.people.includes(T.id));
-  if (thread || theirs) { const n = has(G, 'ohiostar') ? 2 : 1; vivid += n; parts.push({ k: 'v', label: (thread ? 'Thread: people who know each other' : 'Their own story, told back') + ` +${n}` }); }
+  if (thread || theirs) { vivid++; parts.push({ k: 'v', label: (thread ? 'Thread: people who know each other' : 'Their own story, told back') + ' +1' }); }
   if (cards.length === 3 && shared('theme') && shared('place') && shared('era')) { vivid++; parts.push({ k: 'v', label: 'Whole story +1' }); }
   if (cards.some(c => c.theme === T.want)) { vivid++; parts.push({ k: 'v', label: `They want ${T.want} +1` }); }
-  if (S.toldToday === 0 && has(G, 'sawtooth')) { vivid++; parts.push({ k: 'v', label: 'Sawtooth: first telling today +1' }); }
+  const ctx = { firstToday: S.toldToday === 0, thread: thread || theirs };
+  for (const [k, h] of hooks(G, 'vivid')) { const nv = h.vivid(vivid, ctx); if (nv !== vivid) parts.push({ k: 'v', label: `${KEEPS[k].name} +${nv - vivid}` }); vivid = nv; }
   // events; Repeat copies the strongest other event (all of them, with Pinwheel)
   const evs = cards.map(c => c.event).filter(Boolean), order = ['Risk', 'Chain', 'Find', 'Spare'];
   const others = evs.filter(e => e !== 'Repeat'), best = order.find(e => others.includes(e));
-  const fired = []; for (const e of evs) { if (e !== 'Repeat') fired.push(e); else if (has(G, 'pinwheel')) fired.push(...others); else if (best) fired.push(best); }
+  const fired = []; for (const e of evs) { if (e !== 'Repeat') fired.push(e); else if (hooks(G, 'repeatAll').length) fired.push(...others); else if (best) fired.push(best); }
   let draw = 0, standing = 0;
   const chains = S.last && cards.some(c => S.last.some(l => l.theme === c.theme || l.place === c.place));
-  const chainW = has(G, 'geese') ? 7 : 4, riskW = has(G, 'drunkard') ? 3 : 5;
+  const chainW = hooks(G, 'chain').reduce((n, [, h]) => h.chain(n), 4), riskW = hooks(G, 'risk').reduce((n, [, h]) => h.risk(n), 5), riskSafe = hooks(G, 'riskSafe').length > 0;
   for (const e of fired) {
     if (e === 'Chain' && chains) { weight += chainW; parts.push({ k: 'w', label: `Chain: continues the last telling +${chainW}` }); }
     if (e === 'Find') { draw += 2; parts.push({ k: 'x', label: 'Find: draw 2' }); }
-    if (e === 'Risk') { weight += riskW; parts.push({ k: 'w', label: `Risk +${riskW}` }); if (!S.warm && !has(G, 'drunkard')) { standing -= 1; parts.push({ k: 'bad', label: 'Risk: they aren’t warm yet, −1 standing' }); } }
+    if (e === 'Risk') { weight += riskW; parts.push({ k: 'w', label: `Risk +${riskW}` }); if (!S.warm && !riskSafe) { standing -= 1; parts.push({ k: 'bad', label: 'Risk: they aren’t warm yet, −1 standing' }); } }
   }
   if (S.spareBonus) { weight += S.spareBonus; parts.push({ k: 'w', label: `Spare held back +${S.spareBonus}` }); }
   let answer = false;
@@ -365,11 +401,11 @@ function endTurn(G) {
   const S = G.S, out = { doubt: 0, held: 0 };
   if (S.intent.kind === 'doubt' && !S.answered) {
     out.doubt = Math.min(S.cred, S.intent.n); S.cred -= out.doubt;
-    if (!has(G, 'bearpaw')) { G.standing -= 1; out.standing = -1; }
+    if (!hooks(G, 'doubtCostsStanding').length) { G.standing -= 1; out.standing = -1; }
     if (G.standing <= 0) { G.over = true; G.struck = true; S.result = 'lost'; return finishSitting(G, out); }
   }
   const held = S.hand.filter(c => c.event === 'Spare' && !c.borrowed);
-  out.held = held.length; S.spareBonus = held.length * (has(G, 'logcabin') ? 7 : 4);
+  out.held = held.length; S.spareBonus = held.length * hooks(G, 'spare').reduce((n, [, h]) => h.spare(n), 4);
   S.discard.push(...S.hand.filter(c => !held.includes(c) && !c.borrowed)); S.hand = held;
   const quiet = S.intent.kind === 'quiet';
   S.day++; S.answered = false; S.toldToday = 0;
@@ -382,7 +418,9 @@ function endTurn(G) {
 }
 function finishSitting(G, out = {}) {
   const S = G.S; if (!S.result) S.result = S.cred >= S.threshold ? 'won' : 'lost';
-  G.score += S.cred;
+  /* win-more guard: credibility past the threshold counts half toward your score */
+  S.scored = S.result === 'won' ? S.threshold + Math.floor((S.cred - S.threshold) / 2) : S.cred;
+  G.score += S.scored;
   if (S.result === 'lost') { G.standing -= 3; if (G.standing <= 0) { G.over = true; G.struck = true; } }
   G.history.push({ teller: S.T.id, kind: S.node.kind, cred: S.cred, threshold: S.threshold, result: S.result, day: Math.min(S.day, DAYS) });
   out.result = S.result; return out;
@@ -398,6 +436,10 @@ function offers(G) {
   }
   return list;
 }
+/* the skip button: you may take nothing, give nothing, or both. Draft value = the card's strength
+   minus your deck's average strength: below zero, it makes your average hand worse. */
+const deckAverage = G => Math.round(G.deck.reduce((a, c) => a + strength(c), 0) / Math.max(1, G.deck.length) * 10) / 10;
+const draftValue = (G, c) => Math.round((strength(c) - deckAverage(G)) * 10) / 10;
 function trade(G, take, give) {
   if (give) { G.deck = G.deck.filter(c => c.uid !== give.uid); if (!give.small) G.given.push({ card: give, at: G.history.length - 1 }); }
   if (take) G.deck.push(take);
@@ -427,6 +469,6 @@ function roadChoose(G, ev, choice) {
 function finalScore(G) { return G.score + Math.max(0, G.standing) * 20; }
 function rank(G) { const s = finalScore(G); let r = RANKS[0][1]; for (const [n, name] of RANKS) if (s >= n) r = name; return G.struck ? 'Struck from the record' : r; }
 
-root.SITTING = { CARDS, CARD, START, PLACE, TELLERS, TELLER, KEEPS, ROAD, ENDINGS, DAYS, TRUST, HAND, MAX_TELL, START_STANDING, MAX_STANDING, COLS, RANKS,
+root.SITTING = { BUDGET, EVMULT, strength, deckAverage, draftValue, CARDS, CARD, START, PLACE, TELLERS, TELLER, KEEPS, ROAD, ENDINGS, DAYS, TRUST, HAND, MAX_TELL, START_STANDING, MAX_STANDING, COLS, RANKS,
   rng, newRun, reachable, goTo, nodeById, threshold, startSitting, evaluate, canTell, costOf, tell, endTurn, finishSitting, offers, trade, keepOffer, takeKeep, arch, fileValue, canFile, file, roadChoose, finalScore, rank, tagOf };
 })(typeof window !== 'undefined' ? window : globalThis);

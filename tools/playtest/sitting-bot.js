@@ -22,18 +22,20 @@ function playTurn(G) {
     K.tell(G, best.c); if (G.over) return;
   }
 }
-const strength = c => c.w * c.v;
+const strength = c => K.strength(c);
 function sitting(G, node) {
   K.startSitting(G, node);
   let out; do { playTurn(G); if (G.over) return; out = K.endTurn(G); } while (!out.result && !G.over);
   if (G.over) return;
   if (G.S.result === 'won') {
-    const take = K.offers(G).sort((a, b) => strength(b) - strength(a))[0], give = [...G.deck].sort((a, b) => strength(a) - strength(b))[0];
-    K.trade(G, take, give);
+    // the guide's draft rule: take only what lifts your average; give only what lowers it
+    const best = K.offers(G).sort((a, b) => K.strength(b) - K.strength(a))[0], worst = [...G.deck].sort((a, b) => K.strength(a) - K.strength(b))[0];
+    const take = K.draftValue(G, best) > 0 ? best : null, give = G.deck.length > 8 && K.draftValue(G, worst) < 0 ? worst : null;
+    K.trade(G, take, give); skips += !take; gives += !!give;
     if (node.kind === 'holdout') K.takeKeep(G, K.keepOffer(G, 1)[0]);
   }
 }
-const kindsSeen = {}, byCol = {}; let struck = 0, finals = [], ranks = {}, keepsHeld = 0;
+const kindsSeen = {}, byCol = {}; let struck = 0, finals = [], ranks = {}, keepsHeld = 0, skips = 0, gives = 0;
 for (let n = 0; n < runs; n++) {
   const G = K.newRun(5000 + n);
   while (!G.over) {
@@ -53,6 +55,6 @@ for (let n = 0; n < runs; n++) {
 finals.sort((a, b) => a - b);
 console.log(`runs ${runs}, struck from the record ${(100 * struck / runs).toFixed(0)}%, keepsakes per run ${(keepsHeld / runs).toFixed(1)}`);
 for (const k of Object.keys(byCol).sort()) { const s = byCol[k]; console.log(`${k.padEnd(9)} threshold ${String(s.thr).padStart(4)}  won ${(100 * s.won / s.n).toFixed(0).padStart(3)}%  avg cred ${(s.cred / s.n).toFixed(0).padStart(4)}  (${s.n})`); }
-console.log('nodes visited', kindsSeen);
+console.log('trades skipped (took nothing)', skips, ' gave a card', gives);
 console.log('final score: p10', finals[Math.floor(runs * .1)], 'median', finals[runs >> 1], 'p90', finals[Math.floor(runs * .9)]);
 console.log('ranks', ranks);

@@ -116,3 +116,60 @@ Three sittings (Ruth at Halsey, Tomás on the North Loup, Odette at the Register
 - **The bridge:** Imani opens by telling one of her own Leaving stories, so you can answer her reservation with her own words. Win or lose, you choose an ending: sign, refuse and stay, or take the water.
 - **Score:** credibility + filing + standing × 20. Ranks: Noted, Entered 1300, Recorded 1900, Indexed 2400, Bound into the record 2800.
 - **Bot balance:** early sittings ~100%, middle ~92%, late ~80%, the holdout ~90%, the bridge ~49%. About 1 run in 8 ends struck. Median final score ~2100 (Recorded).
+
+## Applying the deckbuilder guide (Nov 23)
+
+The project guide (`CLAUDE_DECKBUILDER_GUIDE.md`, from Gemini's research) was applied to the prototype's rules. What changed and why:
+
+**1. A value budget (the guide's per-energy baseline).** An audit of all 64 cards (solo value = Weight × Vivid, per trust) found:
+
+| | before | after |
+|---|---|---|
+| starting cards, 1 trust | 6.0 avg (4–10) | 5.6–7.1 |
+| uncommon, 1 trust | 11.0 avg (6–16) | 9.2–11.1 |
+| uncommon, 2 trust | 9.3 avg: worse per trust than 1-cost | 10.6–11.1 |
+| rare, 1 trust | 19.5 avg | 13.8 |
+| Find cards (draw 2) | 11.6 avg: the strongest | budget × 0.65 |
+
+Weight is now derived from a budget table in `game.js` (basic 6 / uncommon 10 / rare 14 per trust at cost 1), shaped by the event: Find ×0.65 (the guide's cantrip penalty), Chain ×0.85, Risk ×0.9, Spare ×0.9, Repeat ×1. Vivid, the multiplicative axis, is capped by rarity (basic 1, uncommon 2, rare 3), so multiplication is gated behind trades, as the guide asks.
+
+**2. The 30/40/30 pool.** Bridges (cards that tie two people together) rose from 12 to 21 of 64 (33%). Enablers (Find, Spare, small talk) 29, payoffs (Chain, Risk, Repeat) 35.
+
+**3. The skip button and draft value.** Every trade can take nothing and give nothing. Each offered card shows its draft value: its strength minus your deck's average strength (`draftValue = strength − deckAverage`). Below zero, it dilutes your hands.
+
+**4. Win-more.** Credibility past a teller's threshold now counts half toward your score.
+
+**5. Keepsakes are relics with hooks** (weight, vivid, chain, risk, spare, cost, first-day trust, doubt), resolved left to right in the order collected.
+
+**6. Vocabulary.** Spare is *Retain*. A teller's story lent to you for the day is *Ethereal* (gone if not told) and *Exhausts* when told. Giving a story away or filing it is *Trash* (gone for the run). The draw pile reshuffles the told pile only when empty.
+
+**7. RNG.** All randomness is input RNG (the draw, the map, the offers). Nothing is decided after you act.
+
+**Keepsake math** (against a mid-run sitting: threshold ~310, about 8 tellings, average telling ~14 Weight × 2.5 Vivid ≈ 35):
+
+| keepsake | effect | gain per sitting | note |
+|---|---|---|---|
+| Sawtooth | +1 Vivid, first telling each day | 4 days × ~14 ≈ +56 (≈18%) | multiplicative, so mid-run only |
+| Ohio Star | Threads +2 Vivid | ~40% of tellings × 14 ≈ +45 | rewards the bridge cards |
+| Log Cabin | Retained Spare +7 instead of +4 | +3 × 2.5 per Spare held ≈ +8 each | build-around, not parasitic: Spare is 22% of the pool |
+| Flying Geese | Chain +7 instead of +4 | +3 × 2.5 per chain ≈ +8 each | |
+| Pinwheel | Repeat copies every event | ~1 extra event per Repeat | |
+| Bear's Paw | doubts never cost standing | saves ~1–2 standing a sitting | defensive |
+| Lone Star | rares cost 1 less | +1 trust per rare told ≈ +20 | gated: rares come from trades |
+| Churn Dash | +1 trust on day 1 | ~1 more card ≈ +20 | |
+| Dresden Plate | small talk +4 Weight | small talk 2 → 6, ≈ +10 each | turns the cards you'd trash into a build |
+| Drunkard's Path | Risk safe, +3 instead of +5 | −2 Weight × Vivid, no standing loss | a trade-off, not pure power |
+
+**Traps checked.** Infinite loops: none (every draw costs trust; 0-cost cards are hand-limited). Bloat: trades can now thin, and the bot gives a card away in nearly every trade. Win-more: capped. Parasitic keepsakes: each targets an event that is 15–25% of the pool.
+
+**Where the prototype differs from the guide's code rules:** it is plain JavaScript in one file with mutable state, not typed and immutable. That is deliberate for a prototype the designer can open and play; the rules are isolated in `game.js` with no drawing code, so moving them to typed reducers for production is a contained job.
+
+**Bot balance after the changes** (600 runs): early sittings 100%, rows 3–5 90–96%, row 6 82%, the holdout 93%, the bridge 46%. 13% of runs struck. Median score ~2030 (Recorded).
+
+## Engagement (Nov 23)
+
+- **The light follows the journey east:** dawn at Halsey, day in the Sandhills, gold in the middle, night under the aurora near the river. The page sky, the scene grading, the night print (light inks on dark stock), the music and the ambience all follow it.
+- **Nebraska palette:** Sandhills gold, prairie green, sage, wheat, milo, barn red, loess, river blue, big-sky blue, storm slate, sunset orange, dusk pink, aurora green, night indigo. Every card carries its theme's color.
+- **Live scenes** (from the collision demos): the place printed over its photograph, your arch standing in it, the camera pulling back out of the arch on arrival, creatures that react to matching events, flocks by day, lamp moths and the live aurora at night, and stamps where each story lands. Your lantern (the pointer) develops the photograph.
+- **Sound, all synthesized:** wind, birds by day, crickets and an owl at night, cranes on the rivers; a slow drone and plucked pentatonic notes whose key rises as you travel east; sounds for picking, telling (rising notes for bigger tellings), the counting score, warming, answering a reservation, doubt, losing standing, walking, trading, keepsakes and filing.
+- **Keepsake art:** each barn quilt is also a Gemini photograph of that block on a Nebraska barn (the code-drawn block was the reference).
