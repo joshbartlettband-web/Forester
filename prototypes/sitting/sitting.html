@@ -210,7 +210,8 @@ dialog .row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-cont
 #insp[open]{display:grid;justify-items:center;gap:14px}
 #insp::backdrop{background:rgba(31,27,46,.62)}
 #insp .row{display:flex;gap:10px;justify-content:center}
-#insp .card{box-shadow:4px 6px 0 var(--ink)}
+#insp .card{box-shadow:4px 6px 0 var(--ink);height:auto;min-height:340px}
+#insp[open]{align-content:center;height:100dvh;margin:0 auto;padding:10px 0}
 .toast{position:fixed;left:50%;top:calc(52px + env(safe-area-inset-top,0px));transform:translate(-50%,-8px);width:max-content;max-width:min(92vw,520px);background:var(--card);border:2px solid var(--ink);border-radius:6px;box-shadow:2px 3px 0 var(--ink);padding:6px 12px;font-size:14px;line-height:1.3;z-index:30;opacity:0;pointer-events:none;transition:opacity .25s,transform .25s}
 .toast.on{opacity:1;transform:translate(-50%,0)}
 .peek-hd{display:flex;gap:12px;align-items:center;margin-bottom:8px}
@@ -548,7 +549,8 @@ function placeIntent(){const i=$('#intent');if(PHONE.matches){if(i.parentElement
 /* the hand fans to fit the width: cost, title and numbers sit on each card's left edge */
 function fanHand(){const h=$('#hand'),cards=[...h.children],n=cards.length;
   if(!PHONE.matches||!n){h.style.removeProperty('--ov');return}
-  const W=h.clientWidth,cw=cards[0].offsetWidth||104,need=n*cw+(n-1)*6,ov=n>1&&need>W?(need-W)/(n-1)+6:-6;h.style.setProperty('--ov',ov.toFixed(1)+'px');
+  const room=h.parentElement.clientHeight-18,z=Math.max(1,Math.min(1.45,room/172));cards.forEach(c=>c.style.zoom=z.toFixed(3));
+  const W=h.clientWidth,cw=104*z,need=n*cw+(n-1)*6,ov=n>1&&need>W?(need-W)/(n-1)+6:-6;h.style.setProperty('--ov',(ov/z).toFixed(1)+'px');
   cards.forEach((c,i)=>{const t=n>1?i/(n-1)-.5:0;c.style.setProperty('--r',(t*(n>3?7:3)).toFixed(2)+'deg');c.style.setProperty('--y',(t*t*(n>3?18:6)).toFixed(1)+'px')})}
 /* the teller, in full (on a phone the header only has room for the short version) */
 function tellerSheet(){const S=G.S;if(!S||!PHONE.matches)return;const T=S.T;
@@ -560,10 +562,11 @@ $('.sitter').addEventListener('click',tellerSheet);$('#intent').addEventListener
 /* hold any card (or right-click it) to read it up close */
 const insp=$('#insp');let held=null,heldT=0,swallow=false;
 function inspect(c){const S=G.S,inHand=S&&!S.result&&!dlg.open&&S.hand.includes(c)&&!sel.includes(c),can=inHand&&sel.length<3&&K.costOf(G,c)<=S.trust-cost();
-  const sc=Math.max(.8,Math.min(1.6,(innerWidth-32)/212,(innerHeight-120)/340));
-  insp.innerHTML=`<div style="width:${212*sc}px;height:${340*sc}px"><div style="width:212px;transform:scale(${sc});transform-origin:0 0">${cardHTML(c,{tag:'div',full:true})}</div></div>
+  insp.innerHTML=`<div class="big"><div class="sc" style="width:212px;transform-origin:0 0">${cardHTML(c,{tag:'div',full:true})}</div></div>
     <div class="row">${can?'<button class="btn" id="iTell">Add to the telling</button>':''}<button class="btn quiet" id="iClose">Close</button></div>`;
-  insp.showModal();insp.querySelector('#iClose').onclick=()=>insp.close();
+  insp.showModal();const cd=insp.querySelector('.card'),ch=cd.offsetHeight,sc=Math.max(.8,Math.min(1.6,(innerWidth-32)/212,(innerHeight-110)/ch));
+  insp.querySelector('.sc').style.transform=`scale(${sc})`;Object.assign(insp.querySelector('.big').style,{width:212*sc+'px',height:ch*sc+'px'});
+  insp.querySelector('#iClose').onclick=()=>insp.close();
   if(can)insp.querySelector('#iTell').onclick=()=>{insp.close();sel.push(c);HSOUND.play('pick');render()}}
 insp.addEventListener('click',e=>{if(e.target===insp)insp.close()});
 document.addEventListener('pointerdown',e=>{swallow=false;const el=e.target.closest('.card[data-uid]');if(!el||el.closest('#insp'))return;held={el,x:e.clientX,y:e.clientY};clearTimeout(heldT);
