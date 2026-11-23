@@ -15,6 +15,96 @@
   "source": "Tasks",
   "ar": 1.0619
  },
+ "crane-dance": {
+  "kind": "creature",
+  "habitat": [
+   "river",
+   "sandbar",
+   "sky"
+  ],
+  "source": "Tasks, crane page",
+  "ar": 0.4826
+ },
+ "crane-dance-arms": {
+  "kind": "creature",
+  "habitat": [
+   "river",
+   "sandbar",
+   "sky"
+  ],
+  "source": "Tasks, crane page",
+  "ar": 0.8368
+ },
+ "crane-head": {
+  "kind": "creature",
+  "habitat": [
+   "river",
+   "sandbar",
+   "sky"
+  ],
+  "source": "Tasks, crane page",
+  "ar": 0.5796
+ },
+ "crane-preen": {
+  "kind": "creature",
+  "habitat": [
+   "river",
+   "sandbar",
+   "sky"
+  ],
+  "source": "Tasks, crane page",
+  "ar": 0.5345
+ },
+ "crane-small": {
+  "kind": "creature",
+  "habitat": [
+   "river",
+   "sandbar",
+   "sky"
+  ],
+  "source": "Tasks, crane page",
+  "ar": 0.8164
+ },
+ "crane-standing": {
+  "kind": "creature",
+  "habitat": [
+   "river",
+   "sandbar",
+   "sky"
+  ],
+  "source": "Tasks, crane page",
+  "ar": 0.1979
+ },
+ "crane-step": {
+  "kind": "creature",
+  "habitat": [
+   "river",
+   "sandbar",
+   "sky"
+  ],
+  "source": "Tasks, crane page",
+  "ar": 0.6143
+ },
+ "crane-tall": {
+  "kind": "creature",
+  "habitat": [
+   "river",
+   "sandbar",
+   "sky"
+  ],
+  "source": "Tasks, crane page",
+  "ar": 0.4472
+ },
+ "crane-wings": {
+  "kind": "creature",
+  "habitat": [
+   "river",
+   "sandbar",
+   "sky"
+  ],
+  "source": "Tasks, crane page",
+  "ar": 0.4791
+ },
  "cranes": {
   "kind": "creature",
   "habitat": [
