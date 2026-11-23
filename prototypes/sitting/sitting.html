@@ -1,0 +1,301 @@
+<title>Halsey Sittings</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap">
+<style>
+@font-face{font-family:"Halsey Hand";src:url(fonts/HalseyHand.woff2) format("woff2");font-display:swap}
+/* Layout: one column, read top to bottom in the order you play: who you're sitting with, what they'll do,
+   how close you are, what you're telling, your hand. Single printed-paper theme by choice.
+   Type: Halsey Hand only for names and voices; Atkinson Hyperlegible for every rule and number. */
+:root{
+  --paper:#f1ebdc;--card:#faf6ec;--ink:#1f1b2e;--muted:#55506a;--line:rgba(31,27,46,.22);
+  --weight:#2f6db5;--vivid:#c2362f;--trust:#e2486f;--good:#4f7a34;--warn:#b5521f;--yellow:#f3c22f;
+  --hand:"Halsey Hand","Bradley Hand","Segoe Print",cursive;
+  --text:"Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",sans-serif;
+  color-scheme:light}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{height:auto}
+body{background:var(--paper);color:var(--ink);font-family:var(--text);font-size:16px;line-height:1.4;margin:0}
+.wrap>*{min-width:0}
+.wrap{max-width:1040px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:12px 40px;display:grid;gap:14px}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible{outline:3px solid var(--weight);outline-offset:2px}
+.top{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 18px}
+h1{font:400 38px/1 var(--hand);margin:0}
+.stats{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:15px;align-items:center}
+.stats b{font-size:18px;font-variant-numeric:tabular-nums}
+.pips{display:inline-flex;gap:3px;vertical-align:-2px}
+.pips i{width:12px;height:16px;border:1.5px solid var(--ink);border-radius:2px;background:#fff8}
+.pips i.on{background:var(--good)}
+.pips.low i.on{background:var(--warn)}
+.band{position:relative;border:2px solid var(--ink);border-radius:6px;overflow:hidden;box-shadow:3px 4px 0 var(--ink)}
+.band canvas{display:block;width:100%;height:auto;aspect-ratio:960/250;max-width:100%}
+.band .where{position:absolute;left:10px;bottom:8px;background:var(--card);border:1.5px solid var(--ink);border-radius:3px;padding:2px 10px 0;font:400 20px var(--hand)}
+.sitter{display:grid;grid-template-columns:150px minmax(0,1fr) minmax(0,300px);gap:16px;align-items:start}
+#portrait{width:100%;height:auto;aspect-ratio:3/4;display:block;border:2px solid var(--ink);border-radius:4px;max-width:100%}
+.who{display:grid;gap:6px;min-width:0}
+.who h2{font:400 34px/1 var(--hand);margin:0}
+.who .line{font:400 21px/1.15 var(--hand);color:#3c3650;margin:0}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{display:inline-flex;gap:6px;align-items:center;border:1.5px solid var(--ink);border-radius:4px;padding:2px 8px;font-size:14px;background:var(--card)}
+.chip b{font-weight:700}
+.chip.res.done{text-decoration:line-through;opacity:.55}
+.intent{border:2px solid var(--ink);border-radius:6px;background:var(--card);padding:10px 12px;display:grid;gap:4px;box-shadow:3px 4px 0 var(--ink)}
+.intent .lab{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700}
+.intent .what{display:flex;gap:8px;align-items:center;font-size:19px;font-weight:700}
+.intent .what img{width:30px;height:30px}
+.intent p{margin:0;font-size:14.5px}
+.meter{display:grid;gap:4px}
+.meter .row{display:flex;justify-content:space-between;align-items:baseline;gap:8px;font-size:15px}
+.meter .num{font-size:24px;font-weight:700;font-variant-numeric:tabular-nums}
+.bar{position:relative;height:22px;border:2px solid var(--ink);border-radius:4px;background:#fff8;overflow:hidden}
+.bar b{position:absolute;inset:0 auto 0 0;background:linear-gradient(90deg,var(--trust),#f07a3a);transition:width .5s cubic-bezier(.2,.8,.2,1)}
+.bar .half{position:absolute;top:-2px;bottom:-2px;left:50%;border-left:2px dashed var(--ink)}
+.play{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:stretch}
+.telling{border:2px dashed var(--line);border-radius:8px;padding:10px;display:grid;gap:10px;min-height:120px;background:rgba(255,255,255,.35)}
+.slots{display:flex;gap:8px;flex-wrap:wrap;min-height:40px}
+.slot{border:1.5px solid var(--ink);border-radius:5px;background:var(--card);padding:4px 10px;font-size:15px;display:flex;gap:6px;align-items:center}
+.slot .c{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--trust);color:#fff;font-weight:700;font-size:13px}
+.slot.empty{border-style:dashed;color:var(--muted);background:transparent}
+.calc{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:17px}
+.num-w,.num-v,.num-t{font-weight:700;font-size:22px;padding:1px 10px;border-radius:6px;border:2px solid var(--ink);color:#fff;font-variant-numeric:tabular-nums}
+.num-w{background:var(--weight)}.num-v{background:var(--vivid)}.num-t{background:var(--ink)}
+.parts{display:flex;flex-wrap:wrap;gap:5px}
+.parts span{font-size:13px;border-radius:3px;padding:1px 6px;background:#fff;border:1px solid var(--line)}
+.parts .w{border-color:var(--weight);color:var(--weight)}.parts .v{border-color:var(--vivid);color:var(--vivid)}
+.parts .bad{background:#fbe3d9;border-color:var(--warn);color:#7a3410}.parts .good{background:#e3efd8;border-color:var(--good);color:#2d4a1c}
+.actions{display:grid;gap:8px;align-content:start;min-width:170px}
+.btn{background:var(--yellow);border:2px solid var(--ink);border-radius:6px;padding:8px 16px;font-size:17px;font-weight:700;box-shadow:2px 3px 0 var(--ink)}
+.btn:disabled{opacity:.45;cursor:not-allowed;box-shadow:none}
+.btn.quiet{background:var(--card)}
+.day{font-size:15px;display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center}
+.trustpips{display:inline-flex;gap:4px;vertical-align:-3px}
+.trustpips i{width:18px;height:18px;border-radius:50%;border:2px solid var(--ink);background:#fff8}
+.trustpips i.on{background:var(--trust)}
+.handwrap{overflow-x:auto;padding:6px 2px 14px;-webkit-overflow-scrolling:touch}
+.hand{display:flex;gap:12px;width:max-content}
+/* the card: cost, title, art, keyword, rule, voice, score: always in that order */
+.card{width:212px;height:340px;background:var(--card);border:2px solid var(--ink);border-radius:10px;box-shadow:3px 4px 0 var(--ink);position:relative;display:grid;grid-template-rows:54px 120px auto 1fr auto;overflow:hidden;text-align:left;padding:0;transition:transform .15s,box-shadow .15s}
+.card:hover{transform:translateY(-4px)}
+.card[aria-pressed="true"]{transform:translateY(-12px);box-shadow:4px 12px 0 var(--ink);border-color:var(--trust)}
+.card.cant{opacity:.55}
+.card .hd{display:flex;align-items:center;gap:7px;padding:6px 8px}
+.card .cost{flex:none;width:30px;height:30px;border-radius:50%;background:var(--trust);color:#fff;font-weight:700;font-size:18px;display:grid;place-items:center;border:2px solid var(--ink)}
+.card .cost.free{background:var(--good)}
+.card .ti{font:400 18px/1.02 var(--hand);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.art{position:relative;overflow:hidden;border-block:2px solid var(--ink);background:#e6dfcf}
+.art img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.art.archive img{filter:sepia(.35) contrast(1.05)}
+.art.drawing{background:#fbf8ef}.art.drawing img{object-fit:contain;padding:6px;mix-blend-mode:multiply}
+.art.object{background:var(--paper)}.art.object img{object-fit:contain;padding:8px;filter:drop-shadow(0 5px 3px rgba(31,27,46,.35))}
+.art.render img.ph{filter:grayscale(1) contrast(1.15) brightness(1.05)}
+.art.render .ink{position:absolute;inset:0;mix-blend-mode:screen;opacity:.55}
+.art.render img.ov{object-fit:contain;mix-blend-mode:multiply;padding:4px}
+.card .ty{display:flex;align-items:center;gap:5px;padding:5px 8px 0;font-size:13px;font-weight:700;min-width:0}
+.card .ty img{width:20px;height:20px;flex:none}
+.card .ty span{font-weight:400;color:var(--muted);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card .ru{padding:3px 8px 0;font-size:13.5px;line-height:1.28}
+.card .qu{font:400 15px/1.1 var(--hand);color:#3c3650;padding:4px 8px 0}
+.card .ft{display:flex;justify-content:space-between;align-items:flex-end;gap:6px;padding:4px 8px 7px}
+.card .wv{display:flex;gap:5px}
+.card .w,.card .v{font-weight:700;font-size:18px;min-width:38px;text-align:center;border-radius:5px;padding:0 5px;color:#fff;border:2px solid var(--ink);font-variant-numeric:tabular-nums}
+.card .w{background:var(--weight)}.card .v{background:var(--vivid)}
+.card .v::before{content:"×";font-size:13px;margin-right:1px}
+.card .cr{font-size:10.5px;color:var(--muted);text-align:right;line-height:1.15;max-width:100px}
+.card .flag{position:absolute;right:6px;top:58px;z-index:2;background:var(--ink);color:#fff;font-size:11px;font-weight:700;padding:1px 6px;border-radius:3px}
+.card.rare::after{content:"";position:absolute;inset:0;pointer-events:none;mix-blend-mode:screen;opacity:.35;background:linear-gradient(115deg,transparent 25%,rgba(255,90,190,.6) 42%,rgba(120,255,190,.55) 52%,transparent 70%);background-size:260% 100%;animation:sheen 5s linear infinite}
+@keyframes sheen{0%{background-position:120% 0}100%{background-position:-120% 0}}
+.foot{display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center;font-size:14.5px;color:var(--muted)}
+.foot button{background:none;border:none;text-decoration:underline;color:var(--weight);padding:0;font-size:14.5px}
+.float{position:fixed;z-index:20;font-weight:700;font-size:30px;color:var(--ink);background:var(--yellow);border:2px solid var(--ink);border-radius:6px;padding:0 10px;pointer-events:none;box-shadow:2px 3px 0 var(--ink);animation:rise 1.3s cubic-bezier(.2,.8,.2,1) forwards}
+.float.bad{background:#fbe3d9;font-size:20px}
+@keyframes rise{0%{opacity:0;transform:translateY(10px) scale(.8)}15%{opacity:1;transform:translateY(0) scale(1.08)}100%{opacity:0;transform:translateY(-90px) scale(1)}}
+.note{font-size:15px;min-height:1.5em}
+.note q{quotes:none;font:400 19px var(--hand)}
+dialog{border:2px solid var(--ink);border-radius:8px;background:var(--paper);color:var(--ink);padding:18px;max-width:min(96vw,980px);box-shadow:5px 6px 0 var(--ink)}
+dialog::backdrop{background:rgba(31,27,46,.45)}
+dialog h2{font:400 34px/1 var(--hand);margin:0 0 6px}
+dialog .sub{margin:0 0 12px;font-size:15px}
+dialog .pick{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:12px}
+dialog .row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:flex-end}
+.rank{font:400 46px/1 var(--hand)}
+.hist{display:grid;gap:4px;font-size:15px;margin:10px 0}
+@media (max-width:760px){
+  .sitter{grid-template-columns:110px minmax(0,1fr)}
+  .intent{grid-column:1/-1}
+  .play{grid-template-columns:1fr}
+  .actions{grid-template-columns:1fr 1fr;min-width:0}
+  h1{font-size:30px}
+}
+@media (prefers-reduced-motion:reduce){.card,.bar b{transition:none}.float{animation-duration:.01s}.card.rare::after{animation:none}}
+</style>
+
+<div class="wrap">
+  <div class="top">
+    <h1>Halsey Sittings</h1>
+    <div class="stats" aria-live="polite">
+      <span>Standing <span class="pips" id="standPips"></span> <b id="stand"></b></span>
+      <span>Score <b id="score"></b></span>
+      <span id="sitNo"></span>
+    </div>
+  </div>
+  <div class="band"><canvas id="band" width="960" height="250" aria-hidden="true"></canvas><span class="where" id="where"></span></div>
+  <section class="sitter" aria-label="Who you are sitting with">
+    <canvas id="portrait" width="360" height="480" aria-label="Their portrait: your drawing of them, developing into a photograph as you earn credibility"></canvas>
+    <div class="who">
+      <h2 id="tname"></h2>
+      <p class="line" id="tline"></p>
+      <div class="chips" id="tchips"></div>
+    </div>
+    <div class="intent" id="intent" aria-live="polite"></div>
+  </section>
+  <section class="meter" aria-label="Credibility">
+    <div class="row"><span>Credibility with <span id="tfirst"></span></span><span><span class="num" id="cred">0</span> / <b id="thr"></b> <span id="warmTag"></span></span></div>
+    <div class="bar" id="bar"><b id="barFill" style="width:0"></b><span class="half" title="Halfway: they open up (+1 trust a day)"></span></div>
+  </section>
+  <section class="play" aria-label="Your telling">
+    <div class="telling">
+      <div class="day"><span id="dayNo"></span><span>Trust <span class="trustpips" id="trustPips"></span></span><span id="heldNote"></span></div>
+      <div class="slots" id="slots"></div>
+      <div class="calc" id="calc"></div>
+      <div class="parts" id="parts"></div>
+    </div>
+    <div class="actions">
+      <button class="btn" id="tellBtn" type="button">Tell it</button>
+      <button class="btn quiet" id="endBtn" type="button">End the day</button>
+    </div>
+  </section>
+  <p class="note" id="note"></p>
+  <section aria-label="Your hand"><div class="handwrap"><div class="hand" id="hand"></div></div></section>
+  <div class="foot"><span id="pileInfo"></span><button type="button" id="deckBtn">See your whole deck</button><button type="button" id="howBtn">How it works</button></div>
+</div>
+
+<dialog id="dlg"><div id="dlgBody"></div></dialog>
+
+<script src="engine.js"></script>
+<script src="game.js"></script>
+<script>
+(()=>{
+"use strict";
+const K=SITTING,{TELLERS,DAYS}=K,$=s=>document.querySelector(s);
+const RULE={Find:'Draw 2 cards.',Chain:'+4 Weight if it shares a theme or place with your last telling.',Risk:'+5 Weight. Costs 1 standing if they aren’t warm yet.',Spare:'Hold it at day’s end: +4 Weight to your next telling.',Repeat:'Copies the strongest other event in this telling.'};
+const INK={Find:'#f3c22f',Chain:'#e2486f',Risk:'#c4622c',Spare:'#6f9148',Repeat:'#3a78c3'};
+const PLACE={halsey:'Halsey',sandhills:'Sandhills',platte:'the Platte',loup:'the Loup',courthouse:'Courthouse'};
+let G,sel=[],P=null;
+
+/* ---------- a card, in the fixed order: cost, title, art, keyword, rule, voice, score ---------- */
+function art(c){const a=c.art;
+  if(a.kind==='render')return`<div class="art render"><img class="ph" src="${a.src}" alt=""><span class="ink" style="background:${INK[c.event]||'#9a8f7c'}"></span>${a.over?`<img class="ov" src="${a.over}" alt="">`:''}</div>`;
+  return`<div class="art ${a.kind}"><img src="${a.src}" alt=""></div>`}
+function cardHTML(c,{pressed=false,cant=false,tag='button'}={}){
+  const tags=[c.theme,PLACE[c.place]||c.place,c.era].join(' · ');
+  const credit=c.retold?`Retold by ${c.retold.split(' ')[0]}`:c.borrowed?`Theirs, for now`:c.art.credit||(c.people.length?`Told by ${c.people.map(p=>p[0].toUpperCase()+p.slice(1)).join(' & ')}`:'Yours');
+  return`<${tag} class="card${c.rare?' rare':''}${cant?' cant':''}" ${tag==='button'?`type="button" data-uid="${c.uid}" aria-pressed="${pressed}"`:''} aria-label="${c.title}. Costs ${c.cost} trust. Weight ${c.w}, vivid ${c.v}. ${c.event?c.event+': '+RULE[c.event]:'Small talk.'}">
+    <div class="hd"><span class="cost${c.cost?'':' free'}">${c.cost}</span><span class="ti">${c.title}</span></div>
+    ${art(c)}${c.retold?'<span class="flag">Retold</span>':c.borrowed?'<span class="flag">Theirs</span>':c.retellings?`<span class="flag">+${c.retellings} vivid</span>`:''}
+    <div class="ty">${c.event?`<img src="icons/${c.event.toLowerCase()}.svg" alt="">${c.event}`:'Small talk'} <span>· ${tags}</span></div>
+    <div class="ru">${c.event?`<b>${c.event}:</b> ${RULE[c.event]}`:'Free to tell. Good to give away.'}</div>
+    <div class="qu">“${c.quote.replace(/^“|”$/g,'')}”</div>
+    <div class="ft"><div class="wv"><span class="w" title="Weight">${c.w}</span><span class="v" title="Vivid">${c.v}</span></div><div class="cr">${credit}</div></div>
+  </${tag}>`}
+
+/* ---------- the run ---------- */
+function newRun(){G=K.newRun(Date.now()%100000);K.startSitting(G);enterSitting()}
+async function enterSitting(){
+  const S=G.S,T=S.T;sel=[];
+  $('#where').textContent=T.placeName;
+  const im=await HE.load(T.img),pc=HE.cover(im,960,250),pr=HE.separate(pc,HE.makePaper(960,250,G.sitting+2),G.sitting*31+5);
+  $('#band').getContext('2d').drawImage(pr,0,0);
+  P=await HE.makePortrait({drawing:T.drawing,photo:T.photo});
+  note(`Read what they’ll do today, then pick stories from your hand and tell them.`);render()}
+function note(h){$('#note').innerHTML=h}
+function render(){
+  const S=G.S,T=S.T;
+  $('#stand').textContent=`${Math.max(0,G.standing)}/${K.START_STANDING}`;
+  $('#standPips').innerHTML=Array.from({length:K.START_STANDING},(_,i)=>`<i class="${i<G.standing?'on':''}"></i>`).join('');$('#standPips').classList.toggle('low',G.standing<=4);
+  $('#score').textContent=G.score+S.cred;$('#sitNo').textContent=`Sitting ${G.sitting+1} of ${TELLERS.length}`;
+  $('#tname').textContent=T.name;$('#tline').textContent=`“${T.line}”`;$('#tfirst').textContent=T.name.split(' ')[0];
+  $('#tchips').innerHTML=`<span class="chip">Wants <b>${T.want}</b></span><span class="chip res${S.reservation?'':' done'}" title="Halves your Vivid until answered">Reservation: <b>${T.reservation.text}</b></span>`;
+  const I=S.intent,ic={ask:'place',doubt:'holdout',own:'story',quiet:'trust'}[I.kind];
+  const what={ask:I.label,doubt:`Doubt ${I.n}`,own:'Tells one of their own',quiet:'Goes quiet'}[I.kind];
+  const why={ask:`Stories that fit weigh double today.`,doubt:`At the end of the day they knock ${I.n} off your credibility and you lose 1 standing, unless you tell them something about ${T.want}.`,own:`One of their stories is in your hand today. Tell it back to them for a Thread.`,quiet:`You’ll have one less trust tomorrow.`}[I.kind];
+  $('#intent').innerHTML=`<span class="lab">Today they</span><span class="what"><img src="icons/${ic}.svg" alt="">${what}</span><p>${why}</p>`;
+  $('#cred').textContent=S.cred;$('#thr').textContent=T.threshold;$('#barFill').style.width=Math.min(100,S.cred/T.threshold*100)+'%';
+  $('#warmTag').textContent=S.warm?'· warm':'';
+  $('#dayNo').innerHTML=`<b>Day ${Math.min(S.day,DAYS)} of ${DAYS}</b>`;
+  $('#trustPips').innerHTML=Array.from({length:S.trustMax},(_,i)=>`<i class="${i<S.trust-cost()?'on':''}"></i>`).join('')+` <b>${S.trust-cost()}</b>`;
+  $('#heldNote').textContent=S.spareBonus?`Held back: +${S.spareBonus} Weight on your next telling`:'';
+  $('#slots').innerHTML=[0,1,2].map(i=>sel[i]?`<button type="button" class="slot" data-uid="${sel[i].uid}" title="Take it back"><span class="c">${sel[i].cost}</span>${sel[i].title}</button>`:`<span class="slot empty">Story ${i+1}</span>`).join('');
+  const e=K.evaluate(S,sel);
+  $('#calc').innerHTML=sel.length?`<span class="num-w">${e.weight}</span><span>Weight</span><span>×</span><span class="num-v">${e.vivid}</span><span>Vivid</span><span>=</span><span class="num-t">${e.total}</span><span>credibility</span>`:`<span>Pick up to three stories from your hand. Stories that share a theme, place, era or person tell better together.</span>`;
+  $('#parts').innerHTML=e.parts.map(p=>`<span class="${p.k}">${p.label}</span>`).join('');
+  $('#tellBtn').disabled=!K.canTell(S,sel);
+  $('#hand').innerHTML=S.hand.map(c=>sel.includes(c)?'':cardHTML(c,{cant:c.cost>S.trust-cost()||sel.length>=3})).join('');
+  $('#pileInfo').textContent=`Draw pile ${S.draw.length} · Told today ${S.discard.length} · Deck ${G.deck.length}`;
+}
+const cost=()=>sel.reduce((a,c)=>a+c.cost,0);
+$('#hand').onclick=e=>{const b=e.target.closest('[data-uid]');if(!b)return;const c=G.S.hand.find(c=>c.uid==b.dataset.uid);if(!c||sel.length>=3||c.cost>G.S.trust-cost())return;sel.push(c);render()};
+$('#slots').onclick=e=>{const b=e.target.closest('[data-uid]');if(!b)return;sel=sel.filter(c=>c.uid!=b.dataset.uid);render()};
+
+function floatAt(el,text,bad){const r=el.getBoundingClientRect(),f=document.createElement('div');f.className='float'+(bad?' bad':'');f.textContent=text;f.style.left=(r.left+r.width/2-40)+'px';f.style.top=(r.top-10)+'px';document.body.appendChild(f);setTimeout(()=>f.remove(),1400)}
+$('#tellBtn').onclick=()=>{
+  const S=G.S,cards=[...sel],e=K.tell(G,cards);if(!e)return;sel=[];
+  floatAt($('#calc'),`+${e.total}`);if(e.standing)setTimeout(()=>floatAt($('#stand'),`${e.standing} standing`,true),300);
+  const last=S.log[S.log.length-2];
+  note(`You told ${cards.map(c=>`“${c.title}”`).join(', ')}.${e.answer?` <b>${S.T.name.split(' ')[0]}’s reservation is answered.</b>`:''}${last&&last.t==='warm'?` <b>They open up: +1 trust a day.</b>`:''}`);
+  if(G.over)return endRun();render()};
+$('#endBtn').onclick=()=>{
+  const S=G.S,before=S.cred,out=K.endTurn(G);sel=[];
+  if(out.doubt){floatAt($('#bar'),`−${out.doubt} doubt`,true);}
+  if(out.standing)setTimeout(()=>floatAt($('#stand'),'−1 standing',true),250);
+  if(G.over)return endRun();
+  if(out.result){return out.result==='won'?tradeDialog():lostDialog()}
+  const I=S.intent;note(out.doubt?`They didn’t hear what they wanted. −${out.doubt} credibility, −1 standing.`:`Day ${S.day}.${I.kind==='own'?' They tell you one of theirs.':''}`);render()};
+
+/* ---------- between sittings ---------- */
+const dlg=$('#dlg'),body=$('#dlgBody');
+function open(html,wire){body.innerHTML=html;if(!dlg.open)dlg.showModal();wire&&wire(body)}
+function tradeDialog(){
+  const S=G.S,T=S.T,off=K.offers(G);let take=null,give=null;
+  const draw=()=>open(`<h2>${T.name.split(' ')[0]} trades with you</h2><p class="sub">You reached ${S.cred} credibility. Take one of their stories, and give one of yours back. Giving away a weak story makes your deck better; stories you give may come back retold.</p>
+    <p class="sub"><b>Take one</b></p><div class="pick" id="takeRow">${off.map(c=>cardHTML(c,{pressed:take===c})).join('')}</div>
+    <p class="sub"><b>Give one</b></p><div class="handwrap"><div class="hand" id="giveRow">${G.deck.map(c=>cardHTML(c,{pressed:give===c})).join('')}</div></div>
+    <div class="row"><button class="btn" id="ok" ${take&&give?'':'disabled'}>Trade</button></div>`,b=>{
+      b.querySelector('#takeRow').onclick=e=>{const x=e.target.closest('[data-uid]');if(x){take=off.find(c=>c.uid==x.dataset.uid);draw()}};
+      b.querySelector('#giveRow').onclick=e=>{const x=e.target.closest('[data-uid]');if(x){give=G.deck.find(c=>c.uid==x.dataset.uid);draw()}};
+      b.querySelector('#ok').onclick=()=>{K.trade(G,take,give);archDialog()}});
+  draw()}
+function lostDialog(){
+  const S=G.S;open(`<h2>Night comes down</h2><p class="sub">${S.T.name.split(' ')[0]} didn’t believe enough of it: ${S.cred} of ${S.T.threshold}. You lose 3 standing and leave without trading.</p><div class="row"><button class="btn" id="ok">Walk on</button></div>`,b=>b.querySelector('#ok').onclick=()=>G.over?endRun():archDialog())}
+function archDialog(){
+  if(G.sitting>=TELLERS.length-1){dlg.close();return endRun()}
+  let pick=null;
+  const draw=()=>open(`<h2>An arch on the road</h2><p class="sub">Rest here (+2 standing, now ${G.standing}), or retell one story as you walk (+1 vivid on it for the rest of the run).</p>
+    <div class="handwrap"><div class="hand" id="row">${G.deck.map(c=>cardHTML(c,{pressed:pick===c})).join('')}</div></div>
+    <div class="row"><button class="btn quiet" id="rest">Rest</button><button class="btn" id="retell" ${pick?'':'disabled'}>Retell ${pick?'“'+pick.title+'”':'a story'}</button></div>`,b=>{
+      b.querySelector('#row').onclick=e=>{const x=e.target.closest('[data-uid]');if(x){pick=G.deck.find(c=>c.uid==x.dataset.uid);draw()}};
+      b.querySelector('#rest').onclick=()=>{K.arch(G,'rest');next()};b.querySelector('#retell').onclick=()=>{K.arch(G,'retell',pick);next()}});
+  draw()}
+function next(){dlg.close();K.nextSitting(G);if(G.over)return endRun();enterSitting()}
+function endRun(){
+  const fs=K.finalScore(G);
+  open(`<h2>${G.struck?'Your testimony is struck':'The record'}</h2><p class="rank">${K.rank(G)}</p>
+    <div class="hist">${G.history.map(h=>`<div>${TELLERS.find(t=>t.id===h.teller).name}: ${h.cred} of ${h.threshold} · ${h.result==='won'?'traded':'no trade'}</div>`).join('')}</div>
+    <p class="sub">Credibility ${G.score} + standing ${Math.max(0,G.standing)} × 15 = <b>${fs}</b>. Ranks: ${K.RANKS.map(([n,r])=>`${r} ${n}+`).join(' · ')}.</p>
+    <div class="row"><button class="btn" id="again">Go again</button></div>`,b=>b.querySelector('#again').onclick=()=>{dlg.close();newRun()})}
+$('#deckBtn').onclick=()=>open(`<h2>Your deck</h2><p class="sub">${G.deck.length} stories.</p><div class="handwrap"><div class="hand">${G.deck.map(c=>cardHTML(c,{tag:'div'})).join('')}</div></div><div class="row"><button class="btn" id="x">Close</button></div>`,b=>b.querySelector('#x').onclick=()=>dlg.close());
+$('#howBtn').onclick=()=>open(`<h2>How a sitting works</h2><div class="sub" style="display:grid;gap:8px;max-width:62ch">
+  <p><b>Trust is what you spend.</b> Each story costs trust (the pink circle). You get ${K.TRUST} a day, and one more once they’re warm (halfway to their threshold).</p>
+  <p><b>Credibility is what you win.</b> Tell one to three stories at once: Weight × Vivid. Stories that share a theme, place, era or person raise Vivid. A story about what they want raises it too.</p>
+  <p><b>Reach their threshold within ${DAYS} days</b> and they trade: take one of theirs, give one of yours. Fall short and you lose 3 standing.</p>
+  <p><b>Standing is your health</b> for the whole run. Unanswered doubts and risky stories cost it. At zero your testimony is struck.</p>
+  <p><b>Your score</b> is all the credibility you earned plus your standing × 15. It decides your rank.</p></div><div class="row"><button class="btn" id="x">Got it</button></div>`,b=>b.querySelector('#x').onclick=()=>dlg.close());
+
+/* the portrait develops as credibility rises */
+function frame(){if(P&&G&&G.S){const t=Math.min(9,G.S.cred/G.S.T.threshold*9);P.draw($('#portrait').getContext('2d'),t)}requestAnimationFrame(frame)}
+requestAnimationFrame(frame);
+newRun();
+window.__sit={get G(){return G},clear:()=>{sel=[];render()},pick:i=>{const c=G.S.hand[i];if(c&&!sel.includes(c)&&sel.length<3&&c.cost<=G.S.trust-cost()){sel.push(c);render()}},tell:()=>$('#tellBtn').click(),end:()=>$('#endBtn').click()};
+})();
+</script>

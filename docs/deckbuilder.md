@@ -96,3 +96,12 @@ One sitting, fully playable: 15 starting stories, three tellers with intents, wa
 - **Feedback where the action is.** Show “+12 credibility” rising from where you told the story, Balatro-style, rather than in a log paragraph under the portrait.
 - **The route as a map, not 18 buttons.** A drawn line from Halsey to the Missouri with dots for places, the current one marked.
 - **Rules on demand.** Replace the legend block with tooltips on icons and keywords.
+
+## Decided (Nov 23)
+
+- **Standing is health.** It carries across the run. An unanswered doubt costs 1, a risky story told before they're warm costs 1, a failed sitting costs 3. At 0 your testimony is struck.
+- **You're ranked at the end by total score:** all the credibility you earned, plus standing × 15. Ranks: Noted, Entered (600), Recorded (850), Indexed (1050), Bound into the record (1250). Working names.
+
+## First playable: `prototypes/sitting/`
+
+Three sittings (Ruth at Halsey, Tomás on the North Loup, Odette at the Register of Deeds), a 12-story starting deck, trust 3 a day (4 once they're warm), four days a sitting, the trade after each win, an arch between sittings (rest or retell), and the final rank. Rules live in `game.js` with no drawing code, so `tools/playtest/sitting-bot.js` can play them: with thresholds of 140, 240 and 340, a brute-force bot wins about 100%, 99% and 94% of the three sittings, and its final scores spread across Recorded, Indexed and Bound into the record. People play worse than the bot, so this should feel fair. Tune from real play.
