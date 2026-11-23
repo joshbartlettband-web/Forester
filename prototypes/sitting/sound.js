@@ -5,7 +5,7 @@
    Nothing plays until the player turns sound on (browsers require a tap first). Exposes window.HSOUND. */
 "use strict";
 window.HSOUND = (() => {
-  let ctx = null, master, musicBus, ambBus, fxBus, on = false, amb = null, music = null, region = { key: 0, time: 'day', water: false };
+  let hush = 0, ctx = null, master, musicBus, ambBus, fxBus, on = false, amb = null, music = null, region = { key: 0, time: 'day', water: false };
   const store = { get() { try { return localStorage.getItem('halsey-sound') === 'on'; } catch (e) { return false; } }, set(v) { try { localStorage.setItem('halsey-sound', v ? 'on' : 'off'); } catch (e) {} } };
   const PENTA = [0, 2, 4, 7, 9, 12, 14, 16];
   const hz = semi => 146.83 * Math.pow(2, semi / 12);   // D3
@@ -66,7 +66,7 @@ window.HSOUND = (() => {
     for (const [semi, det] of [[k - 12, -6], [k - 5, 5]]) { const o = ctx.createOscillator(), g = ctx.createGain(), f = ctx.createBiquadFilter(); o.type = 'triangle'; o.frequency.value = hz(semi); o.detune.value = det; f.type = 'lowpass'; f.frequency.value = 700; g.gain.value = .0001; o.connect(f); f.connect(g); g.connect(musicBus); o.start(); g.gain.exponentialRampToValueAtTime(.05, now() + 4); drone.push(o, g); }
     let step = 0, deg = 2; const beat = region.time === 'night' ? 1.05 : .82;
     const timer = setInterval(() => {
-      if (!on) return; const t = now() + .05;
+      if (!on || now() < hush) return; const t = now() + .05;
       if (Math.random() < (region.time === 'night' ? .45 : .6)) { deg = Math.max(0, Math.min(PENTA.length - 1, deg + (Math.random() < .5 ? -1 : 1) * (Math.random() < .25 ? 2 : 1))); pluck(k + PENTA[deg], t, .7 + Math.random() * .3); }
       if (step % 8 === 0) pluck(k - 12 + PENTA[[0, 3, 4, 0][(step / 8) % 4 | 0]], t, .6);
       step++;
@@ -106,6 +106,11 @@ window.HSOUND = (() => {
     },
     /* where you are: key (semitones from D), time ('dawn', 'day', 'dusk', 'night'), water (cranes) */
     setRegion(r) { const changed = r.key !== region.key || r.time !== region.time || r.water !== region.water; region = { ...region, ...r }; if (on && changed) { startAmbience(); startMusic(); } },
+    /* a place's own tune (Neon's C2 motifs), in the current key; the porch guitar rests while it plays */
+    motif(place) {
+      if (!on || !ctx || typeof playPlaceMotif !== 'function') return;
+      try { const r = playPlaceMotif(ctx, musicBus, now() + .6, { place, transpose: region.key, gain: .2, withDrone: false }); hush = r.endTime + .4; } catch (e) {}
+    },
     play(name, ...args) { if (on && ctx && FX[name]) try { FX[name](...args); } catch (e) {} },
   };
 })();

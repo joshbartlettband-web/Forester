@@ -153,6 +153,9 @@ dialog .row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-cont
 .credits img{width:72px;height:54px;object-fit:cover;border:1px solid var(--line)}
 .mrow.dark .node .kind,.mrow.dark .node .nm,.mrow.dark .node .nm span{color:#f4ecd8!important}
 .map svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+#mapFx{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;mix-blend-mode:multiply;border-radius:6px}
+.handsec{position:relative}.handsec .handwrap{position:relative;z-index:1}#pollen{position:absolute;inset:-10px 0 0;width:100%;height:calc(100% + 10px);pointer-events:none;z-index:0}
+#pileIcon{width:26px;height:26px;vertical-align:middle;margin-right:-10px}.foot a{color:var(--muted)}
 .mrows{position:relative;display:grid;gap:22px}
 .mrow{display:flex;justify-content:space-evenly;align-items:flex-start;gap:6px}
 .mrow .col{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:700;position:absolute;left:8px}
@@ -210,7 +213,7 @@ dialog .row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-cont
 
   <section id="mapView" aria-label="The road to the Missouri" style="display:grid;gap:12px">
     <div class="view-h"><h2>The road to the Missouri</h2><p id="mapNote"></p></div>
-    <div class="map" id="map"><span class="aerial a1" aria-hidden="true"></span><span class="aerial a2" aria-hidden="true"></span><span class="aerial a3" aria-hidden="true"></span><svg id="mapLines" aria-hidden="true"></svg><div class="mrows" id="mrows"></div></div>
+    <div class="map" id="map"><span class="aerial a1" aria-hidden="true"></span><span class="aerial a2" aria-hidden="true"></span><span class="aerial a3" aria-hidden="true"></span><canvas id="mapFx" aria-hidden="true"></canvas><svg id="mapLines" aria-hidden="true"></svg><div class="mrows" id="mrows"></div></div>
     <div class="legend"><span><img src="icons/story.svg" alt="">Sitting: a teller</span><span><img src="icons/holdout.svg" alt="">Holdout: harder, and a keepsake</span><span><img src="icons/ties.svg" alt="">The road</span><span><img src="icons/keepsake.svg" alt="">Arch: rest or retell</span><span><img src="icons/filing.svg" alt="">Courthouse: file stories, take a keepsake</span><span><img src="icons/sign.svg" alt="">The bridge</span></div>
   </section>
 
@@ -242,9 +245,9 @@ dialog .row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-cont
     </div>
   </section>
   <p class="note" id="note"></p>
-  <section aria-label="Your hand"><div class="handwrap"><div class="hand" id="hand"></div></div></section>
+  <section class="handsec" aria-label="Your hand"><canvas id="pollen" aria-hidden="true"></canvas><div class="handwrap"><div class="hand" id="hand"></div></div></section>
   </div>
-  <div class="foot"><span id="pileInfo"></span><button type="button" id="deckBtn">See your whole deck</button><button type="button" id="howBtn">How it works</button><button type="button" id="creditsBtn">Image credits</button><button type="button" id="newBtn">Start a new run</button></div>
+  <div class="foot"><canvas id="pileIcon" width="52" height="52" aria-hidden="true"></canvas><span id="pileInfo"></span><button type="button" id="deckBtn">See your whole deck</button><button type="button" id="howBtn">How it works</button><button type="button" id="creditsBtn">Image credits</button><button type="button" id="newBtn">Start a new run</button><a href="editor.html" target="_blank" rel="noopener">Card editor</a></div>
 </div>
 
 <dialog id="dlg"><div id="dlgBody"></div></dialog>
@@ -253,6 +256,13 @@ dialog .row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-cont
 <script src="game.js"></script>
 <script src="sound.js"></script>
 <script src="scene.js"></script>
+<!-- Gemini Neon, pack 1 (CC0/MIT): see neon/README.md -->
+<script src="neon/A1-topo.js"></script>
+<script src="neon/A2-pivot.js"></script>
+<script src="neon/A3-story-swap-thread.js"></script>
+<script src="neon/A4-pollen.js"></script>
+<script src="neon/A5-cloud-shadows.js"></script>
+<script src="neon/C2-place-motifs.js"></script>
 <script>
 (()=>{
 "use strict";
@@ -316,6 +326,8 @@ function renderTop(){
   $('#pileInfo').textContent=G.S&&!G.S.result?`Draw pile ${G.S.draw.length} · Told today ${G.S.discard.length} · Deck ${G.deck.length}`:`Deck ${G.deck.length} · Filed ${G.filed}`}
 
 /* ---------- the map ---------- */
+/* Neon's place motifs: which tune each place plays when you arrive */
+const MOTIF={halsey:'sandhills',thedford:'sandhills',sandhills:'sandhills',dismal:'sandhills',brokenbow:'sandhills',loup:'loup',platte:'platte',archway:'platte',columbus:'platte',mainstreet:'missouri',courthouse:'courthouse',bridge:'missouri'};
 const KEY=[0,0,2,2,5,5,7,7],WATER=new Set(['loup','platte','columbus','bridge']);
 function setLight(c,place){const T=place&&TELLER[place];const light=T&&T.place==='courthouse'?'lamp':HSCENE.LIGHT(c);document.body.dataset.light=light;HSOUND.setRegion({key:KEY[c]||0,time:light==='night'?'night':'day',water:!!(T&&WATER.has(T.place))})}
 let SC=null;
@@ -354,7 +366,7 @@ async function enterSitting(node){
   K.startSitting(G,node);const S=G.S,T=S.T;sel=[];
   $('#mapView').hidden=true;$('#sitView').hidden=false;scrollTo({top:0});
   $('#where').textContent=T.placeName+(node.kind==='holdout'?' · a holdout':node.kind==='bridge'?' · the end of the Survey':'');
-  setLight(node.c,T.id);if(SC)SC.destroy();SC=await HSCENE.mount($('#band'),T,node);
+  setLight(node.c,T.id);HSOUND.motif(MOTIF[T.place]||'sandhills');pollenFor();if(SC)SC.destroy();SC=await HSCENE.mount($('#band'),T,node);
   P=await HE.makePortrait({drawing:T.drawing,photo:T.photo});
   note(node.kind==='holdout'?`Frank never signed the agreement. His stories can’t be filed, but beat his doubt and he’ll give you a keepsake.`:node.kind==='bridge'?`The last sitting. Imani decides how you leave the Survey.`:`Read what they’ll do today, then pick stories from your hand and tell them.`);render()}
 function note(h){$('#note').innerHTML=h}
@@ -386,7 +398,8 @@ function countUp(from,to){const el=$('#cred'),steps=Math.min(14,Math.max(4,Math.
     const k=Math.floor(p*steps);while(i<k){HSOUND.play('count',i);i++}if(p<1)requestAnimationFrame(tick);else{el.style.transform='scale(1.25)';setTimeout(()=>el.style.transform='',160)}};requestAnimationFrame(tick)}
 function floatAt(el,text,bad){const r=el.getBoundingClientRect(),f=document.createElement('div');f.className='float'+(bad?' bad':'');f.textContent=text;f.style.left=(r.left+r.width/2-40)+'px';f.style.top=(r.top-10)+'px';document.body.appendChild(f);setTimeout(()=>f.remove(),1400)}
 $('#tellBtn').onclick=()=>{
-  const S=G.S,cards=[...sel],before=S.cred,e=K.tell(G,cards);if(!e)return;sel=[];
+  const S=G.S,cards=[...sel],before=S.cred,from=$('#slots').getBoundingClientRect(),e=K.tell(G,cards);if(!e)return;sel=[];
+  weave(from,$('#portrait').getBoundingClientRect(),{color:INK[cards.map(c=>c.event).find(Boolean)]||'#F4D35E',strands:Math.max(2,cards.length),ms:800});
   floatAt($('#calc'),`+${e.total}`);if(e.standing){HSOUND.play('standing');setTimeout(()=>floatAt($('#stand'),`${e.standing} standing`,true),300)}
   HSOUND.play('tell',e.total);if(e.answer)setTimeout(()=>HSOUND.play('answer'),350);
   const ev=cards.map(c=>c.event).find(Boolean)||null;if(SC)SC.tell(ev,e.total);
@@ -420,7 +433,8 @@ function tradeDialog(){
       b.querySelector('#noTake').onclick=()=>{noTake=!noTake;if(noTake)take=null;draw()};
       b.querySelector('#noGive').onclick=()=>{noGive=!noGive;if(noGive)give=null;draw()};
       if(hold){keepChoice(b,kopts,k=>{keep=k;b.querySelector('#ok').disabled=!((take||noTake)&&(give||noGive))});if(keep)b.querySelector(`[data-k="${keep}"]`).setAttribute('aria-pressed','true')}
-      b.querySelector('#ok').onclick=()=>{K.trade(G,take,give);HSOUND.play('shuffle');if(keep){K.takeKeep(G,keep);setTimeout(()=>HSOUND.play('keepsake'),300)}back()}});
+      b.querySelector('#ok').onclick=async()=>{const gEl=b.querySelector('#giveRow [aria-pressed="true"]'),from=(gEl||$('#hand')).getBoundingClientRect();K.trade(G,take,give);HSOUND.play('shuffle');if(keep){K.takeKeep(G,keep);setTimeout(()=>HSOUND.play('keepsake'),300)}
+        close();if(take||give)await weave(from,$('#portrait').getBoundingClientRect(),{strands:3,ms:850});back()}});
   draw()}
 function lostDialog(){const S=G.S;open(`<h2>Night comes down</h2><p class="sub">${first(S.T.name)} didn’t believe enough of it: ${S.cred} of ${S.threshold}. You lose 3 standing and leave without trading.</p><div class="row"><button class="btn" id="ok">Walk on</button></div>`,b=>b.querySelector('#ok').onclick=back)}
 function archDialog(){
@@ -431,7 +445,7 @@ function archDialog(){
       b.querySelector('#row').onclick=e=>{const x=e.target.closest('[data-uid]');if(x){pick=G.deck.find(c=>c.uid==x.dataset.uid);draw()}};
       b.querySelector('#rest').onclick=()=>{K.arch(G,'rest');HSOUND.play('warm');back()};b.querySelector('#retell').onclick=()=>{K.arch(G,'retell',pick);HSOUND.play('answer');back()}});
   draw()}
-function courtDialog(){
+function courtDialog(){HSOUND.motif('courthouse');
   const kopts=K.keepOffer(G,2);let picks=[],keep=null;
   const draw=()=>open(`<h2>The Register of Deeds</h2><p class="sub">File up to two stories into the record. They leave your deck for good and add to your score. Small decks draw their best stories more often. Unsigned stories can’t be filed, and you keep at least 8.</p>
     <div class="handwrap"><div class="hand" id="row">${G.deck.map(c=>cardHTML(c,{pressed:picks.includes(c),cant:!K.canFile(G,c),extra:`<span class="filev">${K.canFile(G,c)?`File for +${K.fileValue(c)}`:'Can’t be filed'}</span>`})).join('')}</div></div>
@@ -477,9 +491,28 @@ $('#howBtn').onclick=()=>open(`<h2>How the Survey works</h2><div class="sub" sty
   <p><b>Your score</b> is the credibility you earned (past a teller’s threshold it counts half), plus filing, plus standing × 20. It decides your rank.</p><p><b>Words on the cards.</b> <i>Retain</i>: stays in hand at day’s end. <i>Ethereal</i>: gone if not told today. Giving a story away or filing it removes it for the rest of the run.</p></div><div class="row"><button class="btn" id="x">Got it</button></div>`,b=>b.querySelector('#x').onclick=close);
 
 /* the portrait develops as credibility rises */
-function frame(){if(P&&G&&G.S&&!$('#sitView').hidden){const t=Math.min(9,G.S.cred/G.S.threshold*9);P.draw($('#portrait').getContext('2d'),t)}requestAnimationFrame(frame)}
+let lastT=performance.now();
+function frame(now){const dt=Math.min(100,now-lastT);lastT=now;
+  if(P&&G&&G.S&&!$('#sitView').hidden){const t=Math.min(9,G.S.cred/G.S.threshold*9);P.draw($('#portrait').getContext('2d'),t);drawPollen(dt,now)}
+  if(G&&!$('#mapView').hidden)drawMapFx(dt,now);
+  requestAnimationFrame(frame)}
+/* Neon's A1 contours and A5 cloud shadows on the map, seeded by the run, so every run's land differs */
+let MFX=null;
+function drawMapFx(dt,now){const cv=$('#mapFx'),W=Math.round(cv.clientWidth),H=Math.round(cv.clientHeight);if(!W||!H)return;
+  if(!MFX||MFX.W!==W||MFX.H!==H||MFX.seed!==G.seed){const dpr=Math.min(2,devicePixelRatio||1);cv.width=W*dpr;cv.height=H*dpr;
+    MFX={W,H,seed:G.seed,dpr,topo:makeTopo(W,H,{seed:G.seed,density:14,alpha:.3,lineColor:'#9c4a33',majorColor:'#1f1b2e'}),clouds:makeCloudShadows(W,H,{seed:G.seed+2,count:Math.max(4,Math.round(H/260)),crossSeconds:36,maxOpacity:.2})}}
+  const x=cv.getContext('2d');x.setTransform(MFX.dpr,0,0,MFX.dpr,0,0);x.clearRect(0,0,W,H);MFX.topo.draw(x,now);MFX.clouds.step(dt,now);MFX.clouds.draw(x,now)}
+/* Neon's A4 pollen behind the hand: pollen by day, fireflies at night, dust under the courthouse lamp */
+let PF=null;
+const POLLEN={day:{},dawn:{},gold:{},night:{abundance_gold:'#d8f28a',porch_yellow:'#7fe3b5',sandhills_ochre:'#f4d35e',limestone:'#c6f0a0',paper:'#fff6c8'},lamp:{abundance_gold:'#f1ebdc',porch_yellow:'#d9cfc1',sandhills_ochre:'#e2c79a',limestone:'#f1ebdc',paper:'#fff'}};
+function pollenFor(){PF=null}
+function drawPollen(dt,now){const cv=$('#pollen'),W=Math.round(cv.clientWidth),H=Math.round(cv.clientHeight);if(!W||!H)return;const light=document.body.dataset.light||'day';
+  if(!PF||PF.W!==W||PF.H!==H||PF.light!==light){cv.width=W;cv.height=H;PF={W,H,light,p:makePollen(W,H,{seed:G.seed+G.visited.length,count:light==='night'?22:light==='lamp'?26:36,wind:light==='night'?6:light==='lamp'?3:20,palette:POLLEN[light]||{}})}}
+  const x=cv.getContext('2d');x.clearRect(0,0,W,H);PF.p.step(dt,now);PF.p.draw(x,now)}
+/* Neon's A2 pivot: the draw-pile icon, different every run */
+function pileIcon(){const c=$('#pileIcon').getContext('2d');c.clearRect(0,0,52,52);drawPivot(c,52,{seed:G.seed,rings:3})}
 requestAnimationFrame(frame);
-function newRun(){G=K.newRun(Date.now()%100000);G.S=null;showMap()}
+function newRun(){G=K.newRun(Date.now()%100000);G.S=null;pileIcon();showMap()}
 newRun();
 window.__sit={get G(){return G},clear:()=>{sel=[];render()},pick:i=>{const c=G.S.hand[i];if(c&&!sel.includes(c)&&sel.length<3&&K.costOf(G,c)<=G.S.trust-cost()){sel.push(c);render()}},tell:()=>$('#tellBtn').click(),end:()=>$('#endBtn').click(),visit:id=>{const b=document.querySelector(`[data-id="${id}"]`);if(b&&!b.disabled)b.click()}};
 })();

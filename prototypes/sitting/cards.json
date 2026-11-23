@@ -1,5 +1,5 @@
 {
- "note": "Exported from prototypes/sitting/game.js. Weight (w) is derived from the value budget; edit cost, v, event, theme, place, era, people, art, title and quote.",
+ "note": "Exported from prototypes/sitting/game.js by tools/export-cards.js. Weight (w) comes from the value budget; edit cost, v, event, theme, place, era, people, art, title and quote.",
  "budget": {
   "basic": [
    2,
@@ -24,6 +24,15 @@
   "Spare": 0.9,
   "Repeat": 1
  },
+ "vividCap": {
+  "basic": 1,
+  "uncommon": 2,
+  "rare": 3,
+  "exceptions": {
+   "fog-cranes": 2
+  }
+ },
+ "minWeight": 2,
  "cards": [
   {
    "id": "talk-weather",
@@ -437,9 +446,31 @@
     "deshawn"
    ],
    "art": {
-    "kind": "render",
-    "src": "img/sandhills-windmill.jpg",
-    "over": "sketches/face3.png"
+    "kind": "painting",
+    "src": "public/pd_sandhills_print.jpg",
+    "credit": "Kady B. Faulkner, Nebraska Sandhills · public domain"
+   }
+  },
+  {
+   "id": "deshawn-above",
+   "title": "The Sandhills from above",
+   "quote": "Somebody flew over once and said the lakes looked like dropped coins.",
+   "theme": "Strange",
+   "place": "sandhills",
+   "era": "Later",
+   "event": "Find",
+   "cost": 1,
+   "w": 3,
+   "v": 2,
+   "rarity": "uncommon",
+   "people": [
+    "deshawn",
+    "priya"
+   ],
+   "art": {
+    "kind": "painting",
+    "src": "public/pd_sat_sandhills.jpg",
+    "credit": "NASA Terra satellite · public domain"
    }
   },
   {
@@ -1006,6 +1037,27 @@
    }
   },
   {
+   "id": "marisol-bluff",
+   "title": "The drought year at the bluff",
+   "quote": "The wagon ruts came up out of the grass like they’d been waiting.",
+   "theme": "Weather",
+   "place": "scottsbluff",
+   "era": "1888",
+   "event": "Repeat",
+   "cost": 1,
+   "w": 10,
+   "v": 1,
+   "rarity": "uncommon",
+   "people": [
+    "marisol"
+   ],
+   "art": {
+    "kind": "archive",
+    "src": "public/pd_scotts_bluff_view.jpg",
+    "credit": "NPS photo, Scotts Bluff · public domain"
+   }
+  },
+  {
    "id": "arne-wire",
    "title": "The last wire into Omaha",
    "quote": "The whole city came on, and only I saw.",
@@ -1064,8 +1116,9 @@
     "deshawn"
    ],
    "art": {
-    "kind": "drawing",
-    "src": "sketches/face2.png"
+    "kind": "archive",
+    "src": "public/pd_silo_bennet.jpg",
+    "credit": "Grain elevator, Bennet · CC0, Wikimedia Commons"
    }
   },
   {
@@ -1086,6 +1139,28 @@
    "art": {
     "kind": "render",
     "src": "img/night-mainstreet.jpg"
+   }
+  },
+  {
+   "id": "arne-elevator",
+   "title": "The last day at the elevator",
+   "quote": "They swept it out and left the broom. Somebody should keep sweeping.",
+   "theme": "Work",
+   "place": "mainstreet",
+   "era": "2000",
+   "event": "Spare",
+   "cost": 1,
+   "w": 5,
+   "v": 2,
+   "rarity": "uncommon",
+   "people": [
+    "arne",
+    "deshawn"
+   ],
+   "art": {
+    "kind": "archive",
+    "src": "public/pd_silo_kimball.jpg",
+    "credit": "Grain elevator, Kimball · CC0, Wikimedia Commons"
    }
   },
   {
@@ -1312,6 +1387,69 @@
    }
   },
   {
+   "id": "trail-ruts",
+   "title": "The wagon ruts",
+   "quote": "Everybody who ever left went by here. You can see where they leaned.",
+   "theme": "Leaving",
+   "place": "scottsbluff",
+   "era": "1888",
+   "event": "Chain",
+   "cost": 1,
+   "w": 4,
+   "v": 2,
+   "rarity": "uncommon",
+   "people": [
+    "gus"
+   ],
+   "art": {
+    "kind": "archive",
+    "src": "public/pd_chimney_rock_1904.jpg",
+    "credit": "Chimney Rock, 1904 · NARA, public domain"
+   }
+  },
+  {
+   "id": "lookout",
+   "title": "The lookout tower",
+   "quote": "From the top you can see three counties and nobody in them.",
+   "theme": "Light",
+   "place": "platte",
+   "era": "Later",
+   "event": "Find",
+   "cost": 1,
+   "w": 3,
+   "v": 2,
+   "rarity": "uncommon",
+   "people": [
+    "ada"
+   ],
+   "art": {
+    "kind": "archive",
+    "src": "public/pd_platte_tower.jpg",
+    "credit": "Platte River State Park tower · public domain, Wikimedia Commons"
+   }
+  },
+  {
+   "id": "elevator-sunday",
+   "title": "Sweeping the elevator on Sundays",
+   "quote": "Nobody asked. It’s just that somebody should.",
+   "theme": "Work",
+   "place": "mainstreet",
+   "era": "Later",
+   "event": "Spare",
+   "cost": 0,
+   "w": 4,
+   "v": 1,
+   "rarity": "uncommon",
+   "people": [
+    "deshawn"
+   ],
+   "art": {
+    "kind": "archive",
+    "src": "public/pd_silo_mclean.jpg",
+    "credit": "Grain elevator, McLean · public domain, Wikimedia Commons"
+   }
+  },
+  {
    "id": "culvert",
    "title": "Waiting out the storm",
    "quote": "A stranger who keeps bees shared the culvert.",
@@ -1462,7 +1600,8 @@
     "deshawn-mill",
     "deshawn-well",
     "deshawn-poles",
-    "deshawn-arch"
+    "deshawn-arch",
+    "deshawn-above"
    ],
    "cols": [
     1,
@@ -1740,7 +1879,8 @@
     "marisol-cousins",
     "marisol-quilt",
     "marisol-rivers",
-    "marisol-star"
+    "marisol-star",
+    "marisol-bluff"
    ],
    "cols": [
     5,
@@ -1785,7 +1925,8 @@
     "arne-wire",
     "arne-bulb",
     "arne-poles",
-    "arne-north"
+    "arne-north",
+    "arne-elevator"
    ],
    "cols": [
     5,

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Halsey, Nebraska — Neon Pack 1 Sandbox</title>
+<style>
+  body {
+    margin: 0; padding: 20px;
+    background: #F1EBDC; color: #1F1B2E;
+    font-family: "Atkinson Hyperlegible", system-ui, sans-serif;
+  }
+  h1 { margin: 0 0 8px; font-family: "Halsey Hand", Georgia, serif; }
+  .bar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 16px; }
+  button {
+    padding: 7px 12px; border-radius: 6px; border: 1.5px solid #1F1B2E;
+    background: #F4D35E; color: #1F1B2E; font-weight: 700; cursor: pointer;
+  }
+  button.sec { background: #D9CFC1; }
+  .stage-wrap { display: grid; grid-template-columns: 1fr 220px; gap: 16px; align-items: start; }
+  canvas { display: block; border: 2px solid #1F1B2E; border-radius: 8px; background: #F1EBDC; max-width: 100%; }
+  .panel { background: #EAE2D0; border: 1.5px solid #1F1B2E; border-radius: 8px; padding: 12px; }
+  .swap-box { display: flex; justify-content: space-between; margin-top: 14px; }
+  .slot {
+    padding: 14px 18px; border: 2px solid #1F1B2E; border-radius: 8px;
+    background: #D9CFC1; font-weight: 700;
+  }
+  .meta { font-size: 0.82rem; color: #243044; margin-top: 8px; }
+</style>
+</head>
+<body>
+<h1>Halsey, Nebraska — Neon Pack 1 Offline Harness</h1>
+<div class="bar">
+  <button id="seedBtn">Next Seed (<span id="seedLabel">1903</span>)</button>
+  <button id="weaveBtn">Test A3 Story-Swap Thread</button>
+  <button class="sec" data-place="sandhills">C2: Sandhills</button>
+  <button class="sec" data-place="platte">C2: Platte</button>
+  <button class="sec" data-place="loup">C2: Loup</button>
+  <button class="sec" data-place="courthouse">C2: Courthouse</button>
+  <button class="sec" data-place="missouri">C2: Missouri</button>
+</div>
+
+<div class="stage-wrap">
+  <div>
+    <canvas id="mapCanvas" width="960" height="540"></canvas>
+    <div class="meta" id="perfMeta"></div>
+    <div class="swap-box">
+      <div class="slot" id="fromSlot">Your Story Card</div>
+      <div class="slot" id="toSlot">Teller Portrait</div>
+    </div>
+  </div>
+  <div class="panel">
+    <strong>A2: Pivot Mandala</strong>
+    <canvas id="pivotBig" width="180" height="180" style="margin:8px 0;"></canvas>
+    <canvas id="pivotSmall" width="32" height="32"></canvas>
+    <div class="meta">180 px &amp; 32 px crispness check</div>
+  </div>
+</div>
+
+<script src="A1-topo.js"></script>
+<script src="A2-pivot.js"></script>
+<script src="A3-story-swap-thread.js"></script>
+<script src="A4-pollen.js"></script>
+<script src="A5-cloud-shadows.js"></script>
+<script src="C2-place-motifs.js"></script>
+<script>
+(function () {
+  let seed = 1903;
+  const mapCanvas = document.getElementById('mapCanvas');
+  const ctx = mapCanvas.getContext('2d');
+  const W = mapCanvas.width, H = mapCanvas.height;
+
+  let topo, pollen, clouds;
+
+  function rebuild() {
+    document.getElementById('seedLabel').textContent = seed;
+    const t0 = performance.now();
+    topo = makeTopo(W, H, { seed, density: 12 });
+    const genMs = (performance.now() - t0).toFixed(2);
+    pollen = makePollen(W, H, { seed: seed + 1, count: 34, wind: 20 });
+    clouds = makeCloudShadows(W, H, { seed: seed + 2 });
+
+    const pBig = document.getElementById('pivotBig').getContext('2d');
+    pBig.clearRect(0, 0, 180, 180);
+    drawPivot(pBig, 180, { seed });
+
+    const pSmall = document.getElementById('pivotSmall').getContext('2d');
+    pSmall.clearRect(0, 0, 32, 32);
+    drawPivot(pSmall, 32, { seed });
+
+    document.getElementById('perfMeta').textContent =
+      `A1 makeTopo(960×540) built in ${genMs} ms · Running A1 + A4 (30fps) + A5 (multiply ≤22%)`;
+  }
+
+  let last = performance.now();
+  function loop(now) {
+    const dt = now - last;
+    last = now;
+    ctx.fillStyle = '#F1EBDC';
+    ctx.fillRect(0, 0, W, H);
+    topo.step(dt, now);
+    topo.draw(ctx, now);
+    pollen.step(dt, now);
+    pollen.draw(ctx, now);
+    clouds.step(dt, now);
+    clouds.draw(ctx, now);
+    requestAnimationFrame(loop);
+  }
+
+  document.getElementById('seedBtn').addEventListener('click', () => {
+    seed += 17;
+    rebuild();
+  });
+
+  document.getElementById('weaveBtn').addEventListener('click', () => {
+    const r1 = document.getElementById('fromSlot').getBoundingClientRect();
+    const r2 = document.getElementById('toSlot').getBoundingClientRect();
+    weave(r1, r2, { strands: 3, ms: 850 });
+  });
+
+  let audioCtx = null;
+  document.querySelectorAll('[data-place]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      playPlaceMotif(audioCtx, audioCtx.destination, audioCtx.currentTime + 0.02, {
+        place: btn.dataset.place,
+        withDrone: true,
+      });
+    });
+  });
+
+  rebuild();
+  requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>

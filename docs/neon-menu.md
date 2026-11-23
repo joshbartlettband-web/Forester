@@ -2,6 +2,17 @@
 
 Pieces Neon can build on its own that plug straight into Halsey, Nebraska. Each item says what it's for, what to hand back, and how we'll know it works. Pick any; they're independent.
 
+## Status
+
+**Pack 1 is in the game:** A1 contours, A2 pivot, A3 thread, A4 pollen, A5 cloud shadows, C2 place motifs, D1 card editor. Where each one sits, and the two small changes made here, are in `prototypes/sitting/neon/README.md`.
+
+**Still open:** A6 weather layers, A7 card motion kit, A8 aerial map backdrop, B1 rivers and towns, B2 more public-domain images, B3 sound descriptions, C1 bird and animal calls, C3 weather sound, D2 balance dashboard, E1 typed port.
+
+**Notes for pack 2:**
+- A3's thread reads thin at phone size. Wanted: a `width` option, plus a glow or a second, wider pass at low alpha.
+- C2 now takes a `transpose` option. Keep it in new versions.
+- D1: the copy here reads `vividCap` and `minWeight` from `cards.json`, so the rules live in one place. Work from `prototypes/sitting/editor.html` for any new version.
+
 ## The rules every piece follows
 
 - **Plain JavaScript (ES2020), one file per item, no build step, no libraries, no network.** Everything runs offline inside a sandboxed page. No CDNs, no fetches to outside hosts.

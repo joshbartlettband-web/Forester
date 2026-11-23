@@ -1,0 +1,2945 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Halsey Card Editor</title>
+<style>
+  @font-face { font-family: "Halsey Hand"; src: url(fonts/HalseyHand.woff2) format("woff2"); font-display: swap; }
+  :root {
+    --sandhills-ochre: #C8A464;
+    --prairie-sage: #6E7F5E;
+    --ogallala-sky: #8BAAC2;
+    --twilight-indigo: #243044;
+    --porch-yellow: #E2B842;
+    --limestone: #D9CFC1;
+    --silo-rust: #9C4A33;
+    --abundance-gold: #F4D35E;
+    --ink: #1F1B2E;
+    --paper: #F1EBDC;
+    --river-blue: #3F78AD;
+    --barn-red: #A8352C;
+    --dusk-pink: #D4577F;
+    --aurora-green: #7FE3B5;
+    --font-ui: "Atkinson Hyperlegible", "Atkinson Hyperlegible Next", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --font-hand: "Halsey Hand", "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-ui);
+    line-height: 1.45;
+  }
+
+  header {
+    background: var(--twilight-indigo);
+    color: var(--paper);
+    padding: 14px 20px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    border-bottom: 3px solid var(--sandhills-ochre);
+    position: sticky;
+    top: 0;
+    z-index: 20;
+  }
+
+  header h1 {
+    margin: 0;
+    font-family: var(--font-hand);
+    font-size: 1.45rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+  }
+  header .sub {
+    font-size: 0.82rem;
+    color: var(--limestone);
+    margin-left: 10px;
+    font-family: var(--font-ui);
+  }
+
+  .toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+  }
+
+  button, .file-btn {
+    font-family: var(--font-ui);
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 7px 12px;
+    border-radius: 6px;
+    border: 1px solid var(--sandhills-ochre);
+    background: transparent;
+    color: var(--paper);
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+  button:hover, .file-btn:hover {
+    background: var(--sandhills-ochre);
+    color: var(--ink);
+  }
+  button.primary {
+    background: var(--abundance-gold);
+    color: var(--ink);
+    border-color: var(--abundance-gold);
+  }
+  button.primary:hover {
+    background: var(--porch-yellow);
+  }
+  button.danger {
+    border-color: var(--barn-red);
+    color: var(--barn-red);
+    background: transparent;
+  }
+  button.danger:hover {
+    background: var(--barn-red);
+    color: var(--paper);
+  }
+
+  .filters {
+    background: var(--limestone);
+    padding: 10px 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    border-bottom: 1px solid rgba(31, 27, 46, 0.15);
+  }
+  .filters input, .filters select {
+    font-family: var(--font-ui);
+    font-size: 0.86rem;
+    padding: 6px 9px;
+    border: 1px solid rgba(31, 27, 46, 0.28);
+    border-radius: 5px;
+    background: var(--paper);
+    color: var(--ink);
+  }
+  .stats {
+    margin-left: auto;
+    font-size: 0.82rem;
+    color: var(--twilight-indigo);
+    font-weight: 600;
+  }
+
+  main {
+    display: grid;
+    grid-template-columns: 1fr 410px;
+    min-height: calc(100vh - 115px);
+  }
+  @media (max-width: 980px) {
+    main { grid-template-columns: 1fr; }
+  }
+
+  .grid-pane {
+    padding: 18px 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(225px, 1fr));
+    gap: 16px;
+    align-content: start;
+  }
+
+  /* Game Card Layout — never puts rules text directly on a photo */
+  .story-card {
+    background: var(--paper);
+    border: 2px solid var(--ink);
+    border-radius: 10px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(31, 27, 46, 0.08);
+    transition: transform 0.12s ease, box-shadow 0.12s ease, border-color 0.12s ease;
+  }
+  .story-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 14px rgba(31, 27, 46, 0.15);
+  }
+  .story-card.selected {
+    border-color: var(--silo-rust);
+    box-shadow: 0 0 0 3px var(--abundance-gold);
+  }
+  .story-card.holdout {
+    border-style: dashed;
+  }
+
+  .card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 9px;
+    background: var(--twilight-indigo);
+    color: var(--paper);
+    font-size: 0.75rem;
+    font-weight: 700;
+  }
+  .card-top.rarity-uncommon { background: var(--prairie-sage); }
+  .card-top.rarity-rare { background: var(--silo-rust); }
+
+  .pill-row {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+  }
+  .stat-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 1px 6px;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    background: var(--paper);
+    color: var(--ink);
+  }
+  .stat-badge.weight { background: var(--abundance-gold); }
+  .stat-badge.vivid { background: var(--ogallala-sky); }
+
+  .card-art-frame {
+    height: 92px;
+    background: linear-gradient(135deg, var(--limestone), #e7dfce);
+    border-bottom: 1px solid rgba(31, 27, 46, 0.15);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+    text-align: center;
+    position: relative;
+  }
+  .card-art-frame.has-img { padding: 0; overflow: hidden; }
+  .card-art-frame img.ph { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .card-art-frame img.ph.contain { object-fit: contain; padding: 6px; }
+  .card-art-frame img.ov { position: absolute; right: 4px; bottom: 2px; height: 86%; mix-blend-mode: multiply; }
+  .card-art-frame .art-kind { position: relative; z-index: 1; background: rgba(241,235,220,.85); padding: 1px 6px; border-radius: 4px; align-self: flex-start; margin: 5px; }
+  .warn { color: var(--barn-red); font-weight: 700; }
+  .budget-box .warn { color: var(--dusk-pink); }
+  .art-kind {
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--twilight-indigo);
+    opacity: 0.75;
+    font-weight: 700;
+  }
+  .art-src {
+    font-size: 0.74rem;
+    color: var(--ink);
+    word-break: break-all;
+    margin-top: 2px;
+  }
+  .art-over {
+    font-size: 0.68rem;
+    color: var(--silo-rust);
+    margin-top: 2px;
+  }
+
+  .card-body {
+    padding: 10px 11px 11px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex: 1;
+  }
+  .card-title {
+    font-family: var(--font-hand);
+    font-size: 1.05rem;
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--ink);
+  }
+  .card-quote {
+    font-family: var(--font-hand);
+    font-size: 0.86rem;
+    font-style: italic;
+    color: var(--twilight-indigo);
+    opacity: 0.9;
+  }
+  .card-meta {
+    margin-top: auto;
+    padding-top: 6px;
+    border-top: 1px solid rgba(31, 27, 46, 0.12);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    font-size: 0.71rem;
+  }
+  .tag {
+    padding: 2px 6px;
+    border-radius: 4px;
+    background: var(--limestone);
+    color: var(--ink);
+    font-weight: 600;
+  }
+  .tag.event {
+    background: var(--porch-yellow);
+    color: var(--ink);
+  }
+  .tag.theme {
+    background: var(--ogallala-sky);
+    color: var(--ink);
+  }
+
+  /* Inspector Panel */
+  .editor-pane {
+    background: #EAE2D0;
+    border-left: 2px solid rgba(31, 27, 46, 0.2);
+    padding: 16px 18px;
+    position: sticky;
+    top: 62px;
+    height: calc(100vh - 62px);
+    overflow-y: auto;
+  }
+  @media (max-width: 980px) {
+    .editor-pane { position: static; height: auto; border-left: none; border-top: 2px solid var(--ink); }
+  }
+  .editor-pane h2 {
+    margin: 0 0 10px;
+    font-family: var(--font-hand);
+    font-size: 1.25rem;
+  }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 10px;
+  }
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+  .field.full { grid-column: 1 / -1; }
+  .field label {
+    font-size: 0.74rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--twilight-indigo);
+  }
+  .field input, .field select, .field textarea {
+    font-family: var(--font-ui);
+    font-size: 0.88rem;
+    padding: 6px 8px;
+    border: 1px solid rgba(31, 27, 46, 0.3);
+    border-radius: 5px;
+    background: var(--paper);
+    color: var(--ink);
+  }
+  .field textarea { resize: vertical; min-height: 54px; }
+  .field input, .field select, .field textarea { width: 100%; min-width: 0; }
+  .editor-pane { overflow-x: hidden; }
+  .field input[readonly] {
+    background: var(--limestone);
+    font-weight: 700;
+    cursor: not-allowed;
+  }
+
+  .budget-box {
+    grid-column: 1 / -1;
+    background: var(--twilight-indigo);
+    color: var(--paper);
+    border-radius: 7px;
+    padding: 10px 12px;
+    font-size: 0.82rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+  }
+  .budget-box .w-big {
+    font-size: 1.45rem;
+    font-weight: 700;
+    color: var(--abundance-gold);
+  }
+
+  .checks {
+    grid-column: 1 / -1;
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    font-size: 0.84rem;
+    font-weight: 600;
+  }
+
+  .editor-actions {
+    margin-top: 14px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .editor-actions button {
+    color: var(--ink);
+    border-color: var(--ink);
+  }
+  .editor-actions button:hover {
+    background: var(--ink);
+    color: var(--paper);
+  }
+
+  .toast {
+    position: fixed;
+    bottom: 18px;
+    right: 18px;
+    background: var(--twilight-indigo);
+    color: var(--abundance-gold);
+    padding: 10px 16px;
+    border-radius: 7px;
+    font-weight: 700;
+    font-size: 0.86rem;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+    z-index: 999;
+  }
+  .toast.show { opacity: 1; }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>Halsey, Nebraska — Card Editor</h1>
+    <span class="sub">Made by Gemini Neon · Weight comes from the value budget · Send the JSON back to fold it into the game</span>
+  </div>
+  <div class="toolbar">
+    <label class="file-btn">Load cards.json<input id="fileInput" type="file" accept=".json" hidden></label>
+    <button id="addBtn">+ New Card</button>
+    <button id="copyBtn" class="primary">Copy JSON</button>
+    <button id="downloadBtn">Download cards.json</button>
+  </div>
+</header>
+
+<div class="filters">
+  <input id="searchInput" type="search" placeholder="Search title, quote, id, people…">
+  <select id="filterTheme"><option value="">All Themes</option></select>
+  <select id="filterPlace"><option value="">All Places</option></select>
+  <select id="filterEvent"><option value="">All Events</option></select>
+  <select id="filterRarity">
+    <option value="">All Rarities</option>
+    <option value="basic">basic</option>
+    <option value="uncommon">uncommon</option>
+    <option value="rare">rare</option>
+  </select>
+  <div class="stats" id="statsText"></div>
+</div>
+
+<main>
+  <section class="grid-pane" id="cardGrid"></section>
+  <aside class="editor-pane" id="editorPane">
+    <h2 id="editorHeading">Select a card</h2>
+    <div id="editorForm" class="form-grid"></div>
+  </aside>
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script id="seed-data" type="application/json">{
+ "note": "Exported from prototypes/sitting/game.js by tools/export-cards.js. Weight (w) comes from the value budget; edit cost, v, event, theme, place, era, people, art, title and quote.",
+ "budget": {
+  "basic": [
+   2,
+   6,
+   13
+  ],
+  "uncommon": [
+   4,
+   10,
+   22
+  ],
+  "rare": [
+   6,
+   14,
+   30
+  ]
+ },
+ "eventMultiplier": {
+  "Find": 0.65,
+  "Chain": 0.85,
+  "Risk": 0.9,
+  "Spare": 0.9,
+  "Repeat": 1
+ },
+ "vividCap": {
+  "basic": 1,
+  "uncommon": 2,
+  "rare": 3,
+  "exceptions": {
+   "fog-cranes": 2
+  }
+ },
+ "minWeight": 2,
+ "cards": [
+  {
+   "id": "talk-weather",
+   "title": "The weather, mostly",
+   "quote": "It was hot. Then it wasn’t.",
+   "theme": "Weather",
+   "place": "halsey",
+   "era": "Later",
+   "event": null,
+   "cost": 0,
+   "w": 2,
+   "v": 1,
+   "rarity": "basic",
+   "people": [],
+   "art": {
+    "kind": "drawing",
+    "src": "sketches/stars.png"
+   },
+   "small": true
+  },
+  {
+   "id": "talk-kin",
+   "title": "Who’s related to who",
+   "quote": "Your aunt’s my cousin, near enough.",
+   "theme": "Kin",
+   "place": "halsey",
+   "era": "Later",
+   "event": null,
+   "cost": 0,
+   "w": 2,
+   "v": 1,
+   "rarity": "basic",
+   "people": [],
+   "art": {
+    "kind": "drawing",
+    "src": "sketches/traveler.png"
+   },
+   "small": true
+  },
+  {
+   "id": "rows",
+   "title": "Planting the rows by hand",
+   "quote": "Twelve hundred a day with a bar and a bucket.",
+   "theme": "Work",
+   "place": "halsey",
+   "era": "1903",
+   "event": "Repeat",
+   "cost": 1,
+   "w": 6,
+   "v": 1,
+   "rarity": "basic",
+   "people": [],
+   "art": {
+    "kind": "render",
+    "src": "img/halsey-rows.jpg",
+    "over": "sketches/tower.png"
+   }
+  },
+  {
+   "id": "hail",
+   "title": "The hail that flattened the rows",
+   "quote": "Somebody wrote down every broken tree.",
+   "theme": "Weather",
+   "place": "halsey",
+   "era": "1903",
+   "event": "Chain",
+   "cost": 1,
+   "w": 5,
+   "v": 1,
+   "rarity": "basic",
+   "people": [],
+   "art": {
+    "kind": "render",
+    "src": "img/halsey-rows.jpg"
+   }
+  },
+  {
+   "id": "bridge-thing",
+   "title": "The thing under the bridge",
+   "quote": "It didn’t chase me. It just looked.",
+   "theme": "Strange",
+   "place": "halsey",
+   "era": "Later",
+   "event": "Risk",
+   "cost": 2,
+   "w": 12,
+   "v": 1,
+   "rarity": "basic",
+   "people": [],
+   "art": {
+    "kind": "drawing",
+    "src": "sketches/critter.png"
+   }
+  },
+  {
+   "id": "tree-lights",
+   "title": "Lights past the tower",
+   "quote": "They went out when I stopped walking.",
+   "theme": "Strange",
+   "place": "halsey",
+   "era": "1974",
+   "event": "Find",
+   "cost": 1,
+   "w": 4,
+   "v": 1,
+   "rarity": "basic",
+   "people": [
+    "ruth"
+   ],
+   "art": {
+    "kind": "drawing",
+    "src": "sketches/tower.png"
+   }
+  },
+  {
+   "id": "walked-rows",
+   "title": "Something walked the rows",
+   "quote": "Every row had the same track down the middle.",
+   "theme": "Strange",
+   "place": "halsey",
+   "era": "1950",
+   "event": "Repeat",
+   "cost": 1,
+   "w": 6,
+   "v": 1,
+   "rarity": "basic",
+   "people": [],
+   "art": {
+    "kind": "render",
+    "src": "img/night-halsey-rows.jpg"
+   }
+  },
+  {
+   "id": "fence-posts",
+   "title": "We burned the fence posts",
+   "quote": "We kept one. We walk around it.",
+   "theme": "Weather",
+   "place": "sandhills",
+   "era": "1888",
+   "event": "Spare",
+   "cost": 1,
+   "w": 5,
+   "v": 1,
+   "rarity": "basic",
+   "people": [],
+   "art": {
+    "kind": "archive",
+    "src": "public/loc-2005693378.jpg",
+    "credit": "Solomon D. Butcher, 1886 · Library of Congress"
+   }
+  },
+  {
+   "id": "turtle",
+   "title": "The turtle crossing",
+   "quote": "We sat down in the road and waited.",
+   "theme": "Animals",
+   "place": "sandhills",
+   "era": "1950",
+   "event": "Spare",
+   "cost": 1,
+   "w": 5,
+   "v": 1,
+   "rarity": "basic",
+   "people": [],
+   "art": {
+    "kind": "object",
+    "src": "objects/beast-turtle.png"
+   }
+  },
+  {
+   "id": "stock-tank",
+   "title": "Reading by the stock tank",
+   "quote": "The moon on the water was enough.",
+   "theme": "Light",
+   "place": "sandhills",
+   "era": "1888",
+   "event": "Repeat",
+   "cost": 1,
+   "w": 6,
+   "v": 1,
+   "rarity": "basic",
+   "people": [],
+   "art": {
+    "kind": "archive",
+    "src": "public/loc-2005693384.jpg",
+    "credit": "Solomon D. Butcher · Library of Congress"
+   }
+  },
+  {
+   "id": "fog-cranes",
+   "title": "Fog so thick the cranes walked",
+   "quote": "Thousands of feet in the water, nobody flying.",
+   "theme": "Animals",
+   "place": "platte",
+   "era": "Later",
+   "event": "Chain",
+   "cost": 1,
+   "w": 3,
+   "v": 2,
+   "rarity": "basic",
+   "people": [
+    "ada"
+   ],
+   "art": {
+    "kind": "render",
+    "src": "img/platte-cranes.jpg",
+    "over": "sketches/crane-standing.png"
+   }
+  },
+  {
+   "id": "power",
+   "title": "When the power came",
+   "quote": "We stood in the yard looking at the house.",
+   "theme": "Light",
+   "place": "sandhills",
+   "era": "1950",
+   "event": "Find",
+   "cost": 1,
+   "w": 4,
+   "v": 1,
+   "rarity": "basic",
+   "people": [
+    "arne"
+   ],
+   "art": {
+    "kind": "archive",
+    "src": "public/loc-2005693387.jpg",
+    "credit": "Solomon D. Butcher · Library of Congress"
+   }
+  },
+  {
+   "id": "ruth-page",
+   "title": "My great-nephew’s page",
+   "quote": "“Gus. Will want to leave.”",
+   "theme": "Kin",
+   "place": "halsey",
+   "era": "Later",
+   "event": "Risk",
+   "cost": 2,
+   "w": 9,
+   "v": 3,
+   "rarity": "rare",
+   "people": [
+    "ruth",
+    "gus"
+   ],
+   "art": {
+    "kind": "render",
+    "src": "img/halsey-rows.jpg",
+    "over": "sketches/drawn-gus.png"
+   }
+  },
+  {
+   "id": "ruth-foreman",
+   "title": "What the foreman said",
+   "quote": "“Plant them like you’ll be here when they’re grown.”",
+   "theme": "Work",
+   "place": "halsey",
+   "era": "1903",
+   "event": "Find",
+   "cost": 1,
+   "w": 3,
+   "v": 2,
+   "rarity": "uncommon",
+   "people": [
+    "ruth"
+   ],
+   "art": {
+    "kind": "drawing",
+    "src": "sketches/drawn-ruth.png"
+   }
+  },
+  {
+   "id": "ruth-twelve",
+   "title": "Twelve hundred a day",
+   "quote": "My hands still count.",
+   "theme": "Work",
+   "place": "halsey",
+   "era": "1903",
+   "event": "Chain",
+   "cost": 1,
+   "w": 9,
+   "v": 1,
+   "rarity": "uncommon",
+   "people": [
+    "ruth"
+   ],
+   "art": {
+    "kind": "render",
+    "src": "img/halsey-rows.jpg",
+    "over": "sketches/drawn-ruth.png"
+   }
+  },
+  {
+   "id": "ruth-ledger",
+   "title": "A page for every tree",
+   "quote": "Some pages have more in them than the tree.",
+   "theme": "Work",
+   "place": "halsey",
+   "era": "1903",
+   "event": "Spare",
+   "cost": 1,
+   "w": 5,
+   "v": 2,
+   "rarity": "uncommon",
+   "people": [
+    "ruth"
+   ],
+   "art": {
+    "kind": "object",
+    "src": "objects/arch-red-blue.png"
+   }
+  },
+  {
+   "id": "priya-green",
+   "title": "A green sky over Thedford",
+   "quote": "The bees came home at noon.",
+   "theme": "Weather",
+   "place": "thedford",
+   "era": "1974",
+   "event": "Find",
+   "cost": 1,
+   "w": 3,
+   "v": 2,
+   "rarity": "uncommon",
+   "people": [
+    "priya",
+    "walt"
+   ],
+   "art": {
+    "kind": "render",
+    "src": "img/thedford.jpg",
+    "over": "sketches/drawn-priya.png"
+   }
+  },
+  {
+   "id": "priya-rabbits",
+   "title": "The jackrabbit census",
+   "quote": "You can’t count them. They count you.",
+   "theme": "Animals",
+   "place": "thedford",
+   "era": "Later",
+   "event": "Repeat",
+   "cost": 1,
+   "w": 5,
+   "v": 2,
+   "rarity": "uncommon",
+   "people": [
+    "priya"
+   ],
+   "art": {
+    "kind": "object",
+    "src": "objects/beast-jackrabbit.png"
+   }
+  },
+  {
+   "id": "priya-shape",
+   "title": "The shape over Thedford",
+   "quote": "Ten thousand birds, asking something.",
+   "theme": "Animals",
+   "place": "thedford",
+   "era": "Later",
+   "event": "Chain",
+   "cost": 2,
+   "w": 9,
+   "v": 3,
+   "rarity": "rare",
+   "people": [
+    "priya"
+   ],
+   "art": {
+    "kind": "drawing",
+    "src": "sketches/crane-wings.png"
+   }
+  },
+  {
+   "id": "priya-wind",
+   "title": "Three days of wind",
+   "quote": "The sand came into the kitchen and lay down.",
+   "theme": "Weather",
+   "place": "thedford",
+   "era": "1888",
+   "event": "Risk",
+   "cost": 2,
+   "w": 20,
+   "v": 1,
+   "rarity": "uncommon",
+   "people": [
+    "priya",
+    "deshawn"
+   ],
+   "art": {
+    "kind": "archive",
+    "src": "public/loc-2005693385.jpg",
+    "credit": "Solomon D. Butcher · Library of Congress"
+   }
+  },
+  {
+   "id": "deshawn-mill",
+   "title": "A windmill lies about the wind",
+   "quote": "It tells you which way. Then it lies.",
+   "theme": "Weather",
+   "place": "sandhills",
+   "era": "Later",
+   "event": "Repeat",
+   "cost": 1,
+   "w": 10,
+   "v": 1,
+   "rarity": "uncommon",
+   "people": [
+    "deshawn"
+   ],
+   "art": {
+    "kind": "painting",
+    "src": "public/pd_sandhills_print.jpg",
+    "credit": "Kady B. Faulkner, Nebraska Sandhills · public domain"
+   }
+  },
+  {
+   "id": "deshawn-above",
+   "title": "The Sandhills from above",
+   "quote": "Somebody flew over once and said the lakes looked like dropped coins.",
+   "theme": "Strange",
+   "place": "sandhills",
+   "era": "Later",
+   "event": "Find",
+   "cost": 1,
+   "w": 3,
+   "v": 2,
+   "rarity": "uncommon",
+   "people": [
+    "deshawn",
+    "priya"
+   ],
+   "art": {
+    "kind": "painting",
+    "src": "public/pd_sat_sandhills.jpg",
+    "credit": "NASA Terra satellite · public domain"
+   }
+  },
+  {
+   "id": "deshawn-well",
+   "title": "The well that went sweet",
+   "quote": "Sixty years of pennies. Then it didn’t.",
+   "theme": "Water",
+   "place": "sandhills",
+   "era": "Later",
+   "event": "Spare",
+   "cost": 1,
+   "w": 5,
+   "v": 2,
+   "rarity": "uncommon",
+   "people": [
+    "deshawn",
+    "tomas"
+   ],
+   "art": {
+    "kind": "render",
+    "src": "img/sandhills-windmill.jpg"
+   }
+  },
+  {
+   "id": "deshawn-poles",
+   "title": "Setting poles on the Ord line",
+   "quote": "You can see every pole you ever set.",
+   "theme": "Work",
+   "place": "sandhills",
+   "era": "1950",
+   "event": "Chain",
+   "cost": 1,
+   "w": 9,
+   "v": 1,
+   "rarity": "uncommon",
+   "people": [
+    "deshawn",
+    "arne"
+   ],
+   "art": {
+    "kind": "archive",
+    "src": "public/loc-2005693377.jpg",
+    "credit": "Solomon D. Butcher · Library of Congress"
+   }
+  },
+  {
+   "id": "deshawn-arch",
+   "title": "The arch that moved",
+   "quote": "Nobody saw it go.",
+   "theme": "Strange",
+   "place": "sandhills",
+   "era": "Later",
+   "event": "Repeat",
+   "cost": 0,
+   "w": 4,
+   "v": 1,
+   "rarity": "uncommon",
+   "people": [
+    "deshawn"
+   ],
+   "art": {
+    "kind": "object",
+    "src": "objects/arch-black.png"
+   }
+  },
+  {
+   "id": "frank-door",
+   "title": "The door in the hill",
+   "quote": "It’s lit inside. It isn’t for me yet.",
+   "theme": "Strange",
+   "place": "door",
+   "era": "Later",
+   "event": "Find",
+   "cost": 1,
+   "w": 3,
+   "v": 3,
+   "rarity": "rare",
+   "people": [
+    "frank"
+   ],
+   "art": {
+    "kind": "render",
+    "src": "img/painting-door-in-the-hill.jpg"
+   },
+   "holdout": true
+  },
+  {
+   "id": "frank-clay",
+   "title": "The clay one by the cellar",
+   "quote": "It looked like old paper. Then it blinked.",
+   "theme": "Strange",
+   "place": "dismal",
+   "era": "Later",
+   "event": "Spare",
+   "cost": 1,
+   "w": 5,
+   "v": 2,
+   "rarity": "uncommon",
+   "people": [
+    "frank"
+   ],
+   "art": {
+    "kind": "object",
+    "src": "objects/beast-crumple.png"
+   },
+   "holdout": true
+  },
+  {
+   "id": "frank-coyote",
+   "title": "The coyote that walked us home",
+   "quote": "At the gate it sat down.",
+   "theme": "Animals",
+   "place": "dismal",
+   "era": "1974",
+   "event": "Risk",
+   "cost": 2,
+   "w": 10,
+   "v": 2,
+   "rarity": "uncommon",
+   "people": [
+    "frank"
+   ],
+   "art": {
+    "kind": "object",
+    "src": "objects/beast-coyote.png"
+   },
+   "holdout": true
+  },
+  {
+   "id": "frank-unsigned",
+   "title": "Not signed",
+   "quote": "Write it down. It won’t count.",
+   "theme": "Kin",
+   "place": "dismal",
+   "era": "Later",
+   "event": "Chain",
+   "cost": 1,
+   "w": 9,
+   "v": 1,
+   "rarity": "uncommon",
+   "people": [
+    "frank",
+    "lou"
+   ],
+   "art": {
+    "kind": "drawing",
+    "src": "sketches/drawn-frank.png"
+   },
+   "holdout": true
+  },
+  {
+   "id": "walt-seed",
+   "title": "The seed packet with my name",
+   "quote": "Mine is sweet corn.",
+   "theme": "Kin",
+   "place": "brokenbow",
+   "era": "1950",
+   "event": "Spare",
+   "cost": 1,
+   "w": 5,
+   "v": 2,
+   "rarity": "uncommon",
+   "people": [
+    "walt"
+   ],
+   "art": {
+    "kind": "drawing",
+    "src": "sketches/face1.png"
+   }
+  },
+  {
+   "id": "walt-count",
+   "title": "My aunt heard it count",
+   "quote": "To a number that doesn’t exist.",
+   "theme": "Strange",
+   "place": "brokenbow",
+   "era": "1903",
+   "event": "Chain",
+   "cost": 2,
+   "w": 9,
+   "v": 2,
+   "rarity": "uncommon",
+   "people": [
+    "walt"
+   ],
+   "art": {
+    "kind": "archive",
+    "src": "public/loc-2005693388.jpg",
+    "credit": "Solomon D. Butcher · Library of Congress"
+   }
+  },
+  {
+   "id": "walt-aurora",
+   "title": "Aurora over Broken Bow",
+   "quote": "Pink first, then green like grass.",
+   "theme": "Light",
+   "place": "brokenbow",
+   "era": "Later",
+   "event": "Chain",
+   "cost": 1,
+   "w": 4,
+   "v": 2,
+   "rarity": "uncommon",
+   "people": [
+    "walt",
+    "arne"
+   ],
+   "art": {
+    "kind": "render",
+    "src": "img/night-broken-bow.jpg"
+   }
+  },
+  {
+   "id": "walt-sod",
+   "title": "A sod house on the Middle Loup",
+   "quote": "Grandmother kept a goat on the roof.",
+   "theme": "Kin",
+   "place": "brokenbow",
+   "era": "1888",
+   "event": "Find",
+   "cost": 1,
+   "w": 7,
+   "v": 1,
+   "rarity": "uncommon",
+   "people": [
+    "walt"
+   ],
+   "art": {
+    "kind": "archive",
+    "src": "public/loc-2005693381.jpg",
+    "credit": "Solomon D. Butcher · Library of Congress"
+   }
+  },
+  {
+   "id": "tomas-landing",
+   "title": "The landing moved forty feet",
+   "quote": "The river doesn’t ask. I just move the post.",
+   "theme": "Water",
+   "place": "loup",
+   "era": "Later",
+   "event": "Repeat",
+   "cost": 1,
+   "w": 5,
+   "v": 2,
+   "rarity": "uncommon",
+   "people": [
+    "tomas"
+   ],
+   "art": {
+    "kind": "render",
+    "src": "img/loup-fog.jpg",
+    "over": "sketches/drawn-tomas.png"
+   }
+  },
+  {
+   "id": "tomas-ada",
+   "title": "Teaching Ada to pole",
+   "quote": "She doesn’t fight the river. She asks it.",
+   "theme": "Kin",
+   "place": "loup",
+   "era": "Later",
+   "event": "Find",
+   "cost": 1,
+   "w": 3,
+   "v": 2,
+   "rarity": "uncommon",
+   "people": [
+    "tomas",
+    "ada"
+   ],
+   "art": {
+    "kind": "drawing",
+    "src": "sketches/drawn-ada.png"
+   }
+  },
+  {
+   "id": "tomas-ice",
+   "title": "Ice thick enough to drive",
+   "quote": "We walked it anyway, in the dark, listening.",
+   "theme": "Water",
+   "place": "loup",
+   "era": "1974",
+   "event": "Risk",
+   "cost": 2,
+   "w": 10,
+   "v": 2,
+   "rarity": "uncommon",
+   "people": [
+    "tomas"
+   ],
+   "art": {
+    "kind": "render",
+    "src": "img/night-loup-fog.jpg"
+   }
+  },
+  {
+   "id": "tomas-pivot",
+   "title": "An owl on the pivot",
+   "quote": "We named the pipe, not the owl.",
+   "theme": "Animals",
+   "place": "loup",
+   "era": "2000",
+   "event": "Chain",
+   "cost": 1,
+   "w": 9,
+   "v": 1,
+   "rarity": "uncommon",
+   "people": [
+    "tomas",
+    "ada"
+   ],
+   "art": {
+    "kind": "object",
+    "src": "objects/beast-owl.png"
+   }
+  },
+  {
+   "id": "ada-412",
+   "title": "Four hundred and twelve cranes",
+   "quote": "Then they all stood up and I lost count.",
+   "theme": "Animals",
+   "place": "platte",
+   "era": "Later",
+   "event": "Chain",
+   "cost": 2,
+   "w": 9,
+   "v": 3,
+   "rarity": "rare",
+   "people": [
+    "ada"
+   ],
+   "art": {
+    "kind": "render",
+    "src": "img/platte-cranes.jpg",
+    "over": "sketches/crane-dance-arms.png"
+   }
+  },
+  {
+   "id": "ada-fours",
+   "title": "Counting by fours",
+   "quote": "You count the legs and divide.",
+   "theme": "Animals",
+   "place": "platte",
+   "era": "Later",
+   "event": "Find",
+   "cost": 1,
+   "w": 3,
+   "v": 2,
+   "rarity": "uncommon",
+   "people": [
+    "ada"
+   ],
+   "art": {
+    "kind": "drawing",
+    "src": "sketches/crane-step.png"
+   }
+  },
+  {
+   "id": "ada-still",
+   "title": "The one that stood still",
+   "quote": "All night. I watched it the whole time.",
+   "theme": "Animals",
+   "place": "platte",
+   "era": "Later",
+   "event": "Spare",
+   "cost": 1,
+   "w": 5,
+   "v": 2,
+   "rarity": "uncommon",
+   "people": [
+    "ada"
+   ],
+   "art": {
+    "kind": "object",
+    "src": "objects/beast-crane.png"
+   }
+  },
+  {
+   "id": "ada-landing",
+   "title": "He moved the post",
+   "quote": "So I moved my count.",
+   "theme": "Kin",
+   "place": "loup",
+   "era": "Later",
+   "event": "Repeat",
+   "cost": 1,
+   "w": 10,
+   "v": 1,
+   "rarity": "uncommon",
+   "people": [
+    "ada",
+    "tomas"
+   ],
+   "art": {
+    "kind": "drawing",
+    "src": "sketches/drawn-ada.png"
+   }
+  },
+  {
+   "id": "gus-sister",
+   "title": "My sister took the water",
+   "quote": "She waved from the middle like it was nothing.",
+   "theme": "Leaving",
+   "place": "bridge",
+   "era": "Later",
+   "event": "Chain",
+   "cost": 1,
+   "w": 4,
+   "v": 2,
+   "rarity": "uncommon",
+   "people": [
+    "gus",
+    "imani"
+   ],
+   "art": {
+    "kind": "drawing",
+    "src": "sketches/drawn-gus.png"
+   }
+  },
+  {
+   "id": "gus-looked",
+   "title": "It looked at me",
+   "quote": "Long legs, like sticks that made up their mind.",
+   "theme": "Strange",
+   "place": "halsey",
+   "era": "Later",
+   "event": "Risk",
+   "cost": 2,
+   "w": 10,
+   "v": 2,
+   "rarity": "uncommon",
+   "people": [
+    "gus",
+    "ruth"
+   ],
+   "art": {
+    "kind": "object",
+    "src": "objects/beast-critter.png"
+   }
+  },
+  {
+   "id": "gus-notebook",
+   "title": "The survey that never came back",
+   "quote": "Every page filled. No name.",
+   "theme": "Leaving",
+   "place": "archway",
+   "era": "Later",
+   "event": "Find",
+   "cost": 1,
+   "w": 3,
+   "v": 2,
+   "rarity": "uncommon",
+   "people": [
+    "gus",
+    "imani"
+   ],
+   "art": {
+    "kind": "render",
+    "src": "img/archway.jpg"
+   }
+  },
+  {
+   "id": "gus-old",
+   "title": "When I’m old enough",
+   "quote": "I’m going too.",
+   "theme": "Leaving",
+   "place": "archway",
+   "era": "Later",
+   "event": "Spare",
+   "cost": 1,
+   "w": 5,
+   "v": 2,
+   "rarity": "uncommon",
+   "people": [
+    "gus"
+   ],
+   "art": {
+    "kind": "render",
+    "src": "img/archway.jpg",
+    "over": "sketches/traveler.png"
+   }
+  },
+  {
+   "id": "marisol-cousins",
+   "title": "Cousins in Columbus",
+   "quote": "Half signed, half didn’t. We still do Christmas.",
+   "theme": "Kin",
+   "place": "columbus",
+   "era": "1974",
+   "event": "Repeat",
+   "cost": 1,
+   "w": 5,
+   "v": 2,
+   "rarity": "uncommon",
+   "people": [
+    "marisol",
+    "odette"
+   ],
+   "art": {
+    "kind": "render",
+    "src": "img/columbus.jpg",
+    "over": "sketches/drawn-marisol.png"
+   }
+  },
+  {
+   "id": "marisol-quilt",
+   "title": "Everyone’s initials",
+   "quote": "Ninety squares. Some are only initials now.",
+   "theme": "Kin",
+   "place": "columbus",
+   "era": "1950",
+   "event": "Spare",
+   "cost": 1,
+   "w": 5,
+   "v": 2,
+   "rarity": "uncommon",
+   "people": [
+    "marisol"
+   ],
+   "art": {
+    "kind": "drawing",
+    "src": "sketches/drawn-marisol.png"
+   }
+  },
+  {
+   "id": "marisol-rivers",
+   "title": "Where the two rivers argue",
+   "quote": "For a mile they won’t mix.",
+   "theme": "Water",
+   "place": "columbus",
+   "era": "1974",
+   "event": "Chain",
+   "cost": 1,
+   "w": 9,
+   "v": 1,
+   "rarity": "uncommon",
+   "people": [
+    "marisol",
+    "tomas"
+   ],
+   "art": {
+    "kind": "render",
+    "src": "img/columbus.jpg"
+   }
+  },
+  {
+   "id": "marisol-star",
+   "title": "The star hung upside down",
+   "quote": "On purpose. Three of us and a ladder.",
+   "theme": "Work",
+   "place": "columbus",
+   "era": "1974",
+   "event": "Find",
+   "cost": 1,
+   "w": 3,
+   "v": 2,
+   "rarity": "uncommon",
+   "people": [
+    "marisol"
+   ],
+   "art": {
+    "kind": "object",
+    "src": "objects/arch-red-hook.png"
+   }
+  },
+  {
+   "id": "marisol-bluff",
+   "title": "The drought year at the bluff",
+   "quote": "The wagon ruts came up out of the grass like they’d been waiting.",
+   "theme": "Weather",
+   "place": "scottsbluff",
+   "era": "1888",
+   "event": "Repeat",
+   "cost": 1,
+   "w": 10,
+   "v": 1,
+   "rarity": "uncommon",
+   "people": [
+    "marisol"
+   ],
+   "art": {
+    "kind": "archive",
+    "src": "public/pd_scotts_bluff_view.jpg",
+    "credit": "NPS photo, Scotts Bluff · public domain"
+   }
+  },
+  {
+   "id": "arne-wire",
+   "title": "The last wire into Omaha",
+   "quote": "The whole city came on, and only I saw.",
+   "theme": "Light",
+   "place": "omaha",
+   "era": "1974",
+   "event": "Risk",
+   "cost": 2,
+   "w": 10,
+   "v": 2,
+   "rarity": "uncommon",
+   "people": [
+    "arne"
+   ],
+   "art": {
+    "kind": "render",
+    "src": "img/omaha.jpg",
+    "over": "sketches/face2.png"
+   }
+  },
+  {
+   "id": "arne-bulb",
+   "title": "The bulb that never burns out",
+   "quote": "We left it on a year. It got brighter.",
+   "theme": "Light",
+   "place": "mainstreet",
+   "era": "Later",
+   "event": "Spare",
+   "cost": 1,
+   "w": 5,
+   "v": 2,
+   "rarity": "uncommon",
+   "people": [
+    "arne",
+    "odette"
+   ],
+   "art": {
+    "kind": "drawing",
+    "src": "sketches/bulb.png"
+   }
+  },
+  {
+   "id": "arne-poles",
+   "title": "Every pole you ever set",
+   "quote": "Look back and there they all are.",
+   "theme": "Work",
+   "place": "mainstreet",
+   "era": "1950",
+   "event": "Chain",
+   "cost": 1,
+   "w": 9,
+   "v": 1,
+   "rarity": "uncommon",
+   "people": [
+    "arne",
+    "deshawn"
+   ],
+   "art": {
+    "kind": "archive",
+    "src": "public/pd_silo_bennet.jpg",
+    "credit": "Grain elevator, Bennet · CC0, Wikimedia Commons"
+   }
+  },
+  {
+   "id": "arne-north",
+   "title": "Lights in the north",
+   "quote": "Mother said, remember this. I have.",
+   "theme": "Weather",
+   "place": "mainstreet",
+   "era": "2000",
+   "event": "Find",
+   "cost": 1,
+   "w": 3,
+   "v": 3,
+   "rarity": "rare",
+   "people": [
+    "arne"
+   ],
+   "art": {
+    "kind": "render",
+    "src": "img/night-mainstreet.jpg"
+   }
+  },
+  {
+   "id": "arne-elevator",
+   "title": "The last day at the elevator",
+   "quote": "They swept it out and left the broom. Somebody should keep sweeping.",
+   "theme": "Work",
+   "place": "mainstreet",
+   "era": "2000",
+   "event": "Spare",
+   "cost": 1,
+   "w": 5,
+   "v": 2,
+   "rarity": "uncommon",
+   "people": [
+    "arne",
+    "deshawn"
+   ],
+   "art": {
+    "kind": "archive",
+    "src": "public/pd_silo_kimball.jpg",
+    "credit": "Grain elevator, Kimball · CC0, Wikimedia Commons"
+   }
+  },
+  {
+   "id": "odette-survey",
+   "title": "Her grandmother’s Survey",
+   "quote": "The baby is in four of the stories.",
+   "theme": "Kin",
+   "place": "courthouse",
+   "era": "1903",
+   "event": "Chain",
+   "cost": 1,
+   "w": 4,
+   "v": 2,
+   "rarity": "uncommon",
+   "people": [
+    "odette"
+   ],
+   "art": {
+    "kind": "archive",
+    "src": "public/loc-2005693386.jpg",
+    "credit": "Solomon D. Butcher · Library of Congress"
+   }
+  },
+  {
+   "id": "odette-copy",
+   "title": "Copying the deed books",
+   "quote": "My hand will be in the record longer than I will.",
+   "theme": "Work",
+   "place": "courthouse",
+   "era": "Later",
+   "event": "Spare",
+   "cost": 1,
+   "w": 5,
+   "v": 2,
+   "rarity": "uncommon",
+   "people": [
+    "odette"
+   ],
+   "art": {
+    "kind": "drawing",
+    "src": "sketches/drawn-odette.png"
+   }
+  },
+  {
+   "id": "odette-lamp",
+   "title": "The lamp they keep",
+   "quote": "Nobody pays for it. It’s in the agreement.",
+   "theme": "Light",
+   "place": "courthouse",
+   "era": "1903",
+   "event": "Spare",
+   "cost": 2,
+   "w": 9,
+   "v": 3,
+   "rarity": "rare",
+   "people": [
+    "odette"
+   ],
+   "art": {
+    "kind": "drawing",
+    "src": "sketches/bulb.png"
+   }
+  },
+  {
+   "id": "odette-bees",
+   "title": "Bees in the courthouse wall",
+   "quote": "The deeds smell like honey in July.",
+   "theme": "Animals",
+   "place": "courthouse",
+   "era": "Later",
+   "event": "Find",
+   "cost": 1,
+   "w": 3,
+   "v": 2,
+   "rarity": "uncommon",
+   "people": [
+    "odette",
+    "priya"
+   ],
+   "art": {
+    "kind": "render",
+    "src": "img/courthouse.jpg",
+    "over": "sketches/crane-small.png"
+   }
+  },
+  {
+   "id": "imani-water",
+   "title": "Taking the water at Brownville",
+   "quote": "You get in, and then you’re from somewhere else.",
+   "theme": "Leaving",
+   "place": "bridge",
+   "era": "Later",
+   "event": "Risk",
+   "cost": 2,
+   "w": 9,
+   "v": 3,
+   "rarity": "rare",
+   "people": [
+    "imani"
+   ],
+   "art": {
+    "kind": "render",
+    "src": "img/bridge.jpg"
+   }
+  },
+  {
+   "id": "imani-count",
+   "title": "Who crosses the bridge",
+   "quote": "I count them both ways.",
+   "theme": "Leaving",
+   "place": "bridge",
+   "era": "Later",
+   "event": "Repeat",
+   "cost": 1,
+   "w": 5,
+   "v": 2,
+   "rarity": "uncommon",
+   "people": [
+    "imani"
+   ],
+   "art": {
+    "kind": "drawing",
+    "src": "sketches/drawn-imani.png"
+   }
+  },
+  {
+   "id": "imani-brown",
+   "title": "Brown water at Omaha",
+   "quote": "Every handful is from somewhere.",
+   "theme": "Water",
+   "place": "omaha",
+   "era": "Later",
+   "event": "Chain",
+   "cost": 1,
+   "w": 4,
+   "v": 2,
+   "rarity": "uncommon",
+   "people": [
+    "imani",
+    "marisol"
+   ],
+   "art": {
+    "kind": "render",
+    "src": "img/omaha.jpg"
+   }
+  },
+  {
+   "id": "imani-back",
+   "title": "More come back than you’d think",
+   "quote": "They come back carrying something.",
+   "theme": "Kin",
+   "place": "bridge",
+   "era": "Later",
+   "event": "Spare",
+   "cost": 1,
+   "w": 5,
+   "v": 2,
+   "rarity": "uncommon",
+   "people": [
+    "imani",
+    "gus"
+   ],
+   "art": {
+    "kind": "render",
+    "src": "img/night-bridge.jpg"
+   }
+  },
+  {
+   "id": "peaches",
+   "title": "Peaches from Dunning",
+   "quote": "She said they were spare.",
+   "theme": "Kin",
+   "place": "sandhills",
+   "era": "Later",
+   "event": "Spare",
+   "cost": 0,
+   "w": 4,
+   "v": 1,
+   "rarity": "uncommon",
+   "people": [],
+   "art": {
+    "kind": "drawing",
+    "src": "sketches/traveler.png"
+   }
+  },
+  {
+   "id": "cousin",
+   "title": "A man who knows your cousin",
+   "quote": "You’re Odette’s cousin’s kid. I knew it.",
+   "theme": "Kin",
+   "place": "brokenbow",
+   "era": "Later",
+   "event": "Chain",
+   "cost": 1,
+   "w": 4,
+   "v": 2,
+   "rarity": "uncommon",
+   "people": [
+    "odette",
+    "marisol",
+    "walt"
+   ],
+   "art": {
+    "kind": "drawing",
+    "src": "sketches/face3.png"
+   }
+  },
+  {
+   "id": "cranes-lift",
+   "title": "They lifted all at once",
+   "quote": "Furious and enormous.",
+   "theme": "Animals",
+   "place": "platte",
+   "era": "Later",
+   "event": "Risk",
+   "cost": 1,
+   "w": 5,
+   "v": 2,
+   "rarity": "uncommon",
+   "people": [],
+   "art": {
+    "kind": "drawing",
+    "src": "sketches/crane-dance.png"
+   }
+  },
+  {
+   "id": "trail-ruts",
+   "title": "The wagon ruts",
+   "quote": "Everybody who ever left went by here. You can see where they leaned.",
+   "theme": "Leaving",
+   "place": "scottsbluff",
+   "era": "1888",
+   "event": "Chain",
+   "cost": 1,
+   "w": 4,
+   "v": 2,
+   "rarity": "uncommon",
+   "people": [
+    "gus"
+   ],
+   "art": {
+    "kind": "archive",
+    "src": "public/pd_chimney_rock_1904.jpg",
+    "credit": "Chimney Rock, 1904 · NARA, public domain"
+   }
+  },
+  {
+   "id": "lookout",
+   "title": "The lookout tower",
+   "quote": "From the top you can see three counties and nobody in them.",
+   "theme": "Light",
+   "place": "platte",
+   "era": "Later",
+   "event": "Find",
+   "cost": 1,
+   "w": 3,
+   "v": 2,
+   "rarity": "uncommon",
+   "people": [
+    "ada"
+   ],
+   "art": {
+    "kind": "archive",
+    "src": "public/pd_platte_tower.jpg",
+    "credit": "Platte River State Park tower · public domain, Wikimedia Commons"
+   }
+  },
+  {
+   "id": "elevator-sunday",
+   "title": "Sweeping the elevator on Sundays",
+   "quote": "Nobody asked. It’s just that somebody should.",
+   "theme": "Work",
+   "place": "mainstreet",
+   "era": "Later",
+   "event": "Spare",
+   "cost": 0,
+   "w": 4,
+   "v": 1,
+   "rarity": "uncommon",
+   "people": [
+    "deshawn"
+   ],
+   "art": {
+    "kind": "archive",
+    "src": "public/pd_silo_mclean.jpg",
+    "credit": "Grain elevator, McLean · public domain, Wikimedia Commons"
+   }
+  },
+  {
+   "id": "culvert",
+   "title": "Waiting out the storm",
+   "quote": "A stranger who keeps bees shared the culvert.",
+   "theme": "Weather",
+   "place": "thedford",
+   "era": "Later",
+   "event": "Find",
+   "cost": 1,
+   "w": 3,
+   "v": 2,
+   "rarity": "uncommon",
+   "people": [
+    "priya"
+   ],
+   "art": {
+    "kind": "render",
+    "src": "img/thedford.jpg"
+   }
+  }
+ ],
+ "tellers": [
+  {
+   "id": "ruth",
+   "name": "Ruth Ebersole",
+   "place": "halsey",
+   "want": "Work",
+   "line": "Every tree in these rows has a page. Sit down.",
+   "reservation": {
+    "text": "Only trusts people who’ve planted something",
+    "tag": [
+     "theme",
+     "Work"
+    ]
+   },
+   "intents": [
+    {
+     "kind": "ask",
+     "tag": [
+      "place",
+      "halsey"
+     ],
+     "label": "Asks about Halsey"
+    },
+    {
+     "kind": "doubt",
+     "n": 12
+    },
+    {
+     "kind": "own"
+    },
+    {
+     "kind": "quiet"
+    }
+   ],
+   "stories": [
+    "ruth-page",
+    "ruth-foreman",
+    "ruth-twelve",
+    "ruth-ledger"
+   ],
+   "cols": [
+    0
+   ]
+  },
+  {
+   "id": "priya",
+   "name": "Priya Raman",
+   "place": "thedford",
+   "want": "Weather",
+   "line": "The bees know the weather a day early. I write down what they say.",
+   "reservation": {
+    "text": "Won’t talk to someone who’s never stopped for an animal",
+    "tag": [
+     "theme",
+     "Animals"
+    ]
+   },
+   "intents": [
+    {
+     "kind": "ask",
+     "tag": [
+      "theme",
+      "Weather"
+     ],
+     "label": "Asks about the sky"
+    },
+    {
+     "kind": "doubt",
+     "n": 14
+    },
+    {
+     "kind": "own"
+    },
+    {
+     "kind": "quiet"
+    }
+   ],
+   "stories": [
+    "priya-green",
+    "priya-rabbits",
+    "priya-shape",
+    "priya-wind"
+   ],
+   "cols": [
+    1,
+    2
+   ]
+  },
+  {
+   "id": "deshawn",
+   "name": "Deshawn Price",
+   "place": "sandhills",
+   "want": "Weather",
+   "line": "A windmill tells you which way everything is going. Then it lies.",
+   "reservation": {
+    "text": "Doesn’t trust anyone who hasn’t seen the Sandhills",
+    "tag": [
+     "place",
+     "sandhills"
+    ]
+   },
+   "intents": [
+    {
+     "kind": "own"
+    },
+    {
+     "kind": "ask",
+     "tag": [
+      "place",
+      "sandhills"
+     ],
+     "label": "Asks about the Sandhills"
+    },
+    {
+     "kind": "doubt",
+     "n": 14
+    },
+    {
+     "kind": "ask",
+     "tag": [
+      "theme",
+      "Work"
+     ],
+     "label": "Asks about work"
+    }
+   ],
+   "stories": [
+    "deshawn-mill",
+    "deshawn-well",
+    "deshawn-poles",
+    "deshawn-arch",
+    "deshawn-above"
+   ],
+   "cols": [
+    1,
+    2
+   ]
+  },
+  {
+   "id": "frank",
+   "name": "Frank Dvorak",
+   "place": "dismal",
+   "want": "Strange",
+   "line": "I’m not signed. You can write it down. It won’t count.",
+   "reservation": {
+    "text": "Not signed: he only listens to something strange",
+    "tag": [
+     "theme",
+     "Strange"
+    ]
+   },
+   "intents": [
+    {
+     "kind": "doubt",
+     "n": 22
+    },
+    {
+     "kind": "ask",
+     "tag": [
+      "theme",
+      "Strange"
+     ],
+     "label": "Asks what you’ve seen"
+    },
+    {
+     "kind": "doubt",
+     "n": 22
+    },
+    {
+     "kind": "own"
+    }
+   ],
+   "stories": [
+    "frank-door",
+    "frank-clay",
+    "frank-coyote",
+    "frank-unsigned"
+   ],
+   "cols": [
+    2,
+    3,
+    5
+   ],
+   "holdout": true
+  },
+  {
+   "id": "walt",
+   "name": "Walt Okamoto",
+   "place": "brokenbow",
+   "want": "Kin",
+   "line": "I keep a packet for every child born in the county. Ask me yours.",
+   "reservation": {
+    "text": "Wants to know whose child you are",
+    "tag": [
+     "theme",
+     "Kin"
+    ]
+   },
+   "intents": [
+    {
+     "kind": "own"
+    },
+    {
+     "kind": "ask",
+     "tag": [
+      "era",
+      "1903"
+     ],
+     "label": "Asks about 1903"
+    },
+    {
+     "kind": "doubt",
+     "n": 18
+    },
+    {
+     "kind": "quiet"
+    }
+   ],
+   "stories": [
+    "walt-seed",
+    "walt-count",
+    "walt-aurora",
+    "walt-sod"
+   ],
+   "cols": [
+    3,
+    4
+   ]
+  },
+  {
+   "id": "tomas",
+   "name": "Tomás Arriaga",
+   "place": "loup",
+   "want": "Water",
+   "line": "The river moved forty feet this spring. Talk slow.",
+   "reservation": {
+    "text": "Won’t talk to someone in a hurry",
+    "tag": [
+     "event",
+     "Spare"
+    ]
+   },
+   "intents": [
+    {
+     "kind": "doubt",
+     "n": 18
+    },
+    {
+     "kind": "ask",
+     "tag": [
+      "theme",
+      "Water"
+     ],
+     "label": "Asks about the river"
+    },
+    {
+     "kind": "own"
+    },
+    {
+     "kind": "doubt",
+     "n": 18
+    }
+   ],
+   "stories": [
+    "tomas-landing",
+    "tomas-ada",
+    "tomas-ice",
+    "tomas-pivot"
+   ],
+   "cols": [
+    3,
+    4
+   ]
+  },
+  {
+   "id": "ada",
+   "name": "Ada Nakamura-Hill",
+   "place": "platte",
+   "want": "Animals",
+   "line": "Four hundred and twelve. Then they all stood up and I lost count.",
+   "reservation": {
+    "text": "Won’t listen unless you can find something",
+    "tag": [
+     "event",
+     "Find"
+    ]
+   },
+   "intents": [
+    {
+     "kind": "ask",
+     "tag": [
+      "theme",
+      "Animals"
+     ],
+     "label": "Asks about the cranes"
+    },
+    {
+     "kind": "own"
+    },
+    {
+     "kind": "doubt",
+     "n": 20
+    },
+    {
+     "kind": "ask",
+     "tag": [
+      "place",
+      "platte"
+     ],
+     "label": "Asks about the river"
+    }
+   ],
+   "stories": [
+    "ada-412",
+    "ada-fours",
+    "ada-still",
+    "ada-landing"
+   ],
+   "cols": [
+    4,
+    5
+   ]
+  },
+  {
+   "id": "gus",
+   "name": "Gus Pfeiffer",
+   "place": "archway",
+   "want": "Leaving",
+   "line": "My sister took the water. When I’m old enough I’m going too.",
+   "reservation": {
+    "text": "Doesn’t believe grown-ups unless it’s strange",
+    "tag": [
+     "theme",
+     "Strange"
+    ]
+   },
+   "intents": [
+    {
+     "kind": "own"
+    },
+    {
+     "kind": "doubt",
+     "n": 22
+    },
+    {
+     "kind": "ask",
+     "tag": [
+      "theme",
+      "Leaving"
+     ],
+     "label": "Asks about leaving"
+    },
+    {
+     "kind": "quiet"
+    }
+   ],
+   "stories": [
+    "gus-sister",
+    "gus-looked",
+    "gus-notebook",
+    "gus-old"
+   ],
+   "cols": [
+    5,
+    6
+   ]
+  },
+  {
+   "id": "marisol",
+   "name": "Marisol Ybarra",
+   "place": "columbus",
+   "want": "Kin",
+   "line": "Every block is somebody. You just have to know who to look for.",
+   "reservation": {
+    "text": "Every block is somebody: name someone",
+    "tag": [
+     "people",
+     1
+    ]
+   },
+   "intents": [
+    {
+     "kind": "ask",
+     "tag": [
+      "theme",
+      "Kin"
+     ],
+     "label": "Asks about family"
+    },
+    {
+     "kind": "doubt",
+     "n": 24
+    },
+    {
+     "kind": "own"
+    },
+    {
+     "kind": "ask",
+     "tag": [
+      "place",
+      "columbus"
+     ],
+     "label": "Asks about the rivers"
+    }
+   ],
+   "stories": [
+    "marisol-cousins",
+    "marisol-quilt",
+    "marisol-rivers",
+    "marisol-star",
+    "marisol-bluff"
+   ],
+   "cols": [
+    5,
+    6
+   ]
+  },
+  {
+   "id": "arne",
+   "name": "Arne Lindqvist",
+   "place": "mainstreet",
+   "want": "Light",
+   "line": "I put light in every house from here to the river. Now I’m collecting it back.",
+   "reservation": {
+    "text": "Wants something that lasted since 1950",
+    "tag": [
+     "era",
+     "1950"
+    ]
+   },
+   "intents": [
+    {
+     "kind": "doubt",
+     "n": 24
+    },
+    {
+     "kind": "ask",
+     "tag": [
+      "theme",
+      "Light"
+     ],
+     "label": "Asks about the power"
+    },
+    {
+     "kind": "own"
+    },
+    {
+     "kind": "doubt",
+     "n": 24
+    }
+   ],
+   "stories": [
+    "arne-wire",
+    "arne-bulb",
+    "arne-poles",
+    "arne-north",
+    "arne-elevator"
+   ],
+   "cols": [
+    5,
+    6
+   ]
+  },
+  {
+   "id": "odette",
+   "name": "Odette Mbeki-Larsen",
+   "place": "courthouse",
+   "want": "Kin",
+   "line": "Everything in this room was signed by somebody’s grandmother.",
+   "reservation": {
+    "text": "Wants it on the record: something from 1903",
+    "tag": [
+     "era",
+     "1903"
+    ]
+   },
+   "intents": [
+    {
+     "kind": "ask",
+     "tag": [
+      "theme",
+      "Kin"
+     ],
+     "label": "Asks about family"
+    },
+    {
+     "kind": "doubt",
+     "n": 26
+    },
+    {
+     "kind": "own"
+    },
+    {
+     "kind": "ask",
+     "tag": [
+      "era",
+      "1903"
+     ],
+     "label": "Asks about 1903"
+    }
+   ],
+   "stories": [
+    "odette-survey",
+    "odette-copy",
+    "odette-lamp",
+    "odette-bees"
+   ],
+   "cols": [
+    6
+   ]
+  },
+  {
+   "id": "imani",
+   "name": "Imani Cole",
+   "place": "bridge",
+   "want": "Leaving",
+   "line": "I count who crosses, both ways. Tell me why you came.",
+   "reservation": {
+    "text": "Wants to know why you’re going",
+    "tag": [
+     "theme",
+     "Leaving"
+    ]
+   },
+   "intents": [
+    {
+     "kind": "own"
+    },
+    {
+     "kind": "ask",
+     "tag": [
+      "theme",
+      "Leaving"
+     ],
+     "label": "Asks why you’re going"
+    },
+    {
+     "kind": "doubt",
+     "n": 26
+    },
+    {
+     "kind": "ask",
+     "tag": [
+      "theme",
+      "Water"
+     ],
+     "label": "Asks about the river"
+    }
+   ],
+   "stories": [
+    "imani-water",
+    "imani-count",
+    "imani-brown",
+    "imani-back"
+   ],
+   "cols": [
+    7
+   ],
+   "boss": true
+  }
+ ],
+ "keepsakes": {
+  "sawtooth": {
+   "name": "Sawtooth",
+   "text": "Your first telling each day gets +1 Vivid."
+  },
+  "ohiostar": {
+   "name": "Ohio Star",
+   "text": "Threads give +2 Vivid instead of +1."
+  },
+  "logcabin": {
+   "name": "Log Cabin",
+   "text": "Retained Spare stories give +7 Weight instead of +4."
+  },
+  "geese": {
+   "name": "Flying Geese",
+   "text": "Chain gives +7 Weight instead of +4."
+  },
+  "pinwheel": {
+   "name": "Pinwheel",
+   "text": "Repeat copies every other event in the telling."
+  },
+  "bearpaw": {
+   "name": "Bear’s Paw",
+   "text": "Unanswered doubts cost credibility, never standing."
+  },
+  "lonestar": {
+   "name": "Lone Star",
+   "text": "Rare stories cost 1 less trust."
+  },
+  "churndash": {
+   "name": "Churn Dash",
+   "text": "+1 trust on the first day of every sitting."
+  },
+  "dresden": {
+   "name": "Dresden Plate",
+   "text": "Small talk gets +4 Weight."
+  },
+  "drunkard": {
+   "name": "Drunkard’s Path",
+   "text": "Risk never costs standing, but gives only +3 Weight."
+  }
+ }
+}</script>
+<script>
+(function () {
+  'use strict';
+
+  let data = JSON.parse(document.getElementById('seed-data').textContent);
+  let selectedId = data.cards[0] ? data.cards[0].id : null;
+
+  const els = {
+    grid: document.getElementById('cardGrid'),
+    form: document.getElementById('editorForm'),
+    heading: document.getElementById('editorHeading'),
+    search: document.getElementById('searchInput'),
+    theme: document.getElementById('filterTheme'),
+    place: document.getElementById('filterPlace'),
+    event: document.getElementById('filterEvent'),
+    rarity: document.getElementById('filterRarity'),
+    stats: document.getElementById('statsText'),
+    toast: document.getElementById('toast'),
+  };
+
+  function computeWeight(card) {
+    const tier = data.budget[card.rarity] || data.budget.basic;
+    const costIdx = Math.max(0, Math.min(tier.length - 1, Number(card.cost) || 0));
+    const baseBudget = tier[costIdx];
+    const mult = card.event && data.eventMultiplier[card.event] != null
+      ? data.eventMultiplier[card.event]
+      : 1;
+    const vivid = Math.max(1, Number(card.v) || 1);
+    const raw = (baseBudget * mult) / vivid;
+    const caps = data.vividCap || { basic: 1, uncommon: 2, rare: 3, exceptions: { 'fog-cranes': 2 } };
+    const cap = (caps.exceptions && caps.exceptions[card.id]) || caps[card.rarity] || 3;
+    return {
+      w: Math.max(data.minWeight ?? 2, Math.round(raw)),
+      cap,
+      over: vivid > cap,
+      baseBudget,
+      mult,
+      vivid,
+      raw,
+    };
+  }
+
+  function syncAllWeights() {
+    for (const c of data.cards) {
+      c.w = computeWeight(c).w;
+    }
+  }
+
+  function showToast(msg) {
+    els.toast.textContent = msg;
+    els.toast.classList.add('show');
+    clearTimeout(showToast._t);
+    showToast._t = setTimeout(() => els.toast.classList.remove('show'), 2100);
+  }
+
+  function uniqueSorted(arr) {
+    return Array.from(new Set(arr.filter(Boolean))).sort();
+  }
+
+  function populateFilterDropdowns() {
+    const themes = uniqueSorted(data.cards.map(c => c.theme));
+    const places = uniqueSorted(data.cards.map(c => c.place));
+    const events = uniqueSorted(data.cards.map(c => c.event));
+
+    function refill(sel, label, items) {
+      const cur = sel.value;
+      sel.innerHTML = `<option value="">${label}</option>` +
+        items.map(v => `<option value="${v}">${v}</option>`).join('');
+      if (items.includes(cur)) sel.value = cur;
+    }
+    refill(els.theme, 'All Themes', themes);
+    refill(els.place, 'All Places', places);
+    refill(els.event, 'All Events', events);
+  }
+
+  function getFilteredCards() {
+    const q = els.search.value.trim().toLowerCase();
+    return data.cards.filter(c => {
+      if (els.theme.value && c.theme !== els.theme.value) return false;
+      if (els.place.value && c.place !== els.place.value) return false;
+      if (els.event.value && c.event !== els.event.value) return false;
+      if (els.rarity.value && c.rarity !== els.rarity.value) return false;
+      if (q) {
+        const hay = [c.id, c.title, c.quote, c.theme, c.place, c.era, (c.people || []).join(' ')]
+          .join(' ').toLowerCase();
+        if (!hay.includes(q)) return false;
+      }
+      return true;
+    });
+  }
+
+  function esc(str) {
+    return String(str ?? '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  function renderGrid() {
+    const list = getFilteredCards();
+    els.stats.textContent = `Showing ${list.length} / ${data.cards.length} cards`;
+    els.grid.innerHTML = list.map(c => {
+      const calc = computeWeight(c);
+      c.w = calc.w;
+      const sel = c.id === selectedId ? ' selected' : '';
+      const hold = c.holdout ? ' holdout' : '';
+      const art = c.art || {};
+      return `
+        <article class="story-card${sel}${hold}" data-id="${esc(c.id)}">
+          <div class="card-top rarity-${esc(c.rarity)}">
+            <span>Trust ${c.cost} · ${esc(c.rarity)}</span>
+            <span class="pill-row">
+              <span class="stat-badge weight" title="Weight (derived)">W ${c.w}</span>
+              <span class="stat-badge vivid" title="Vivid">V ${c.v}</span>
+            </span>
+          </div>
+          <div class="card-art-frame${art.src ? ' has-img' : ''}">
+            ${art.src ? `<img class="ph${art.kind === 'object' || art.kind === 'drawing' ? ' contain' : ''}" src="${esc(art.src)}" alt="" loading="lazy">` : ''}
+            ${art.over ? `<img class="ov" src="${esc(art.over)}" alt="" loading="lazy">` : ''}
+            <div class="art-kind">${esc(art.kind || 'art')}${calc.over ? ' · <span class="warn">vivid over cap</span>' : ''}</div>
+            ${art.src ? '' : '<div class="art-src">(no art yet)</div>'}
+          </div>
+          <div class="card-body">
+            <div class="card-title">${esc(c.title)}</div>
+            <div class="card-quote">${esc(c.quote)}</div>
+            <div class="card-meta">
+              <span class="tag theme">${esc(c.theme)}</span>
+              <span class="tag">${esc(c.place)}</span>
+              <span class="tag">${esc(c.era)}</span>
+              ${c.event ? `<span class="tag event">${esc(c.event)}</span>` : ''}
+              ${c.small ? `<span class="tag">small</span>` : ''}
+              ${c.holdout ? `<span class="tag">holdout</span>` : ''}
+            </div>
+          </div>
+        </article>
+      `;
+    }).join('');
+  }
+
+  function renderEditor() {
+    const card = data.cards.find(c => c.id === selectedId);
+    if (!card) {
+      els.heading.textContent = 'Select a card';
+      els.form.innerHTML = '';
+      return;
+    }
+    const calc = computeWeight(card);
+    card.w = calc.w;
+    els.heading.textContent = card.title || card.id;
+
+    const art = card.art || { kind: 'drawing', src: '' };
+    const themes = uniqueSorted(data.cards.map(c => c.theme));
+    const places = uniqueSorted(data.cards.map(c => c.place));
+    const eras = uniqueSorted(data.cards.map(c => c.era));
+    const events = ['', ...Object.keys(data.eventMultiplier)];
+
+    els.form.innerHTML = `
+      <div class="budget-box">
+        <div>
+          <div style="font-weight:700;">Derived Weight (Locked)</div>
+          <div style="opacity:0.85;font-size:0.75rem;">
+            Budget ${calc.baseBudget} × ${calc.mult} ÷ Vivid ${calc.vivid} = ${calc.raw.toFixed(2)}${calc.raw < 1.5 ? ' (at least 2)' : ''}
+          </div>
+          ${calc.over ? `<div class="warn" style="font-size:0.78rem;">Vivid ${calc.vivid} is over the ${esc(card.rarity)} cap of ${calc.cap}. The game will lower it to ${calc.cap}.</div>` : ''}
+        </div>
+        <div class="w-big">W ${calc.w}</div>
+      </div>
+
+      <div class="field">
+        <label>ID</label>
+        <input data-key="id" value="${esc(card.id)}">
+      </div>
+      <div class="field">
+        <label>Rarity</label>
+        <select data-key="rarity">
+          ${['basic', 'uncommon', 'rare'].map(r => `<option value="${r}" ${card.rarity === r ? 'selected' : ''}>${r}</option>`).join('')}
+        </select>
+      </div>
+
+      <div class="field full">
+        <label>Title</label>
+        <input data-key="title" value="${esc(card.title)}">
+      </div>
+      <div class="field full">
+        <label>Quote</label>
+        <textarea data-key="quote">${esc(card.quote)}</textarea>
+      </div>
+
+      <div class="field">
+        <label>Theme</label>
+        <input data-key="theme" list="theme-list" value="${esc(card.theme)}">
+        <datalist id="theme-list">${themes.map(t => `<option value="${esc(t)}">`).join('')}</datalist>
+      </div>
+      <div class="field">
+        <label>Place</label>
+        <input data-key="place" list="place-list" value="${esc(card.place)}">
+        <datalist id="place-list">${places.map(p => `<option value="${esc(p)}">`).join('')}</datalist>
+      </div>
+
+      <div class="field">
+        <label>Era</label>
+        <input data-key="era" list="era-list" value="${esc(card.era)}">
+        <datalist id="era-list">${eras.map(e => `<option value="${esc(e)}">`).join('')}</datalist>
+      </div>
+      <div class="field">
+        <label>Event</label>
+        <select data-key="event">
+          ${events.map(ev => `<option value="${ev}" ${(card.event || '') === ev ? 'selected' : ''}>${ev || '(none)'}</option>`).join('')}
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Cost (Trust 0–2)</label>
+        <select data-key="cost">
+          ${[0, 1, 2].map(n => `<option value="${n}" ${Number(card.cost) === n ? 'selected' : ''}>${n}</option>`).join('')}
+        </select>
+      </div>
+      <div class="field">
+        <label>Vivid (cap ${calc.cap} for ${esc(card.rarity)})</label>
+        <input data-key="v" type="number" min="1" max="3" step="1" value="${card.v}">
+      </div>
+
+      <div class="field full">
+        <label>People (comma-separated teller ids)</label>
+        <input data-key="people" value="${esc((card.people || []).join(', '))}">
+      </div>
+
+      <div class="field">
+        <label>Art Kind</label>
+        <select data-art="kind">
+          ${['drawing', 'render', 'painting', 'archive', 'object'].map(k => `<option value="${k}" ${art.kind === k ? 'selected' : ''}>${k}</option>`).join('')}
+        </select>
+      </div>
+      <div class="field">
+        <label>Art Overlay (optional)</label>
+        <input data-art="over" value="${esc(art.over || '')}" placeholder="sketches/...">
+      </div>
+      <div class="field full">
+        <label>Art Source</label>
+        <input data-art="src" value="${esc(art.src || '')}">
+      </div>
+      <div class="field full">
+        <label>Art Credit (archive cards)</label>
+        <input data-art="credit" value="${esc(art.credit || '')}" placeholder="Solomon D. Butcher · Library of Congress">
+      </div>
+
+      <div class="checks">
+        <label><input type="checkbox" data-flag="small" ${card.small ? 'checked' : ''}> Small talk</label>
+        <label><input type="checkbox" data-flag="holdout" ${card.holdout ? 'checked' : ''}> Holdout</label>
+      </div>
+
+      <div class="editor-actions full">
+        <button type="button" id="dupCardBtn">Duplicate</button>
+        <button type="button" id="delCardBtn" class="danger">Delete</button>
+      </div>
+    `;
+
+    els.form.querySelectorAll('[data-key]').forEach(input => {
+      const evt = input.tagName === 'SELECT' ? 'change' : 'input';
+      input.addEventListener(evt, () => {
+        const k = input.dataset.key;
+        if (k === 'cost' || k === 'v') {
+          card[k] = Math.max(k === 'v' ? 1 : 0, parseInt(input.value, 10) || 0);
+        } else if (k === 'event') {
+          card.event = input.value || null;
+        } else if (k === 'people') {
+          card.people = input.value.split(',').map(s => s.trim()).filter(Boolean);
+        } else {
+          card[k] = input.value;
+          if (k === 'id') selectedId = card.id;
+        }
+        card.w = computeWeight(card).w;
+        renderGrid();
+        if (k === 'rarity' || k === 'cost' || k === 'v' || k === 'event') {
+          renderEditor();
+        } else {
+          els.heading.textContent = card.title || card.id;
+        }
+      });
+    });
+
+    els.form.querySelectorAll('[data-art]').forEach(input => {
+      const evt = input.tagName === 'SELECT' ? 'change' : 'input';
+      input.addEventListener(evt, () => {
+        card.art = card.art || { kind: 'drawing', src: '' };
+        const k = input.dataset.art;
+        const val = input.value.trim();
+        if (val) card.art[k] = val;
+        else if (k === 'over' || k === 'credit') delete card.art[k];
+        else card.art[k] = '';
+        renderGrid();
+      });
+    });
+
+    els.form.querySelectorAll('[data-flag]').forEach(cb => {
+      cb.addEventListener('change', () => {
+        const k = cb.dataset.flag;
+        if (cb.checked) card[k] = true;
+        else delete card[k];
+        renderGrid();
+      });
+    });
+
+    document.getElementById('dupCardBtn').addEventListener('click', () => {
+      const copy = JSON.parse(JSON.stringify(card));
+      copy.id = card.id + '-copy';
+      copy.title = card.title + ' (copy)';
+      data.cards.push(copy);
+      selectedId = copy.id;
+      populateFilterDropdowns();
+      renderGrid();
+      renderEditor();
+      showToast('Card duplicated');
+    });
+
+    document.getElementById('delCardBtn').addEventListener('click', () => {
+      if (data.cards.length <= 1) return;
+      const idx = data.cards.findIndex(c => c.id === card.id);
+      if (idx >= 0) {
+        data.cards.splice(idx, 1);
+        selectedId = data.cards[Math.max(0, idx - 1)].id;
+        populateFilterDropdowns();
+        renderGrid();
+        renderEditor();
+        showToast('Card deleted');
+      }
+    });
+  }
+
+  els.grid.addEventListener('click', e => {
+    const cardEl = e.target.closest('.story-card');
+    if (!cardEl) return;
+    selectedId = cardEl.dataset.id;
+    renderGrid();
+    renderEditor();
+  });
+
+  [els.search, els.theme, els.place, els.event, els.rarity].forEach(ctrl => {
+    ctrl.addEventListener('input', renderGrid);
+    ctrl.addEventListener('change', renderGrid);
+  });
+
+  document.getElementById('addBtn').addEventListener('click', () => {
+    const newCard = {
+      id: 'new-story-' + (data.cards.length + 1),
+      title: 'Untitled story',
+      quote: 'Write the line here.',
+      theme: 'Weather',
+      place: 'halsey',
+      era: 'Later',
+      event: null,
+      cost: 1,
+      w: 6,
+      v: 1,
+      rarity: 'basic',
+      people: [],
+      art: { kind: 'drawing', src: 'sketches/traveler.png' },
+    };
+    newCard.w = computeWeight(newCard).w;
+    data.cards.unshift(newCard);
+    selectedId = newCard.id;
+    populateFilterDropdowns();
+    renderGrid();
+    renderEditor();
+    showToast('Added new card');
+  });
+
+  document.getElementById('copyBtn').addEventListener('click', async () => {
+    syncAllWeights();
+    const out = JSON.stringify(data, null, 1);
+    try {
+      await navigator.clipboard.writeText(out);
+      showToast('Copied cards.json to clipboard');
+    } catch (_e) {
+      const ta = document.createElement('textarea');
+      ta.value = out;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      ta.remove();
+      showToast('Copied cards.json');
+    }
+  });
+
+  document.getElementById('downloadBtn').addEventListener('click', () => {
+    syncAllWeights();
+    const blob = new Blob([JSON.stringify(data, null, 1)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'cards.json';
+    a.click();
+    URL.revokeObjectURL(url);
+    showToast('Downloaded cards.json');
+  });
+
+  document.getElementById('fileInput').addEventListener('change', e => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      try {
+        const parsed = JSON.parse(reader.result);
+        if (!Array.isArray(parsed.cards)) throw new Error('Missing cards array');
+        data = parsed;
+        syncAllWeights();
+        selectedId = data.cards[0] ? data.cards[0].id : null;
+        populateFilterDropdowns();
+        renderGrid();
+        renderEditor();
+        showToast('Loaded ' + file.name);
+      } catch (err) {
+        showToast('Invalid JSON: ' + err.message);
+      }
+    };
+    reader.readAsText(file);
+  });
+
+  syncAllWeights();
+  populateFilterDropdowns();
+  renderGrid();
+  renderEditor();
+})();
+</script>
+</body>
+</html>
