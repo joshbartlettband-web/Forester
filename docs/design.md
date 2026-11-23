@@ -199,3 +199,27 @@ Everything below lives in `prototypes/collision/` (play: `collision.html`; brows
 **The end.** At the bridge over the Missouri: sign, refuse and stay, or take the water.
 
 Pipeline: `tools/gemini-render.py` (batches in `art/rendered/batch-*.json`), then `tools/prepare-assets.py` (keys creatures, cleans sky masks, lifts drawings, compresses photos into the prototype).
+
+## The sittings cast: 21 tellers (`prototypes/sitting/`)
+
+Runs used to meet the same people in the same order. Now each column of the map draws from a pool of four to seven tellers, so two runs rarely share a route.
+
+Nine tellers were added, each with a Gemini photograph, a pen drawing in the same loose style as the others, a place with day and aurora-night versions, and four stories:
+
+| Teller | Place | Map columns | Wants | Reservation |
+|---|---|---|---|---|
+| Lou Haskins, 63, turns on the Kingsley dam tower lights (Frank's sister) | Kingsley Dam | 2–3 | Light | a Repeat story |
+| Cal Sorensen, 29, river outfitter who keeps what the river keeps | The Niobrara near Valentine | 1–2 | Weather | an Animals story |
+| Lan Pham, 45, geologist following tracks into the rock | Toadstool badlands | 1–3 | Animals | something from 1888 |
+| Maeve Kinkaid, 80, paints the shamrock in the crossroads | O’Neill | 2–3 | Kin | talk about the weather first |
+| Nadia Haddad, 39, drives the summit road | Scotts Bluff | 3–4 | Weather | a Risk story |
+| Bettina Novak, 67, brushes ash off the fossil rhinos | Ashfall | 3–4 | Strange | an Animals story |
+| Abuk Deng, 31, runs to the night shift before the train | Lexington | 4–5 | Work | a Work story |
+| Femi Adeyemi, 41, grafts the old orchard (with a twig from Ruth) | Nebraska City | 5–6 | Kin | a Weather story |
+| Dot Albrecht, 90, ran the Capitol tower elevator for fifty years | The Capitol, Lincoln | 6 | Light | a Chain story |
+
+Also new: an ash rhino creature (Toadstool and Ashfall), bison at the Niobrara and Scotts Bluff, and three road events (a bag by the mile marker, a fence of boots, a church kolache sale), two of which give Leaving stories for the bridge.
+
+Every teller except Imani now starts their four-day cycle at a random point, never on a doubt, so the same person plays differently from run to run. Imani always opens the same way, because the finale is tuned around it.
+
+Balance (bot, 600 runs): struck from the record 16% (13–15% before), bridge won 41% (46%), median score 1,921 (1,975). The bot drafts on raw strength and never plans for Imani's Leaving reservation, so a person should do better than this. `node tools/playtest/sitting-bot.js 600 tellers` prints each teller's win rate.

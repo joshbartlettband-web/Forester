@@ -1,0 +1,152 @@
+{
+ "night-toadstool": [
+  "!Make the first photograph into the same place at night. Keep the exact same composition, camera position, buildings, trees, water and land. The sky becomes a dark night sky glowing with aurora, colored like the second photograph: magenta and pink with a soft green band, a few stars. The land is dark and lit faintly pink and green by the aurora; no lamps or lit windows. Large-format long-exposure photograph, fine grain, muted. No text.",
+  "3:2",
+  [
+   "art/rendered/toadstool.jpg",
+   "art/instagram/aurora-1.jpg"
+  ]
+ ],
+ "sky-toadstool": [
+  "!Make a black-and-white mask of this photograph at the same size and composition: pure white (#FFFFFF) everywhere that is open sky, pure black (#000000) everywhere else (land, trees, buildings, water, structures, people). Hard clean edges. Nothing else, no gray, no text.",
+  "3:2",
+  "art/rendered/toadstool.jpg"
+ ],
+ "night-ashfall": [
+  "!Make the first photograph into the same place at night. Keep the exact same composition, camera position, buildings, trees, water and land. The sky becomes a dark night sky glowing with aurora, colored like the second photograph: magenta and pink with a soft green band, a few stars. The land is dark and lit faintly pink and green by the aurora; no lamps or lit windows. Large-format long-exposure photograph, fine grain, muted. No text.",
+  "3:2",
+  [
+   "art/rendered/ashfall.jpg",
+   "art/instagram/aurora-1.jpg"
+  ]
+ ],
+ "sky-ashfall": [
+  "!Make a black-and-white mask of this photograph at the same size and composition: pure white (#FFFFFF) everywhere that is open sky, pure black (#000000) everywhere else (land, trees, buildings, water, structures, people). Hard clean edges. Nothing else, no gray, no text.",
+  "3:2",
+  "art/rendered/ashfall.jpg"
+ ],
+ "night-lexington": [
+  "!Make the first photograph into the same place at night. Keep the exact same composition, camera position, buildings, trees, water and land. The sky becomes a dark night sky glowing with aurora, colored like the second photograph: magenta and pink with a soft green band, a few stars. The land is dark and lit faintly pink and green by the aurora; no lamps or lit windows. Large-format long-exposure photograph, fine grain, muted. No text.",
+  "3:2",
+  [
+   "art/rendered/lexington.jpg",
+   "art/instagram/aurora-1.jpg"
+  ]
+ ],
+ "sky-lexington": [
+  "!Make a black-and-white mask of this photograph at the same size and composition: pure white (#FFFFFF) everywhere that is open sky, pure black (#000000) everywhere else (land, trees, buildings, water, structures, people). Hard clean edges. Nothing else, no gray, no text.",
+  "3:2",
+  "art/rendered/lexington.jpg"
+ ],
+ "night-nebraskacity": [
+  "!Make the first photograph into the same place at night. Keep the exact same composition, camera position, buildings, trees, water and land. The sky becomes a dark night sky glowing with aurora, colored like the second photograph: magenta and pink with a soft green band, a few stars. The land is dark and lit faintly pink and green by the aurora; no lamps or lit windows. Large-format long-exposure photograph, fine grain, muted. No text.",
+  "3:2",
+  [
+   "art/rendered/nebraskacity.jpg",
+   "art/instagram/aurora-1.jpg"
+  ]
+ ],
+ "sky-nebraskacity": [
+  "!Make a black-and-white mask of this photograph at the same size and composition: pure white (#FFFFFF) everywhere that is open sky, pure black (#000000) everywhere else (land, trees, buildings, water, structures, people). Hard clean edges. Nothing else, no gray, no text.",
+  "3:2",
+  "art/rendered/nebraskacity.jpg"
+ ],
+ "night-capitol": [
+  "!Make the first photograph into the same place at night. Keep the exact same composition, camera position, buildings, trees, water and land. The sky becomes a dark night sky glowing with aurora, colored like the second photograph: magenta and pink with a soft green band, a few stars. The land is dark and lit faintly pink and green by the aurora; no lamps or lit windows. Large-format long-exposure photograph, fine grain, muted. No text.",
+  "3:2",
+  [
+   "art/rendered/capitol.jpg",
+   "art/instagram/aurora-1.jpg"
+  ]
+ ],
+ "sky-capitol": [
+  "!Make a black-and-white mask of this photograph at the same size and composition: pure white (#FFFFFF) everywhere that is open sky, pure black (#000000) everywhere else (land, trees, buildings, water, structures, people). Hard clean edges. Nothing else, no gray, no text.",
+  "3:2",
+  "art/rendered/capitol.jpg"
+ ],
+ "night-oneill": [
+  "!Make the first photograph into the same place at night. Keep the exact same composition, camera position, buildings, trees, water and land. The sky becomes a dark night sky glowing with aurora, colored like the second photograph: magenta and pink with a soft green band, a few stars. The land is dark and lit faintly pink and green by the aurora; no lamps or lit windows. Large-format long-exposure photograph, fine grain, muted. No text.",
+  "3:2",
+  [
+   "art/rendered/oneill.jpg",
+   "art/instagram/aurora-1.jpg"
+  ]
+ ],
+ "sky-oneill": [
+  "!Make a black-and-white mask of this photograph at the same size and composition: pure white (#FFFFFF) everywhere that is open sky, pure black (#000000) everywhere else (land, trees, buildings, water, structures, people). Hard clean edges. Nothing else, no gray, no text.",
+  "3:2",
+  "art/rendered/oneill.jpg"
+ ],
+ "drawn2-cal": [
+  "!Redraw the person in the first image the way the second and third drawings are made: a fast, crude, naive contour drawing with an uneven wobbly pen line, like a quick stylus sketch on a tablet. Very few lines: outline of the head, eyes, nose, mouth, a hint of hair and collar. No hatching, no realistic shading, just two or three flat gray marker smudges. Proportions a little off, the way a quick sketch is. Same framing and pose as the photo. Plain white background only.",
+  "3:4",
+  [
+   "art/rendered/cast-cal.jpg",
+   "art/sketches/face1.png",
+   "art/sketches/face3.png"
+  ]
+ ],
+ "drawn2-lan": [
+  "!Redraw the person in the first image the way the second and third drawings are made: a fast, crude, naive contour drawing with an uneven wobbly pen line, like a quick stylus sketch on a tablet. Very few lines: outline of the head, eyes, nose, mouth, a hint of hair and collar. No hatching, no realistic shading, just two or three flat gray marker smudges. Proportions a little off, the way a quick sketch is. Same framing and pose as the photo. Plain white background only.",
+  "3:4",
+  [
+   "art/rendered/cast-lan.jpg",
+   "art/sketches/face1.png",
+   "art/sketches/face3.png"
+  ]
+ ],
+ "drawn2-maeve": [
+  "!Redraw the person in the first image the way the second and third drawings are made: a fast, crude, naive contour drawing with an uneven wobbly pen line, like a quick stylus sketch on a tablet. Very few lines: outline of the head, eyes, nose, mouth, a hint of hair and collar. No hatching, no realistic shading, just two or three flat gray marker smudges. Proportions a little off, the way a quick sketch is. Same framing and pose as the photo. Plain white background only.",
+  "3:4",
+  [
+   "art/rendered/cast-maeve.jpg",
+   "art/sketches/face1.png",
+   "art/sketches/face3.png"
+  ]
+ ],
+ "drawn2-nadia": [
+  "!Redraw the person in the first image the way the second and third drawings are made: a fast, crude, naive contour drawing with an uneven wobbly pen line, like a quick stylus sketch on a tablet. Very few lines: outline of the head, eyes, nose, mouth, a hint of hair and collar. No hatching, no realistic shading, just two or three flat gray marker smudges. Proportions a little off, the way a quick sketch is. Same framing and pose as the photo. Plain white background only.",
+  "3:4",
+  [
+   "art/rendered/cast-nadia.jpg",
+   "art/sketches/face1.png",
+   "art/sketches/face3.png"
+  ]
+ ],
+ "drawn2-bettina": [
+  "!Redraw the person in the first image the way the second and third drawings are made: a fast, crude, naive contour drawing with an uneven wobbly pen line, like a quick stylus sketch on a tablet. Very few lines: outline of the head, eyes, nose, mouth, a hint of hair and collar. No hatching, no realistic shading, just two or three flat gray marker smudges. Proportions a little off, the way a quick sketch is. Same framing and pose as the photo. Plain white background only.",
+  "3:4",
+  [
+   "art/rendered/cast-bettina.jpg",
+   "art/sketches/face1.png",
+   "art/sketches/face3.png"
+  ]
+ ],
+ "drawn2-abuk": [
+  "!Redraw the person in the first image the way the second and third drawings are made: a fast, crude, naive contour drawing with an uneven wobbly pen line, like a quick stylus sketch on a tablet. Very few lines: outline of the head, eyes, nose, mouth, a hint of hair and collar. No hatching, no realistic shading, just two or three flat gray marker smudges. Proportions a little off, the way a quick sketch is. Same framing and pose as the photo. Plain white background only.",
+  "3:4",
+  [
+   "art/rendered/cast-abuk.jpg",
+   "art/sketches/face1.png",
+   "art/sketches/face3.png"
+  ]
+ ],
+ "drawn2-femi": [
+  "!Redraw the person in the first image the way the second and third drawings are made: a fast, crude, naive contour drawing with an uneven wobbly pen line, like a quick stylus sketch on a tablet. Very few lines: outline of the head, eyes, nose, mouth, a hint of hair and collar. No hatching, no realistic shading, just two or three flat gray marker smudges. Proportions a little off, the way a quick sketch is. Same framing and pose as the photo. Plain white background only.",
+  "3:4",
+  [
+   "art/rendered/cast-femi.jpg",
+   "art/sketches/face1.png",
+   "art/sketches/face3.png"
+  ]
+ ],
+ "drawn2-dot": [
+  "!Redraw the person in the first image the way the second and third drawings are made: a fast, crude, naive contour drawing with an uneven wobbly pen line, like a quick stylus sketch on a tablet. Very few lines: outline of the head, eyes, nose, mouth, a hint of hair and collar. No hatching, no realistic shading, just two or three flat gray marker smudges. Proportions a little off, the way a quick sketch is. Same framing and pose as the photo. Plain white background only.",
+  "3:4",
+  [
+   "art/rendered/cast-dot.jpg",
+   "art/sketches/face1.png",
+   "art/sketches/face3.png"
+  ]
+ ]
+}

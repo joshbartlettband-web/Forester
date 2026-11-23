@@ -491,8 +491,8 @@ function renderTop(){
 
 /* ---------- the map ---------- */
 /* Neon's place motifs: which tune each place plays when you arrive */
-const MOTIF={halsey:'sandhills',thedford:'sandhills',sandhills:'sandhills',dismal:'sandhills',brokenbow:'sandhills',loup:'loup',platte:'platte',archway:'platte',columbus:'platte',mainstreet:'missouri',courthouse:'courthouse',bridge:'missouri'};
-const KEY=[0,0,2,2,5,5,7,7],WATER=new Set(['loup','platte','columbus','bridge']);
+const MOTIF={halsey:'sandhills',thedford:'sandhills',sandhills:'sandhills',dismal:'sandhills',brokenbow:'sandhills',loup:'loup',platte:'platte',archway:'platte',columbus:'platte',mainstreet:'missouri',courthouse:'courthouse',bridge:'missouri',kingsley:'platte',niobrara:'loup',scottsbluff:'sandhills',toadstool:'sandhills',oneill:'sandhills',ashfall:'sandhills',lexington:'platte',nebraskacity:'missouri',capitol:'courthouse'};
+const KEY=[0,0,2,2,5,5,7,7],WATER=new Set(['loup','platte','columbus','bridge','kingsley','niobrara','nebraskacity']);
 function setLight(c,place){const T=place&&TELLER[place];const light=T&&T.place==='courthouse'?'lamp':HSCENE.LIGHT(c);document.body.dataset.light=light;HSOUND.setRegion({key:KEY[c]||0,time:light==='night'?'night':'day',water:!!(T&&WATER.has(T.place))})}
 let SC=null;
 function showMap(){

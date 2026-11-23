@@ -96,6 +96,51 @@ const CARDS = [
   C('imani-count', 'Who crosses the bridge', 'I count them both ways.', 'Leaving', 'bridge', 'Later', 'Repeat', 1, 7, 2, D('drawn-imani'), { people: ['imani'] }),
   C('imani-brown', 'Brown water at Omaha', 'Every handful is from somewhere.', 'Water', 'omaha', 'Later', 'Chain', 1, 7, 2, R('omaha'), { people: ['imani'] }),
   C('imani-back', 'More come back than you’d think', 'They come back carrying something.', 'Kin', 'bridge', 'Later', 'Spare', 1, 6, 2, R('night-bridge'), { people: ['imani', 'gus'] }),
+  // Lou (Kingsley Dam)
+  C('lou-valley', 'The lake that used to be a valley', 'My grandfather’s house is under there. On calm days you can see the chimney.', 'Water', 'kingsley', '1950', 'Find', 2, 9, 3, R('kingsley'), { people: ['lou'], rare: true }),
+  C('lou-lights', 'Turning on the tower lights', 'Every dusk. Nobody sails. I turn them on anyway.', 'Light', 'kingsley', 'Later', 'Repeat', 1, 6, 2, R('night-kingsley', 'drawn-lou'), { people: ['lou'] }),
+  C('lou-hello', 'It isn’t a warning', 'From the dam you can see the tower all the way across. It’s a hello.', 'Light', 'kingsley', '2000', 'Chain', 1, 6, 2, D('drawn-lou'), { people: ['lou'] }),
+  C('lou-sundays', 'Sundays at the dam with Frank', 'He won’t sign. I won’t stop asking. We both come anyway.', 'Kin', 'kingsley', 'Later', 'Spare', 1, 6, 2, R('kingsley', 'drawn-frank'), { people: ['lou', 'frank'] }),
+  // Cal (the Niobrara)
+  C('cal-keeps', 'What the river keeps', 'A wedding ring, a dog’s collar, a whole canoe. I put them on the shelf by the register.', 'Water', 'niobrara', 'Later', 'Find', 1, 6, 2, R('niobrara', 'drawn-cal'), { people: ['cal'] }),
+  C('cal-falls', 'The falls froze standing up', 'All winter, like it was holding its breath.', 'Weather', 'niobrara', '1974', 'Spare', 1, 6, 2, R('night-niobrara'), { people: ['cal'] }),
+  C('cal-bison', 'Bison at the crossing', 'They came down to drink and the river went quiet.', 'Animals', 'niobrara', '1888', 'Chain', 1, 6, 2, O('beast-bison'), { people: ['cal'] }),
+  C('cal-upstream', 'The canoe that came back upstream', 'Empty. Dry inside. It tied itself to my dock.', 'Strange', 'niobrara', 'Later', 'Risk', 2, 10, 3, D('drawn-cal'), { people: ['cal'], rare: true }),
+  // Lan (Toadstool)
+  C('lan-tracks', 'The tracks go into the rock', 'They don’t come out the other side. I checked.', 'Strange', 'toadstool', 'Later', 'Find', 1, 6, 2, R('toadstool', 'drawn-lan'), { people: ['lan'] }),
+  C('lan-caps', 'Every cap is balanced', 'Every year one falls, and nobody hears it.', 'Weather', 'toadstool', '1950', 'Repeat', 1, 6, 2, R('toadstool'), { people: ['lan'] }),
+  C('lan-rhino', 'The rhino in the clay', 'Barrel-shaped. Short legs. It looked surprised.', 'Animals', 'toadstool', '1888', 'Chain', 2, 9, 3, O('beast-rhino'), { people: ['lan', 'bettina'], rare: true }),
+  C('lan-shelter', 'A sod shelter in the badlands', 'Somebody built with the ground they stood on. The wall is mostly bones.', 'Work', 'toadstool', '1888', 'Spare', 1, 6, 2, R('night-toadstool'), { people: ['lan'] }),
+  // Maeve (O’Neill)
+  C('maeve-shamrock', 'Painting the shamrock', 'Every spring, in the middle of the crossroads. The trucks go around.', 'Work', 'oneill', '1974', 'Repeat', 1, 6, 2, R('oneill', 'drawn-maeve'), { people: ['maeve'] }),
+  C('maeve-postcards', 'A shoebox of postcards', 'Boston, Butte, Brisbane. All of them say come home.', 'Leaving', 'oneill', '1950', 'Find', 1, 6, 2, D('drawn-maeve'), { people: ['maeve', 'imani'] }),
+  C('maeve-boat', 'My mother came on a boat', 'She brought a cup of dirt from home and planted it under the porch.', 'Kin', 'oneill', '1903', 'Chain', 2, 9, 3, R('night-oneill'), { people: ['maeve'], rare: true }),
+  C('maeve-hail', 'Hail the size of potatoes', 'We put them in the freezer. Proof.', 'Weather', 'oneill', '2000', 'Risk', 2, 10, 2, R('oneill'), { people: ['maeve'] }),
+  // Nadia (Scotts Bluff)
+  C('nadia-summit', 'Driving the summit road', 'Three tunnels. In the middle one everybody stops talking.', 'Leaving', 'scottsbluff', 'Later', 'Chain', 1, 6, 2, R('scottsbluff', 'drawn-nadia'), { people: ['nadia', 'marisol'] }),
+  C('nadia-hat', 'The wind took my hat to Wyoming', 'Probably. I never saw it land.', 'Weather', 'scottsbluff', '2000', 'Risk', 2, 10, 2, R('night-scottsbluff'), { people: ['nadia'] }),
+  C('nadia-goods', 'Dry goods for the wagons', 'My great-grandfather sold needles, coffee, and a map that was mostly blank.', 'Leaving', 'scottsbluff', '1888', 'Spare', 1, 6, 2, R('scottsbluff'), { people: ['nadia'] }),
+  C('nadia-blank', 'The blank part of the map', 'He said the blank was where the good stories were.', 'Strange', 'scottsbluff', '1888', 'Find', 2, 9, 3, D('drawn-nadia'), { people: ['nadia'], rare: true }),
+  // Bettina (Ashfall)
+  C('bettina-brush', 'One brush at a time', 'A rib a summer. They waited twelve million years. They can wait for me.', 'Work', 'ashfall', 'Later', 'Spare', 1, 6, 2, R('ashfall', 'drawn-bettina'), { people: ['bettina'] }),
+  C('bettina-calf', 'The calf under its mother', 'Even in the ash she was keeping it out of the weather.', 'Animals', 'ashfall', '1974', 'Chain', 2, 9, 3, R('ashfall'), { people: ['bettina'], rare: true }),
+  C('bettina-sky', 'Snow that didn’t melt', 'The ash came a thousand miles and fell like snow. It never melted.', 'Weather', 'ashfall', '1974', 'Risk', 2, 10, 2, O('beast-rhino'), { people: ['bettina'] }),
+  C('bettina-blinked', 'The skull blinked', 'Once, in the afternoon. I didn’t tell the others.', 'Strange', 'ashfall', 'Later', 'Find', 1, 6, 2, R('night-ashfall'), { people: ['bettina', 'frank'] }),
+  // Abuk (Lexington)
+  C('abuk-train', 'The four o’clock train', 'I race it every morning. Some mornings it lets me win.', 'Work', 'lexington', 'Later', 'Chain', 1, 6, 2, R('lexington', 'drawn-abuk'), { people: ['abuk'] }),
+  C('abuk-cranes', 'Cranes over the parking lot', 'Shift change. All of us stopped and looked up.', 'Animals', 'lexington', '2000', 'Find', 1, 6, 2, R('night-lexington', 'crane-wings'), { people: ['abuk', 'ada'] }),
+  C('abuk-break', 'Thirty languages on the line', 'Nobody shares one. Everybody knows the word for break.', 'Work', 'lexington', '2000', 'Repeat', 1, 6, 2, R('lexington'), { people: ['abuk'] }),
+  C('abuk-sister', 'My sister at three in the morning', 'It’s noon where she is. She tells me her weather. I tell her mine.', 'Leaving', 'lexington', 'Later', 'Spare', 2, 9, 3, D('drawn-abuk'), { people: ['abuk'], rare: true }),
+  // Femi (Nebraska City)
+  C('femi-graft', 'A graft from the Halsey rows', 'Ruth mailed me a twig in a wet sock. It took.', 'Kin', 'nebraskacity', 'Later', 'Chain', 1, 6, 2, R('nebraskacity', 'drawn-femi'), { people: ['femi', 'ruth'] }),
+  C('femi-frost', 'Fires between the rows', 'Frost on the blossoms. We stayed up all night talking to the trees.', 'Weather', 'nebraskacity', '1974', 'Risk', 2, 10, 2, R('night-nebraskacity'), { people: ['femi'] }),
+  C('femi-apple', 'An apple nobody has a name for', 'It tastes like the year you were born. Everyone says so.', 'Strange', 'nebraskacity', 'Later', 'Find', 1, 6, 3, D('drawn-femi'), { people: ['femi'], rare: true }),
+  C('femi-ledger', 'Every tree in one book', 'Every tree planted in the state, by hand. The book stops in 1903.', 'Work', 'nebraskacity', '1903', 'Spare', 1, 6, 2, PD('pd_aerial_otoe_1949', 'USDA aerial index, Otoe County, 1949 · public domain', 'painting'), { people: ['femi'] }),
+  // Dot (the Capitol)
+  C('dot-sower', 'The Sower turned around', 'Once, in a thunderstorm. He was facing west in the morning.', 'Strange', 'capitol', '1974', 'Risk', 2, 10, 3, R('capitol', 'drawn-dot'), { people: ['dot'], rare: true }),
+  C('dot-weather', 'Weather from three counties', 'From the top you can see it coming. I used to warn the senators.', 'Weather', 'capitol', '1950', 'Find', 1, 6, 2, R('capitol'), { people: ['dot'] }),
+  C('dot-dome', 'Checking the dome lights', 'They put the lamps on a timer. I still go up and check.', 'Light', 'capitol', '2000', 'Repeat', 1, 6, 2, R('night-capitol'), { people: ['dot', 'arne'] }),
+  C('dot-gate', 'What they say on the way up', 'Senators, schoolchildren. Everybody tells the elevator the truth.', 'Kin', 'capitol', '1950', 'Spare', 1, 6, 2, D('drawn-dot'), { people: ['dot', 'odette'] }),
   // found on the road
   C('peaches', 'Peaches from Dunning', 'She said they were spare.', 'Kin', 'sandhills', 'Later', 'Spare', 0, 4, 1, D('traveler')),
   C('cousin', 'A man who knows your cousin', 'You’re Odette’s cousin’s kid. I knew it.', 'Kin', 'brokenbow', 'Later', 'Chain', 1, 5, 2, D('face3'), { people: ['odette', 'marisol', 'walt'] }),
@@ -103,6 +148,9 @@ const CARDS = [
   C('trail-ruts', 'The wagon ruts', 'Everybody who ever left went by here. You can see where they leaned.', 'Leaving', 'scottsbluff', '1888', 'Chain', 1, 6, 2, PD('pd_chimney_rock_1904', 'Chimney Rock, 1904 · NARA, public domain'), { people: ['gus'] }),
   C('lookout', 'The lookout tower', 'From the top you can see three counties and nobody in them.', 'Light', 'platte', 'Later', 'Find', 1, 6, 2, PD('pd_platte_tower', 'Platte River State Park tower · public domain, Wikimedia Commons'), { people: ['ada'] }),
   C('elevator-sunday', 'Sweeping the elevator on Sundays', 'Nobody asked. It’s just that somebody should.', 'Work', 'mainstreet', 'Later', 'Spare', 0, 4, 1, PD('pd_silo_mclean', 'Grain elevator, McLean · public domain, Wikimedia Commons'), { people: ['deshawn'] }),
+  C('duffel-east', 'A bag pointed east', 'Somebody set it down facing the river and kept going without it.', 'Leaving', 'sandhills', 'Later', 'Chain', 1, 6, 2, R('road-duffel')),
+  C('boot-fence', 'Every boot on the fence', 'One for everybody who walked away and kept walking.', 'Leaving', 'sandhills', '1974', 'Spare', 1, 6, 2, R('road-bootfence')),
+  C('kolaches', 'Kolaches after the funeral', 'Apricot, poppy seed, prune. Everybody knew whose were whose.', 'Kin', 'mainstreet', '1950', 'Find', 1, 6, 2, R('road-kolaches')),
   C('culvert', 'Waiting out the storm', 'A stranger who keeps bees shared the culvert.', 'Weather', 'thedford', 'Later', 'Find', 1, 5, 2, R('thedford'), { people: ['priya'] }),
 ];
 /* ---------------- the value budget ----------------
@@ -129,13 +177,15 @@ for (const c of CARDS) {
 CARDS.filter(c => c.small).forEach(c => { c.rarity = 'basic'; });
 /* bridges between people (the guide's 30% glue): stories that tie two tellers together */
 const GLUE = { 'tree-lights': ['ruth'], 'fog-cranes': ['ada'], 'power': ['arne'], 'priya-green': ['walt'], 'deshawn-well': ['tomas'], 'walt-aurora': ['arne'],
-  'tomas-pivot': ['ada'], 'gus-notebook': ['imani'], 'marisol-rivers': ['tomas'], 'arne-bulb': ['odette'], 'imani-brown': ['marisol'], 'priya-wind': ['deshawn'] };
+  'tomas-pivot': ['ada'], 'gus-notebook': ['imani'], 'marisol-rivers': ['tomas'], 'arne-bulb': ['odette'], 'imani-brown': ['marisol'], 'priya-wind': ['deshawn'],
+  'frank-unsigned': ['lou'], 'cal-keeps': ['tomas', 'imani'], 'lan-tracks': ['deshawn'], 'maeve-boat': ['walt'], 'nadia-goods': ['gus'], 'bettina-calf': ['ada'], 'abuk-train': ['arne'], 'abuk-sister': ['imani'], 'femi-ledger': ['ruth'], 'dot-weather': ['priya'] };
 for (const [id, ps] of Object.entries(GLUE)) { const c = CARDS.find(c => c.id === id); if (c) c.people = [...new Set([...c.people, ...ps])]; }
 /* what a card is worth on its own, for comparing a draft to your deck's average */
 const strength = c => Math.round(c.w * c.v / (EVMULT[c.event] ?? 1) / Math.max(1, c.cost) * 10) / 10;
 const CARD = Object.fromEntries(CARDS.map(c => [c.id, c]));
 const START = ['talk-weather', 'talk-kin', 'rows', 'hail', 'bridge-thing', 'tree-lights', 'walked-rows', 'fence-posts', 'turtle', 'stock-tank', 'fog-cranes', 'power'];
-const PLACE = { halsey: 'Halsey', thedford: 'Thedford', sandhills: 'the Sandhills', dismal: 'the Dismal', brokenbow: 'Broken Bow', loup: 'the North Loup', platte: 'the Platte', archway: 'the Archway', columbus: 'Columbus', mainstreet: 'Main Street', courthouse: 'the Courthouse', omaha: 'Omaha', bridge: 'the bridge', door: 'the door in the hill', scottsbluff: 'Scotts Bluff' };
+const PLACE = { halsey: 'Halsey', thedford: 'Thedford', sandhills: 'the Sandhills', dismal: 'the Dismal', brokenbow: 'Broken Bow', loup: 'the North Loup', platte: 'the Platte', archway: 'the Archway', columbus: 'Columbus', mainstreet: 'Main Street', courthouse: 'the Courthouse', omaha: 'Omaha', bridge: 'the bridge', door: 'the door in the hill', scottsbluff: 'Scotts Bluff',
+  kingsley: 'Kingsley Dam', niobrara: 'the Niobrara', toadstool: 'Toadstool', oneill: 'O’Neill', ashfall: 'Ashfall', lexington: 'Lexington', nebraskacity: 'Nebraska City', capitol: 'the Capitol' };
 
 /* ---------------- tellers ----------------
    intents cycle one per day. ask: stories with that tag weigh double today.
@@ -200,6 +250,51 @@ const TELLERS = [
     reservation: { text: 'Wants it on the record: something from 1903', tag: ['era', '1903'] },
     intents: [ask('theme', 'Kin', 'Asks about family'), { kind: 'doubt', n: 26 }, { kind: 'own' }, ask('era', '1903', 'Asks about 1903')],
     stories: ['odette-survey', 'odette-copy', 'odette-lamp', 'odette-bees'] },
+  { id: 'lou', name: 'Lou Haskins', place: 'kingsley', placeName: 'Kingsley Dam at dusk', img: 'img/kingsley.jpg', drawing: 'sketches/drawn-lou.png', photo: 'img/cast-lou.jpg', cols: [2, 3],
+    want: 'Light', line: 'Somebody has to turn them on. Nobody has to look at them.',
+    reservation: { text: 'Listens to people who keep doing a thing nobody asked for', tag: ['event', 'Repeat'] },
+    intents: [{ kind: 'own' }, ask('theme', 'Light', 'Asks about the tower lights'), { kind: 'doubt', n: 16 }, { kind: 'quiet' }],
+    stories: ['lou-valley', 'lou-lights', 'lou-hello', 'lou-sundays'] },
+  { id: 'cal', name: 'Cal Sorensen', place: 'niobrara', placeName: 'The Niobrara near Valentine', img: 'img/niobrara.jpg', drawing: 'sketches/drawn-cal.png', photo: 'img/cast-cal.jpg', cols: [1, 2],
+    want: 'Weather', line: 'A river is just weather lying down. It keeps one thing from everybody who floats through.',
+    reservation: { text: 'Only listens if you’ve seen what comes down to drink', tag: ['theme', 'Animals'] },
+    intents: [ask('theme', 'Weather', 'Asks what the sky did'), { kind: 'doubt', n: 14 }, { kind: 'own' }, ask('theme', 'Animals', 'Asks what came down to drink')],
+    stories: ['cal-keeps', 'cal-falls', 'cal-bison', 'cal-upstream'] },
+  { id: 'lan', name: 'Lan Pham', place: 'toadstool', placeName: 'The badlands at Toadstool', img: 'img/toadstool.jpg', drawing: 'sketches/drawn-lan.png', photo: 'img/cast-lan.jpg', cols: [1, 2, 3],
+    want: 'Animals', line: 'Something walked here before the rock was rock. I’m following it.',
+    reservation: { text: 'Wants proof: something from 1888 or before', tag: ['era', '1888'] },
+    intents: [{ kind: 'doubt', n: 14 }, ask('theme', 'Animals', 'Asks what left the tracks'), { kind: 'own' }, ask('theme', 'Strange', 'Asks what you’ve seen')],
+    stories: ['lan-tracks', 'lan-caps', 'lan-rhino', 'lan-shelter'] },
+  { id: 'maeve', name: 'Maeve Kinkaid', place: 'oneill', placeName: 'The crossroads at O’Neill', img: 'img/oneill.jpg', drawing: 'sketches/drawn-maeve.png', photo: 'img/cast-maeve.jpg', cols: [2, 3],
+    want: 'Kin', line: 'Half this town left. Every one of them sends a postcard in March. Whose are you?',
+    reservation: { text: 'Won’t say a word until you’ve talked about the weather', tag: ['theme', 'Weather'] },
+    intents: [{ kind: 'own' }, ask('theme', 'Leaving', 'Asks who left'), { kind: 'doubt', n: 16 }, ask('theme', 'Work', 'Asks what you do')],
+    stories: ['maeve-shamrock', 'maeve-postcards', 'maeve-boat', 'maeve-hail'] },
+  { id: 'nadia', name: 'Nadia Haddad', place: 'scottsbluff', placeName: 'The summit road, Scotts Bluff', img: 'img/scottsbluff.jpg', drawing: 'sketches/drawn-nadia.png', photo: 'img/cast-nadia.jpg', cols: [3, 4],
+    want: 'Weather', line: 'The wind takes a little of the bluff every day. I drive people up before it’s gone.',
+    reservation: { text: 'Only trusts someone who’s taken a chance', tag: ['event', 'Risk'] },
+    intents: [ask('theme', 'Weather', 'Asks about the wind'), { kind: 'own' }, { kind: 'doubt', n: 18 }, { kind: 'quiet' }],
+    stories: ['nadia-summit', 'nadia-hat', 'nadia-goods', 'nadia-blank'] },
+  { id: 'bettina', name: 'Bettina Novak', place: 'ashfall', placeName: 'The rhino barn at Ashfall', img: 'img/ashfall.jpg', drawing: 'sketches/drawn-bettina.png', photo: 'img/cast-bettina.jpg', cols: [3, 4],
+    want: 'Strange', line: 'They all died waiting for water. I brush them off one at a time.',
+    reservation: { text: 'Only listens to stories about animals', tag: ['theme', 'Animals'] },
+    intents: [{ kind: 'own' }, { kind: 'doubt', n: 18 }, ask('theme', 'Strange', 'Asks what you can’t explain'), ask('theme', 'Water', 'Asks about the waterhole')],
+    stories: ['bettina-brush', 'bettina-calf', 'bettina-sky', 'bettina-blinked'] },
+  { id: 'abuk', name: 'Abuk Deng', place: 'lexington', placeName: 'The frontage road at Lexington', img: 'img/lexington.jpg', drawing: 'sketches/drawn-abuk.png', photo: 'img/cast-abuk.jpg', cols: [4, 5],
+    want: 'Work', line: 'I run to the plant at four in the morning. The trains wait for me.',
+    reservation: { text: 'Trusts people who work for a living', tag: ['theme', 'Work'] },
+    intents: [ask('theme', 'Work', 'Asks about the night shift'), { kind: 'doubt', n: 20 }, { kind: 'own' }, ask('theme', 'Kin', 'Asks about home')],
+    stories: ['abuk-train', 'abuk-cranes', 'abuk-break', 'abuk-sister'] },
+  { id: 'femi', name: 'Femi Adeyemi', place: 'nebraskacity', placeName: 'The orchard at Nebraska City', img: 'img/nebraskacity.jpg', drawing: 'sketches/drawn-femi.png', photo: 'img/cast-femi.jpg', cols: [5, 6],
+    want: 'Kin', line: 'Every tree here is grafted from one that was somebody’s. Ask me whose.',
+    reservation: { text: 'Wants to hear about weather that hurt something', tag: ['theme', 'Weather'] },
+    intents: [ask('theme', 'Kin', 'Asks whose tree'), { kind: 'own' }, { kind: 'doubt', n: 22 }, ask('theme', 'Work', 'Asks about the work')],
+    stories: ['femi-graft', 'femi-frost', 'femi-apple', 'femi-ledger'] },
+  { id: 'dot', name: 'Dot Albrecht', place: 'capitol', placeName: 'The Capitol tower, Lincoln', img: 'img/capitol.jpg', drawing: 'sketches/drawn-dot.png', photo: 'img/cast-dot.jpg', cols: [6],
+    want: 'Light', line: 'Fifty years in that elevator. I know what everybody says on the way up.',
+    reservation: { text: 'Wants one story to lead into the next', tag: ['event', 'Chain'] },
+    intents: [{ kind: 'doubt', n: 24 }, ask('theme', 'Light', 'Asks about the tower at night'), { kind: 'own' }, ask('theme', 'Weather', 'Asks what’s coming')],
+    stories: ['dot-sower', 'dot-weather', 'dot-dome', 'dot-gate'] },
   { id: 'imani', name: 'Imani Cole', place: 'bridge', placeName: 'The bridge over the Missouri', img: 'img/bridge.jpg', drawing: 'sketches/drawn-imani.png', photo: 'img/cast-imani.jpg', cols: [7], boss: true,
     want: 'Leaving', line: 'I count who crosses, both ways. Tell me why you came.',
     reservation: { text: 'Wants to know why you’re going', tag: ['theme', 'Leaving'] },
@@ -247,7 +342,12 @@ const ROAD = [
   { title: 'An empty elevator', text: 'A grain elevator at the edge of a town nobody lives in now. The door is open and the floor is swept.',
     choices: [{ text: 'Pick up the broom', card: 'elevator-sunday', standing: 1 }, { text: 'Sleep in the office', standing: 3 }] },
   { title: 'Weather coming', text: 'The sky goes the color of a bottle. The wind stops.',
-    choices: [{ text: 'Shelter in the culvert', card: 'culvert', standing: -1 }, { text: 'Keep going', keep: true, standing: -2 }] },
+    choices: [{ text: 'Shelter in the culvert', card: 'culvert', standing: -1 }, { text: 'Keep going', keep: true, standing: -2 }] },  { title: 'A bag by the mile marker', text: 'A duffel bag on the shoulder, zipped, set down neatly, facing east.',
+    choices: [{ text: 'Carry it a while', card: 'duffel-east' }, { text: 'Leave it where it was put', standing: 2 }] },
+  { title: 'A fence of boots', text: 'Every post for a mile wears an old boot, upside down. Somebody added a pair this week.',
+    choices: [{ text: 'Count them', card: 'boot-fence' }, { text: 'Hang up your small talk', dropSmall: true, standing: 1 }] },
+  { title: 'A church sale', text: 'A sign on the church door: kolaches, coffee, everybody welcome. The basement smells like apricots.',
+    choices: [{ text: 'Sit and listen', card: 'kolaches', standing: 1 }, { text: 'Eat and rest', standing: 2 }] },
 ];
 
 const DAYS = 4, TRUST = 3, HAND = 5, MAX_TELL = 3, START_STANDING = 10, MAX_STANDING = 12, COLS = 8;
@@ -330,7 +430,9 @@ function startSitting(G, node) {
   const T = TELLER[node.teller], r = G.r;
   const S = { T, node, threshold: threshold(node), cred: 0, day: 1, trustMax: TRUST, trust: hooks(G, 'firstDayTrust').reduce((n, [, h]) => h.firstDayTrust(n), TRUST), warm: false, reservation: true,
     draw: shuffle(G.deck.map(c => ({ ...c })), r), hand: [], discard: [], last: null, spareBonus: 0, answered: false, toldToday: 0, intentI: 0, log: [], result: null, G };
-  S.intent = T.intents[0];
+  /* a teller starts anywhere in their cycle but never opens with a doubt, so the same person plays differently each run */
+  const opens = T.boss ? [0] : T.intents.map((x, i) => i).filter(i => T.intents[i].kind !== 'doubt');   // Imani, the finale, always opens the same way
+  S.intentI = pickR(opens, r); S.intent = T.intents[S.intentI];
   drawN(S, HAND, r); applyStartIntent(S, G);
   G.S = S; return S;
 }

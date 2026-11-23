@@ -35,7 +35,7 @@ function sitting(G, node) {
     if (node.kind === 'holdout') K.takeKeep(G, K.keepOffer(G, 1)[0]);
   }
 }
-const kindsSeen = {}, byCol = {}; let struck = 0, finals = [], ranks = {}, keepsHeld = 0, skips = 0, gives = 0;
+const kindsSeen = {}, byCol = {}, byTeller = {}; let struck = 0, finals = [], ranks = {}, keepsHeld = 0, skips = 0, gives = 0;
 for (let n = 0; n < runs; n++) {
   const G = K.newRun(5000 + n);
   while (!G.over) {
@@ -44,6 +44,7 @@ for (let n = 0; n < runs; n++) {
     const node = opts.sort((a, b) => pref(a) - pref(b))[0];
     K.goTo(G, node.id); kindsSeen[node.kind] = (kindsSeen[node.kind] || 0) + 1;
     if (node.teller) { sitting(G, node); const h = G.history[G.history.length - 1]; if (h) { const k = node.kind === 'sitting' ? 'col' + node.c : node.kind; (byCol[k] ||= { won: 0, n: 0, thr: h.threshold, cred: 0 }); byCol[k].n++; byCol[k].cred += h.cred; if (h.result === 'won') byCol[k].won++; } }
+    if (node.teller) { const h = G.history[G.history.length - 1]; if (h) { const t = (byTeller[node.teller] ||= { won: 0, n: 0, ratio: 0 }); t.n++; t.won += h.result === 'won'; t.ratio += h.cred / h.threshold; } }
     if (node.kind === 'arch') { if (G.standing < 8) K.arch(G, 'rest'); else K.arch(G, 'retell', [...G.deck].sort((a, b) => strength(b) - strength(a))[0]); }
     if (node.kind === 'road') { const ev = K.ROAD[node.road]; K.roadChoose(G, ev, ev.choices[G.standing < 7 ? ev.choices.findIndex(c => (c.standing || 0) > 0) >= 0 ? ev.choices.findIndex(c => (c.standing || 0) > 0) : 0 : 0]); }
     if (node.kind === 'courthouse') { const f = [...G.deck].filter(c => K.canFile(G, c)).sort((a, b) => strength(a) - strength(b)).slice(0, 2); K.file(G, f); K.takeKeep(G, K.keepOffer(G, 2)[0]); }
@@ -55,6 +56,7 @@ for (let n = 0; n < runs; n++) {
 finals.sort((a, b) => a - b);
 console.log(`runs ${runs}, struck from the record ${(100 * struck / runs).toFixed(0)}%, keepsakes per run ${(keepsHeld / runs).toFixed(1)}`);
 for (const k of Object.keys(byCol).sort()) { const s = byCol[k]; console.log(`${k.padEnd(9)} threshold ${String(s.thr).padStart(4)}  won ${(100 * s.won / s.n).toFixed(0).padStart(3)}%  avg cred ${(s.cred / s.n).toFixed(0).padStart(4)}  (${s.n})`); }
+if (process.argv.includes('tellers')) for (const [k, t] of Object.entries(byTeller).sort((a, b) => a[1].won / a[1].n - b[1].won / b[1].n)) console.log(`  ${k.padEnd(8)} won ${(100 * t.won / t.n).toFixed(0).padStart(3)}%  cred/needed ${(t.ratio / t.n).toFixed(2)}  met ${t.n}`);
 console.log('trades skipped (took nothing)', skips, ' gave a card', gives);
 console.log('final score: p10', finals[Math.floor(runs * .1)], 'median', finals[runs >> 1], 'p90', finals[Math.floor(runs * .9)]);
 console.log('ranks', ranks);

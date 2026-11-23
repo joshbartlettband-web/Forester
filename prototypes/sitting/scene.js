@@ -20,6 +20,15 @@ window.HSCENE = (() => {
     columbus:   { img: 'columbus', fy: .5, arch: { k: 'arch-white', cx: .12, ground: .98, h: .5 }, beasts: ['crane'], murmur: true },
     mainstreet: { img: 'mainstreet', fy: .6, arch: { k: 'arch-red-hook', cx: .5, ground: .99, h: .56 }, beasts: ['folded', 'owl'] },
     courthouse: { img: 'courthouse', fy: .5, arch: { k: 'arch-white', cx: .66, ground: .99, h: .66 }, beasts: ['listener'], indoor: true },
+    kingsley:   { img: 'kingsley', fy: .5, arch: { k: 'arch-white', cx: .14, ground: .98, h: .34 }, beasts: ['turtle'], murmur: true },
+    niobrara:   { img: 'niobrara', fy: .5, arch: { k: 'arch-black', cx: .16, ground: .98, h: .3 }, beasts: ['bison'] },
+    scottsbluff: { img: 'scottsbluff', fy: .5, arch: { k: 'arch-red-blue', cx: .82, ground: .98, h: .34 }, beasts: ['bison', 'coyote'], murmur: true },
+    toadstool:  { img: 'toadstool', fy: .55, arch: { k: 'arch-black', cx: .64, ground: .97, h: .4 }, beasts: ['rhino', 'critter'] },
+    oneill:     { img: 'oneill', fy: .6, arch: { k: 'arch-white', cx: .84, ground: .98, h: .5 }, beasts: ['jackrabbit', 'folded'], murmur: true },
+    ashfall:    { img: 'ashfall', fy: .55, arch: { k: 'arch-celadon', cx: .1, ground: .98, h: .5 }, beasts: ['rhino'] },
+    lexington:  { img: 'lexington', fy: .55, arch: { k: 'arch-red-hook', cx: .46, ground: .98, h: .42 }, beasts: ['crane', 'coyote'], murmur: true },
+    nebraskacity: { img: 'nebraskacity', fy: .55, arch: { k: 'arch-red-blue', cx: .84, ground: .98, h: .5 }, beasts: ['owl', 'jackrabbit'], murmur: true },
+    capitol:    { img: 'capitol', fy: .5, arch: { k: 'arch-white', cx: .2, ground: .98, h: .5 }, beasts: ['owl', 'gatewalker'] },
     bridge:     { img: 'bridge', fy: .5, arch: { k: 'arch-celadon', cx: .14, ground: .99, h: .48 }, beasts: ['gatewalker'] },
   };
   const BEASTS = {
@@ -31,6 +40,8 @@ window.HSCENE = (() => {
     listener: { name: 'The Listener', img: 'beast-bloom', move: 'still', h: .24, event: 'Spare' },
     folded: { name: 'The Folded', img: 'beast-crumple', move: 'still', h: .24, event: 'Find' },
     gatewalker: { name: 'Gatewalker', img: 'beast-archback', move: 'creep', speed: 10, h: .28, event: 'Repeat' },
+    bison: { name: 'Bison', img: 'beast-bison', move: 'walk', speed: 8, h: .26, event: 'Repeat' },
+    rhino: { name: 'Ash rhino', img: 'beast-rhino', move: 'walk', speed: 6, h: .22, event: 'Spare' },
     critter: { name: 'Long-legs', img: 'beast-critter', move: 'crawl', speed: 18, h: .24, event: 'Risk' },
   };
   /* the light of the journey, column by column (0 Halsey … 7 the bridge) */
