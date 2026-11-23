@@ -102,6 +102,7 @@ h1{font:400 38px/1 var(--hand);margin:0}
 .art{position:relative;overflow:hidden;border-block:2px solid var(--ink);background:#e6dfcf}
 .art img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .art.archive img{filter:sepia(.35) contrast(1.05)}
+.art.painting img{object-fit:cover}
 .art.drawing{background:#fbf8ef}.art.drawing img{object-fit:contain;padding:6px;mix-blend-mode:multiply}
 .art.object{background:var(--paper)}.art.object img{object-fit:contain;padding:8px;filter:drop-shadow(0 5px 3px rgba(31,27,46,.35))}
 .art.render img.ph{filter:grayscale(1) contrast(1.15) brightness(1.05)}
@@ -143,6 +144,13 @@ dialog .row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-cont
 .view-h p{margin:0;font-size:15px;color:var(--muted)}
 .map{position:relative;border:2px solid var(--ink);border-radius:8px;padding:16px 8px 44px;box-shadow:3px 4px 0 var(--ink);
   background:linear-gradient(#f7cfae 0%,#f5e3c4 12%,#cfe2f1 22%,#d9e4c9 40%,#f1d59a 56%,#e8a35e 68%,#7a4a72 82%,#1d1830 100%)}
+.aerial{position:absolute;left:0;right:0;background-size:cover;background-position:center;mix-blend-mode:multiply;opacity:.2;pointer-events:none}
+.aerial.a1{top:0;height:34%;background-image:url(public/pd_aerial_forest_1960.jpg)}
+.aerial.a2{top:33%;height:34%;background-image:url(public/pd_aerial_frontier_1952.jpg)}
+.aerial.a3{top:66%;height:34%;background-image:url(public/pd_aerial_otoe_1949.jpg);opacity:.14}
+.credits{display:grid;gap:10px;max-width:70ch;font-size:14px}
+.credits div{display:grid;grid-template-columns:72px 1fr;gap:10px;align-items:start}
+.credits img{width:72px;height:54px;object-fit:cover;border:1px solid var(--line)}
 .mrow.dark .node .kind,.mrow.dark .node .nm,.mrow.dark .node .nm span{color:#f4ecd8!important}
 .map svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
 .mrows{position:relative;display:grid;gap:22px}
@@ -202,7 +210,7 @@ dialog .row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-cont
 
   <section id="mapView" aria-label="The road to the Missouri" style="display:grid;gap:12px">
     <div class="view-h"><h2>The road to the Missouri</h2><p id="mapNote"></p></div>
-    <div class="map" id="map"><svg id="mapLines" aria-hidden="true"></svg><div class="mrows" id="mrows"></div></div>
+    <div class="map" id="map"><span class="aerial a1" aria-hidden="true"></span><span class="aerial a2" aria-hidden="true"></span><span class="aerial a3" aria-hidden="true"></span><svg id="mapLines" aria-hidden="true"></svg><div class="mrows" id="mrows"></div></div>
     <div class="legend"><span><img src="icons/story.svg" alt="">Sitting: a teller</span><span><img src="icons/holdout.svg" alt="">Holdout: harder, and a keepsake</span><span><img src="icons/ties.svg" alt="">The road</span><span><img src="icons/keepsake.svg" alt="">Arch: rest or retell</span><span><img src="icons/filing.svg" alt="">Courthouse: file stories, take a keepsake</span><span><img src="icons/sign.svg" alt="">The bridge</span></div>
   </section>
 
@@ -236,7 +244,7 @@ dialog .row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-cont
   <p class="note" id="note"></p>
   <section aria-label="Your hand"><div class="handwrap"><div class="hand" id="hand"></div></div></section>
   </div>
-  <div class="foot"><span id="pileInfo"></span><button type="button" id="deckBtn">See your whole deck</button><button type="button" id="howBtn">How it works</button><button type="button" id="newBtn">Start a new run</button></div>
+  <div class="foot"><span id="pileInfo"></span><button type="button" id="deckBtn">See your whole deck</button><button type="button" id="howBtn">How it works</button><button type="button" id="creditsBtn">Image credits</button><button type="button" id="newBtn">Start a new run</button></div>
 </div>
 
 <dialog id="dlg"><div id="dlgBody"></div></dialog>
@@ -452,6 +460,10 @@ function endRun(){
 function keepsDialog(){open(`<h2>Your keepsakes</h2><div class="kpick" id="kpick"></div><div class="row"><button class="btn" id="x">Close</button></div>`,b=>{keepChoice(b,G.keeps,()=>{});b.querySelector('#x').onclick=close})}
 $('#deckBtn').onclick=()=>open(`<h2>Your deck</h2><p class="sub">${G.deck.length} stories.</p><div class="handwrap"><div class="hand">${G.deck.map(c=>cardHTML(c,{tag:'div'})).join('')}</div></div><div class="row"><button class="btn" id="x">Close</button></div>`,b=>b.querySelector('#x').onclick=close);
 $('#newBtn').onclick=()=>{close();newRun()};
+$('#creditsBtn').onclick=async()=>{let list=[];try{list=await (await fetch('public/credits.json')).json()}catch(e){}
+  open(`<h2>Image credits</h2><p class="sub">Outside photographs and prints in the game, each checked against its source’s own license record. Under the map: USDA aerial photography indexes (NARA): Nebraska National Forest 1960, Frontier County 1952, Otoe County 1949. Everything else is your drawings, sculptures, paintings and auroras, Gemini renders, or drawn by code.</p>
+    <div class="credits">${list.map(c=>`<div><img src="public/${c.id}.jpg" alt=""><span><b>${c.title.replace(/</g,'&lt;')}</b>${c.date?`, ${c.date}`:''}<br>${(c.by||'Unknown').replace(/</g,'&lt;')} · ${c.rights} · ${c.source}${c.link?` · <a href="${c.link}" target="_blank" rel="noopener">source</a>`:''}</span></div>`).join('')}</div>
+    <div class="row"><button class="btn" id="x">Close</button></div>`,b=>b.querySelector('#x').onclick=close)};
 const sb=$('#soundBtn');const paintSound=()=>{sb.setAttribute('aria-pressed',HSOUND.on);sb.textContent=HSOUND.on?'Sound on':'Sound off'};
 sb.onclick=async()=>{await HSOUND.toggle();paintSound();if(G)setLight(G.S&&!$('#sitView').hidden?G.S.node.c:(G.at?K.nodeById(G,G.at).c:0),G.S&&!$('#sitView').hidden?G.S.T.id:null)};
 if(HSOUND.wanted())addEventListener('pointerdown',async function once(){removeEventListener('pointerdown',once);if(!HSOUND.on){await HSOUND.toggle(true);paintSound()}},{once:true});

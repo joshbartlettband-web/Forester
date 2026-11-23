@@ -16,6 +16,8 @@ const LOC = n => ({ kind: 'archive', src: `public/loc-${n}.jpg`, credit: 'Solomo
 const R = (img, over) => ({ kind: 'render', src: `img/${img}.jpg`, over: over && `sketches/${over}.png` });
 const D = s => ({ kind: 'drawing', src: `sketches/${s}.png` });
 const O = s => ({ kind: 'object', src: `objects/${s}.png` });
+/* public-domain images from Neon's pool, checked against Wikimedia's license records */
+const PD = (id, credit, kind = 'archive') => ({ kind, src: `public/${id}.jpg`, credit });
 const CARDS = [
   // carried from home: your starting deck
   C('talk-weather', 'The weather, mostly', 'It was hot. Then it wasn’t.', 'Weather', 'halsey', 'Later', null, 0, 2, 1, D('stars'), { small: true }),
@@ -42,7 +44,8 @@ const CARDS = [
   C('priya-shape', 'The shape over Thedford', 'Ten thousand birds, asking something.', 'Animals', 'thedford', 'Later', 'Chain', 2, 8, 3, D('crane-wings'), { people: ['priya'], rare: true }),
   C('priya-wind', 'Three days of wind', 'The sand came into the kitchen and lay down.', 'Weather', 'thedford', '1888', 'Risk', 2, 10, 1, LOC(2005693385), { people: ['priya'] }),
   // Deshawn (the Sandhills)
-  C('deshawn-mill', 'A windmill lies about the wind', 'It tells you which way. Then it lies.', 'Weather', 'sandhills', 'Later', 'Repeat', 1, 6, 1, R('sandhills-windmill', 'face3'), { people: ['deshawn'] }),
+  C('deshawn-mill', 'A windmill lies about the wind', 'It tells you which way. Then it lies.', 'Weather', 'sandhills', 'Later', 'Repeat', 1, 6, 1, PD('pd_sandhills_print', 'Kady B. Faulkner, Nebraska Sandhills · public domain', 'painting'), { people: ['deshawn'] }),
+  C('deshawn-above', 'The Sandhills from above', 'Somebody flew over once and said the lakes looked like dropped coins.', 'Strange', 'sandhills', 'Later', 'Find', 1, 6, 2, PD('pd_sat_sandhills', 'NASA Terra satellite · public domain', 'painting'), { people: ['deshawn', 'priya'] }),
   C('deshawn-well', 'The well that went sweet', 'Sixty years of pennies. Then it didn’t.', 'Water', 'sandhills', 'Later', 'Spare', 1, 6, 2, R('sandhills-windmill'), { people: ['deshawn'] }),
   C('deshawn-poles', 'Setting poles on the Ord line', 'You can see every pole you ever set.', 'Work', 'sandhills', '1950', 'Chain', 1, 7, 1, LOC(2005693377), { people: ['deshawn', 'arne'] }),
   C('deshawn-arch', 'The arch that moved', 'Nobody saw it go.', 'Strange', 'sandhills', 'Later', 'Repeat', 0, 3, 1, O('arch-black'), { people: ['deshawn'] }),
@@ -76,11 +79,13 @@ const CARDS = [
   C('marisol-quilt', 'Everyone’s initials', 'Ninety squares. Some are only initials now.', 'Kin', 'columbus', '1950', 'Spare', 1, 7, 2, D('drawn-marisol'), { people: ['marisol'] }),
   C('marisol-rivers', 'Where the two rivers argue', 'For a mile they won’t mix.', 'Water', 'columbus', '1974', 'Chain', 1, 7, 1, R('columbus'), { people: ['marisol'] }),
   C('marisol-star', 'The star hung upside down', 'On purpose. Three of us and a ladder.', 'Work', 'columbus', '1974', 'Find', 1, 6, 2, O('arch-red-hook'), { people: ['marisol'] }),
+  C('marisol-bluff', 'The drought year at the bluff', 'The wagon ruts came up out of the grass like they’d been waiting.', 'Weather', 'scottsbluff', '1888', 'Repeat', 1, 6, 1, PD('pd_scotts_bluff_view', 'NPS photo, Scotts Bluff · public domain'), { people: ['marisol'] }),
   // Arne (Main Street)
   C('arne-wire', 'The last wire into Omaha', 'The whole city came on, and only I saw.', 'Light', 'omaha', '1974', 'Risk', 2, 11, 2, R('omaha', 'face2'), { people: ['arne'] }),
   C('arne-bulb', 'The bulb that never burns out', 'We left it on a year. It got brighter.', 'Light', 'mainstreet', 'Later', 'Spare', 1, 6, 2, D('bulb'), { people: ['arne'] }),
-  C('arne-poles', 'Every pole you ever set', 'Look back and there they all are.', 'Work', 'mainstreet', '1950', 'Chain', 1, 7, 1, D('face2'), { people: ['arne', 'deshawn'] }),
+  C('arne-poles', 'Every pole you ever set', 'Look back and there they all are.', 'Work', 'mainstreet', '1950', 'Chain', 1, 7, 1, PD('pd_silo_bennet', 'Grain elevator, Bennet · CC0, Wikimedia Commons'), { people: ['arne', 'deshawn'] }),
   C('arne-north', 'Lights in the north', 'Mother said, remember this. I have.', 'Weather', 'mainstreet', '2000', 'Find', 1, 6, 3, R('night-mainstreet'), { people: ['arne'], rare: true }),
+  C('arne-elevator', 'The last day at the elevator', 'They swept it out and left the broom. Somebody should keep sweeping.', 'Work', 'mainstreet', '2000', 'Spare', 1, 6, 2, PD('pd_silo_kimball', 'Grain elevator, Kimball · CC0, Wikimedia Commons'), { people: ['arne', 'deshawn'] }),
   // Odette (the Register of Deeds)
   C('odette-survey', 'Her grandmother’s Survey', 'The baby is in four of the stories.', 'Kin', 'courthouse', '1903', 'Chain', 1, 8, 2, LOC(2005693386), { people: ['odette'] }),
   C('odette-copy', 'Copying the deed books', 'My hand will be in the record longer than I will.', 'Work', 'courthouse', 'Later', 'Spare', 1, 7, 2, D('drawn-odette'), { people: ['odette'] }),
@@ -95,6 +100,9 @@ const CARDS = [
   C('peaches', 'Peaches from Dunning', 'She said they were spare.', 'Kin', 'sandhills', 'Later', 'Spare', 0, 4, 1, D('traveler')),
   C('cousin', 'A man who knows your cousin', 'You’re Odette’s cousin’s kid. I knew it.', 'Kin', 'brokenbow', 'Later', 'Chain', 1, 5, 2, D('face3'), { people: ['odette', 'marisol', 'walt'] }),
   C('cranes-lift', 'They lifted all at once', 'Furious and enormous.', 'Animals', 'platte', 'Later', 'Risk', 1, 8, 2, D('crane-dance')),
+  C('trail-ruts', 'The wagon ruts', 'Everybody who ever left went by here. You can see where they leaned.', 'Leaving', 'scottsbluff', '1888', 'Chain', 1, 6, 2, PD('pd_chimney_rock_1904', 'Chimney Rock, 1904 · NARA, public domain'), { people: ['gus'] }),
+  C('lookout', 'The lookout tower', 'From the top you can see three counties and nobody in them.', 'Light', 'platte', 'Later', 'Find', 1, 6, 2, PD('pd_platte_tower', 'Platte River State Park tower · public domain, Wikimedia Commons'), { people: ['ada'] }),
+  C('elevator-sunday', 'Sweeping the elevator on Sundays', 'Nobody asked. It’s just that somebody should.', 'Work', 'mainstreet', 'Later', 'Spare', 0, 4, 1, PD('pd_silo_mclean', 'Grain elevator, McLean · public domain, Wikimedia Commons'), { people: ['deshawn'] }),
   C('culvert', 'Waiting out the storm', 'A stranger who keeps bees shared the culvert.', 'Weather', 'thedford', 'Later', 'Find', 1, 5, 2, R('thedford'), { people: ['priya'] }),
 ];
 /* ---------------- the value budget ----------------
@@ -151,7 +159,7 @@ const TELLERS = [
     want: 'Weather', line: 'A windmill tells you which way everything is going. Then it lies.',
     reservation: { text: 'Doesn’t trust anyone who hasn’t seen the Sandhills', tag: ['place', 'sandhills'] },
     intents: [{ kind: 'own' }, ask('place', 'sandhills', 'Asks about the Sandhills'), { kind: 'doubt', n: 14 }, ask('theme', 'Work', 'Asks about work')],
-    stories: ['deshawn-mill', 'deshawn-well', 'deshawn-poles', 'deshawn-arch'] },
+    stories: ['deshawn-mill', 'deshawn-well', 'deshawn-poles', 'deshawn-arch', 'deshawn-above'] },
   { id: 'frank', name: 'Frank Dvorak', place: 'dismal', placeName: 'The Dismal River', img: 'img/dismal.jpg', drawing: 'sketches/drawn-frank.png', photo: 'img/cast-frank.jpg', cols: [2, 3, 5], holdout: true,
     want: 'Strange', line: 'I’m not signed. You can write it down. It won’t count.',
     reservation: { text: 'Not signed: he only listens to something strange', tag: ['theme', 'Strange'] },
@@ -181,12 +189,12 @@ const TELLERS = [
     want: 'Kin', line: 'Every block is somebody. You just have to know who to look for.',
     reservation: { text: 'Every block is somebody: name someone', tag: ['people', 1] },
     intents: [ask('theme', 'Kin', 'Asks about family'), { kind: 'doubt', n: 24 }, { kind: 'own' }, ask('place', 'columbus', 'Asks about the rivers')],
-    stories: ['marisol-cousins', 'marisol-quilt', 'marisol-rivers', 'marisol-star'] },
+    stories: ['marisol-cousins', 'marisol-quilt', 'marisol-rivers', 'marisol-star', 'marisol-bluff'] },
   { id: 'arne', name: 'Arne Lindqvist', place: 'mainstreet', placeName: 'Main Street', img: 'img/mainstreet.jpg', drawing: 'sketches/face2.png', photo: 'img/face2-photo.jpg', cols: [5, 6],
     want: 'Light', line: 'I put light in every house from here to the river. Now I’m collecting it back.',
     reservation: { text: 'Wants something that lasted since 1950', tag: ['era', '1950'] },
     intents: [{ kind: 'doubt', n: 24 }, ask('theme', 'Light', 'Asks about the power'), { kind: 'own' }, { kind: 'doubt', n: 24 }],
-    stories: ['arne-wire', 'arne-bulb', 'arne-poles', 'arne-north'] },
+    stories: ['arne-wire', 'arne-bulb', 'arne-poles', 'arne-north', 'arne-elevator'] },
   { id: 'odette', name: 'Odette Mbeki-Larsen', place: 'courthouse', placeName: 'Register of Deeds', img: 'img/courthouse.jpg', drawing: 'sketches/drawn-odette.png', photo: 'img/cast-odette.jpg', cols: [6],
     want: 'Kin', line: 'Everything in this room was signed by somebody’s grandmother.',
     reservation: { text: 'Wants it on the record: something from 1903', tag: ['era', '1903'] },
@@ -232,6 +240,12 @@ const ROAD = [
     choices: [{ text: 'Wait for them', standing: 2 }, { text: 'Walk through them', card: 'cranes-lift' }] },
   { title: 'A lamp on a fence post', text: 'Out in the middle of nowhere, a lamp on a fence post, lit.',
     choices: [{ text: 'Take a closer look', keep: true, standing: -1 }, { text: 'Leave it lit', standing: 1, retell: true }] },
+  { title: 'The old trail', text: 'Two ruts in the grass, side by side, running west toward a rock like a chimney. Wagons made them a long time ago.',
+    choices: [{ text: 'Walk in the ruts a while', card: 'trail-ruts' }, { text: 'Sit and rest on the rise', standing: 2 }] },
+  { title: 'A lookout tower', text: 'A red steel tower over the trees by the river, stairs going up and up.',
+    choices: [{ text: 'Climb it', card: 'lookout', standing: -1 }, { text: 'Rest at the bottom', standing: 2 }] },
+  { title: 'An empty elevator', text: 'A grain elevator at the edge of a town nobody lives in now. The door is open and the floor is swept.',
+    choices: [{ text: 'Pick up the broom', card: 'elevator-sunday', standing: 1 }, { text: 'Sleep in the office', standing: 3 }] },
   { title: 'Weather coming', text: 'The sky goes the color of a bottle. The wind stops.',
     choices: [{ text: 'Shelter in the culvert', card: 'culvert', standing: -1 }, { text: 'Keep going', keep: true, standing: -2 }] },
 ];

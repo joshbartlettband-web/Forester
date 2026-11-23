@@ -173,3 +173,12 @@ Weight is now derived from a budget table in `game.js` (basic 6 / uncommon 10 / 
 - **Live scenes** (from the collision demos): the place printed over its photograph, your arch standing in it, the camera pulling back out of the arch on arrival, creatures that react to matching events, flocks by day, lamp moths and the live aurora at night, and stamps where each story lands. Your lantern (the pointer) develops the photograph.
 - **Sound, all synthesized:** wind, birds by day, crickets and an owl at night, cranes on the rivers; a slow drone and plucked pentatonic notes whose key rises as you travel east; sounds for picking, telling (rising notes for bigger tellings), the counting score, warming, answering a reservation, doubt, losing standing, walking, trading, keepsakes and filing.
 - **Keepsake art:** each barn quilt is also a Gemini photograph of that block on a Nebraska barn (the code-drawn block was the reference).
+
+## Neon's image pool, in the game (Nov 23)
+
+All 12 images were checked against Wikimedia's license records (public domain or CC0) and downloaded with credits (`art/public/credits.json`, `tools/fetch-commons.py`).
+- **The map** prints the USDA aerial photography indexes under the journey, in geographic order: Nebraska National Forest 1960 (near Halsey) at the top, Frontier County 1952 in the middle, Otoe County 1949 (on the Missouri) at the bottom.
+- **New cards:** The Sandhills from above (NASA Terra), The wagon ruts (Chimney Rock, 1904), The lookout tower (Platte River State Park), The drought year at the bluff (Scotts Bluff, NPS), The last day at the elevator (Kimball), Every pole you ever set (Bennet), Sweeping the elevator on Sundays (McLean). Deshawn's windmill story now wears Kady B. Faulkner's *Nebraska Sandhills* screen print.
+- **New road encounters:** The old trail, A lookout tower, An empty elevator.
+- **Image credits** screen in the game lists every outside picture with maker, license and source.
+- Dome Rock was left out: it is nearly the same photograph as the Scotts Bluff view.
