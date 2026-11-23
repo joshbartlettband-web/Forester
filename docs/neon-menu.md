@@ -6,6 +6,8 @@ Pieces Neon can build on its own that plug straight into Halsey, Nebraska. Each 
 
 **Pack 1 is in the game:** A1 contours, A2 pivot, A3 thread, A4 pollen, A5 cloud shadows, C2 place motifs, D1 card editor. Where each one sits, and the two small changes made here, are in `prototypes/sitting/neon/README.md`.
 
+**Next for Neon: the phone interface.** See `docs/neon-ui-menu.md` (one screen, no scrolling).
+
 **Still open:** A6 weather layers, A7 card motion kit, A8 aerial map backdrop, B1 rivers and towns, B2 more public-domain images, B3 sound descriptions, C1 bird and animal calls, C3 weather sound, D2 balance dashboard, E1 typed port.
 
 **Notes for pack 2:**
