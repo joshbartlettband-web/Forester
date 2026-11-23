@@ -95,6 +95,7 @@ h1{font:400 38px/1 var(--hand);margin:0}
 .card.cant{opacity:.55}
 .card .hd{display:flex;align-items:center;gap:7px;padding:6px 8px;background:color-mix(in srgb,var(--th,#e6dfcf) 30%,var(--card))}
 .card{--th:#cbbf9f;border-top:6px solid var(--th)}
+.card{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
 .th-Water{--th:#3f78ad}.th-Weather{--th:#7a8aa3}.th-Work{--th:#e0b443}.th-Strange{--th:#8a4e7a}.th-Leaving{--th:#e8833a}.th-Light{--th:#f3c22f}.th-Kin{--th:#a8352c}.th-Animals{--th:#7d9154}
 .card .cost{flex:none;width:30px;height:30px;border-radius:50%;background:var(--trust);color:#fff;font-weight:700;font-size:18px;display:grid;place-items:center;border:2px solid var(--ink)}
 .card .cost.free{background:var(--good)}
@@ -108,7 +109,7 @@ h1{font:400 38px/1 var(--hand);margin:0}
 .art.render img.ph{filter:grayscale(1) contrast(1.15) brightness(1.05)}
 .art.render .ink{position:absolute;inset:0;mix-blend-mode:screen;opacity:.55}
 .art.render img.ov{object-fit:contain;mix-blend-mode:multiply;padding:4px}
-.card .ty{display:flex;align-items:center;gap:5px;padding:5px 8px 0;font-size:13px;font-weight:700;min-width:0}
+.card .ty{display:flex;align-items:center;gap:5px;white-space:nowrap;padding:5px 8px 0;font-size:13px;font-weight:700;min-width:0}
 .card .ty img{width:20px;height:20px;flex:none}
 .card .ty span{font-weight:400;color:var(--muted);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .card .ru{padding:3px 8px 0;font-size:13.5px;line-height:1.28}
@@ -118,7 +119,7 @@ h1{font:400 38px/1 var(--hand);margin:0}
 .card .w,.card .v{font-weight:700;font-size:18px;min-width:38px;text-align:center;border-radius:5px;padding:0 5px;color:#fff;border:2px solid var(--ink);font-variant-numeric:tabular-nums}
 .card .w{background:var(--weight)}.card .v{background:var(--vivid)}
 .card .v::before{content:"×";font-size:13px;margin-right:1px}
-.card .cr{font-size:10.5px;color:var(--muted);text-align:right;line-height:1.15;max-width:100px}
+.card .cr{font-size:12px;color:var(--muted);text-align:right;line-height:1.15;max-width:100px}
 .card .flag{position:absolute;right:6px;top:58px;z-index:2;background:var(--ink);color:#fff;font-size:11px;font-weight:700;padding:1px 6px;border-radius:3px}
 .card.rare::after{content:"";position:absolute;inset:0;pointer-events:none;mix-blend-mode:screen;opacity:.35;background:linear-gradient(115deg,transparent 25%,rgba(255,90,190,.6) 42%,rgba(120,255,190,.55) 52%,transparent 70%);background-size:260% 100%;animation:sheen 5s linear infinite}
 @keyframes sheen{0%{background-position:120% 0}100%{background-position:-120% 0}}
@@ -197,17 +198,176 @@ dialog .row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-cont
   .actions{grid-template-columns:1fr 1fr;min-width:0}
   h1{font-size:30px}
 }
-@media (prefers-reduced-motion:reduce){.card,.bar b{transition:none}.float{animation-duration:.01s}.card.rare::after{animation:none}}
+/* pages: content that doesn't fit is paged, never scrolled */
+.pg{display:flex;flex-wrap:wrap;gap:12px;align-content:flex-start;overflow:hidden;max-height:min(58dvh,700px);margin-bottom:6px}
+.pg.col{flex-direction:column;flex-wrap:nowrap;gap:8px}
+.pgnav{display:flex;align-items:center;justify-content:center;gap:14px;font-size:14px;font-weight:700;margin:2px 0 6px}
+.pgnav button{min-width:48px;min-height:40px;border:2px solid var(--ink);border-radius:6px;background:var(--card);font-size:22px;font-weight:700;line-height:1}
+.pgnav button:disabled{opacity:.3}
+.ph-only,.menubtn{display:none}
+/* hold a card to read it */
+#insp{background:transparent;border:0;box-shadow:none;padding:0;max-width:none;max-height:none;overflow:visible}
+#insp[open]{display:grid;justify-items:center;gap:14px}
+#insp::backdrop{background:rgba(31,27,46,.62)}
+#insp .row{display:flex;gap:10px;justify-content:center}
+#insp .card{box-shadow:4px 6px 0 var(--ink)}
+.toast{position:fixed;left:50%;top:calc(52px + env(safe-area-inset-top,0px));transform:translate(-50%,-8px);width:max-content;max-width:min(92vw,520px);background:var(--card);border:2px solid var(--ink);border-radius:6px;box-shadow:2px 3px 0 var(--ink);padding:6px 12px;font-size:14px;line-height:1.3;z-index:30;opacity:0;pointer-events:none;transition:opacity .25s,transform .25s}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+.peek-hd{display:flex;gap:12px;align-items:center;margin-bottom:8px}
+.peek-hd .dot{width:64px;height:64px;border-radius:50%;border:2.5px solid var(--ink);background:var(--card);overflow:hidden;display:grid;place-items:center;flex:none}
+.peek-hd .dot img{width:100%;height:100%;object-fit:cover;object-position:50% 20%;mix-blend-mode:multiply}
+.peek-hd .dot img.ic{width:38px;height:38px}
+.peek-hd .k{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.menu{display:grid;gap:8px}
+.menu .btn{text-align:left;min-height:46px}
+/* dialogs on a big screen fit the window too: what doesn't fit is paged */
+dialog[open]{display:flex;flex-direction:column;max-height:94dvh;overflow:hidden}
+@media (min-width:761px){dialog[open]:has(.pg){width:min(96vw,980px)}}
+#dlgBody{display:flex;flex-direction:column;min-height:0;flex:1 1 auto}
+#dlgBody .pg{flex:1 1 auto;min-height:0;max-height:none}
+#dlgBody #takeRow{flex:none}
+.card:has(.filev){height:362px}
+@media (min-width:761px) and (max-height:1200px){
+  dialog .card:not(.full){width:156px;height:206px;grid-template-rows:46px 56px auto 1fr auto}
+  dialog .card:not(.full):has(.filev){height:226px}
+  dialog .card:not(.full) .ru{line-height:1.2;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;padding-bottom:0;margin-bottom:2px}
+  dialog .card:not(.full) .ft{padding-bottom:5px}
+}
+@media (min-width:761px) and (max-height:900px){
+  dialog .long{display:none}dialog .ph-only{display:inline}
+}
+@media (min-width:761px) and (max-height:1200px){
+  dialog .card:not(.full) .qu,dialog .card:not(.full) .cr,dialog .card:not(.full) .ty span{display:none}
+  dialog .card:not(.full) .ti{font-size:16px}
+  dialog .card:not(.full) .ru{font-size:12.5px}
+  dialog .card:not(.full) .flag{top:50px}
+}
+/* ---------- a phone: one screen, nothing scrolls ---------- */
+@media (max-width:760px){
+  html,body{height:100%;overflow:hidden}
+  .wrap{height:100dvh;display:flex;flex-direction:column;gap:6px;overflow:hidden;padding:max(6px,env(safe-area-inset-top,0px)) max(10px,env(safe-area-inset-right,0px)) max(6px,env(safe-area-inset-bottom,0px)) max(10px,env(safe-area-inset-left,0px))}
+  .wrap>.top{flex:none;height:40px;flex-wrap:nowrap}
+  .top h1{display:none}
+  .stats{flex-wrap:nowrap;gap:10px;font-size:13px;width:100%;justify-content:space-between}
+  .stats .lbl{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+  .stats>span{display:inline-flex;align-items:center;gap:4px}
+  .stats>span.scorebox::before{content:"Score";font-size:12px;color:var(--top-ink);opacity:.8}
+  .pips{gap:2px}.pips i{width:8px;height:14px}
+  .stats b{font-size:16px}
+  .keeps button{width:22px;height:22px}
+  .soundbtn{display:none}
+  .menubtn{display:inline-grid;place-items:center;width:44px;height:40px;border:2px solid var(--ink);border-radius:6px;background:var(--card);font-size:20px;line-height:1;color:var(--ink);flex:none}
+  .foot,#note{display:none}
+  .ph-only{display:inline}.long{display:none}
+  /* the map: all eight rows on one screen; tap a place to see it */
+  #mapView:not([hidden]){display:flex!important;flex-direction:column;flex:1;min-height:0;gap:0}
+  #mapView .view-h,#mapView .legend{display:none}
+  .map{flex:1;min-height:0;padding:8px 2px 30px;box-shadow:2px 3px 0 var(--ink)}
+  .mrows{height:100%;grid-template-rows:repeat(8,minmax(0,1fr));gap:0}
+  .mrow{align-items:center}
+  .mrow .col{display:none}
+  .node{width:68px;gap:1px}
+  .node .dot{width:42px;height:42px;border-width:2px}
+  .node.boss .dot{width:50px;height:50px}
+  .node .dot img.ic{width:24px;height:24px}
+  .node .kind,.node .nm br,.node .nm span{display:none}
+  .node .nm{font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:68px}
+  .node.done .dot::after{width:16px;height:16px;font-size:10px}
+  /* a sitting: header, credibility, tray, hand */
+  #sitView:not([hidden]){display:flex!important;flex-direction:column;flex:1;min-height:0;gap:5px}
+  #sitView>*{flex:none}
+  .band{box-shadow:2px 3px 0 var(--ink)}
+  .band .where{top:6px;bottom:auto;left:6px;font-size:15px;padding:1px 7px 0}
+  .band .intent{position:absolute;right:6px;bottom:6px;max-width:64%;padding:4px 8px;box-shadow:2px 2px 0 var(--ink);border-width:1.5px;cursor:pointer}
+  .band .intent .lab,.band .intent p{display:none}
+  .band .intent .what{font-size:14px;gap:6px;line-height:1.15}
+  .band .intent .what img{width:20px;height:20px;flex:none}
+  .sitter{display:flex;gap:8px;align-items:flex-start;height:50px;cursor:pointer}
+  #portrait{width:62px;flex:none;margin-top:-36px;position:relative;z-index:2;box-shadow:2px 2px 0 var(--ink)}
+  .who{gap:3px;flex:1}
+  .who h2{font-size:23px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .who .line{display:none}
+  .chips{flex-wrap:nowrap;overflow:hidden;gap:4px}
+  .chip{font-size:12.5px;padding:1px 6px;white-space:nowrap}
+  .meter{display:flex;align-items:center;gap:8px}
+  .meter .bar{flex:1;height:18px;order:-1}
+  .meter .row>span:first-child{display:none}
+  .meter .row{font-size:13px;white-space:nowrap}
+  .meter .num{font-size:18px}
+  .play{display:block;position:relative}
+  .telling{padding:6px 8px;gap:4px;min-height:0;grid-template-columns:minmax(0,1fr);overflow:hidden}
+  .day{font-size:13px;gap:2px 10px;flex-wrap:nowrap;white-space:nowrap}
+  .trustpips i{width:14px;height:14px}
+  .slots{flex-wrap:nowrap;gap:5px;min-height:36px}
+  .slot{flex:1 1 0;min-width:0;font-size:12.5px;padding:3px 6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-height:36px;display:block;text-align:left;line-height:28px}
+  .slot .c{vertical-align:1px;margin-right:4px}
+  .slot.empty{text-align:center}
+  .calc{font-size:14px;gap:5px;padding-right:160px;min-height:30px;flex-wrap:nowrap;white-space:nowrap}
+  .calc .hint{white-space:normal;font-size:12.5px;line-height:1.2;color:var(--muted)}
+  .num-w,.num-v,.num-t{font-size:16px;padding:0 4px}
+  .calc{gap:3px}
+  .parts{flex-wrap:nowrap;overflow:hidden;padding-right:160px;height:20px}
+  .parts span{white-space:nowrap;font-size:12px}
+  .actions{position:absolute;right:8px;bottom:8px;display:flex;gap:6px;min-width:0}
+  .actions .btn{padding:6px 12px;font-size:15px;min-height:44px}
+  .handsec{flex:1 1 auto!important;min-height:170px}
+  .handsec .handwrap{overflow:visible;padding:12px 0 0;height:100%}
+  #hand{width:100%;gap:0;justify-content:center}
+  #hand>.card{flex:none;transform:translateY(var(--y,0)) rotate(var(--r,0deg));transform-origin:50% 120%}
+  #hand>.card+.card{margin-left:calc(-1 * var(--ov,-6px))}
+  #hand>.card:hover{transform:translateY(var(--y,0)) rotate(var(--r,0deg))}
+  #hand>.card:active{transform:translateY(-10px)}
+  /* the small card: cost, title, art, event, Weight × Vivid, all on the left edge so a fanned hand still reads */
+  .card:not(.full){width:104px;height:160px;grid-template-rows:44px 58px auto 1fr auto;border-radius:8px;box-shadow:2px 3px 0 var(--ink);border-top-width:5px}
+  .card:not(.full):has(.filev){height:180px}
+  .card:not(.full) .hd{padding:4px 5px;gap:4px;align-items:flex-start}
+  .card:not(.full) .cost{width:24px;height:24px;font-size:14px}
+  .card:not(.full) .ti{font-size:14px;line-height:1}
+  .card:not(.full) .ty{padding:3px 5px 0;font-size:12px}
+  .card:not(.full) .ty img{width:16px;height:16px}
+  .card:not(.full) .ty span,.card:not(.full) .ru,.card:not(.full) .qu,.card:not(.full) .cr{display:none}
+  .card:not(.full) .ft{padding:2px 5px 5px}
+  .card:not(.full) .w,.card:not(.full) .v{font-size:15px;min-width:30px;padding:0 3px}
+  .card:not(.full) .flag{top:46px;right:3px;font-size:12px;padding:0 4px}
+  .card[aria-pressed="true"]:not(.full){transform:translateY(-6px)}
+  /* sheets: every dialog fills the screen and pages what doesn't fit */
+  dialog[open]{display:flex;flex-direction:column;width:100vw;max-width:100vw;height:100dvh;max-height:100dvh;margin:0;border:0;border-radius:0;box-shadow:none;overflow:hidden;padding:max(10px,env(safe-area-inset-top,0px)) 12px max(10px,env(safe-area-inset-bottom,0px))}
+  #dlgBody{display:flex;flex-direction:column;flex:1;min-height:0}
+  dialog.peek[open]{height:auto;top:auto;bottom:0;border-top:2px solid var(--ink);border-radius:14px 14px 0 0;box-shadow:0 -4px 0 rgba(31,27,46,.25)}
+  dialog h2{font-size:27px}
+  dialog .sub{font-size:14px;margin-bottom:8px}
+  dialog .sub b{white-space:nowrap}
+  .pg{flex:1 1 0;min-height:0;max-height:none;gap:8px;justify-content:center;margin-bottom:0}
+  .pg.col{justify-content:flex-start}
+  #takeRow.pg{flex:0 0 auto;height:184px;flex-wrap:nowrap}
+  dialog .row{margin-top:auto;padding-top:6px}
+  dialog .btn{min-height:44px}
+  .kopt{grid-template-columns:48px 1fr;padding:6px 8px;max-width:none;width:100%;font-size:13px}
+  .kopt img.barn{display:none}
+  .kopt canvas{width:48px;height:48px}
+  .kpick{gap:6px;margin-bottom:6px}
+  .filev{font-size:12px}
+  dialog .sub .btn.quiet{min-height:34px;padding:0 10px!important}
+  dialog .sub:has(.btn.quiet){margin-bottom:4px}
+  #takeRow+.pgnav{display:none}
+  #takeRow.pg{height:182px}
+  .pgnav{margin:0}.pgnav button{min-height:36px}
+  dialog h2{margin-bottom:2px;font-size:25px}
+  .credits{font-size:13px}.credits div{grid-template-columns:56px 1fr}.credits img{width:56px;height:42px}
+  .rank{font-size:40px}
+}
+@media (prefers-reduced-motion:reduce){.card,.bar b{transition:none}.toast{transition:none}.float{animation-duration:.01s}.card.rare::after{animation:none}}
 </style>
 
 <div class="wrap">
   <div class="top">
     <h1>Halsey Sittings</h1>
     <div class="stats" aria-live="polite">
-      <span>Standing <span class="pips" id="standPips"></span> <b id="stand"></b></span>
-      <span>Score <b id="score"></b></span>
-      <span>Keepsakes <span class="keeps" id="keeps"></span></span>
+      <span><span class="lbl">Standing </span><span class="pips" id="standPips"></span> <b id="stand"></b></span>
+      <span class="scorebox"><span class="lbl">Score </span><b id="score"></b></span>
+      <span><span class="lbl">Keepsakes </span><span class="keeps" id="keeps"></span></span>
       <button type="button" class="soundbtn" id="soundBtn" aria-pressed="false">Sound off</button>
+      <button type="button" class="menubtn" id="menuBtn" aria-label="Menu: sound, your deck, how it works, credits, new run">☰</button>
     </div>
   </div>
 
@@ -240,8 +400,8 @@ dialog .row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-cont
       <div class="parts" id="parts"></div>
     </div>
     <div class="actions">
-      <button class="btn" id="tellBtn" type="button">Tell it</button>
-      <button class="btn quiet" id="endBtn" type="button">End the day</button>
+      <button class="btn" id="tellBtn" type="button">Tell<span class="long"> it</span></button>
+      <button class="btn quiet" id="endBtn" type="button">End<span class="long"> the</span> day</button>
     </div>
   </section>
   <p class="note" id="note"></p>
@@ -251,6 +411,8 @@ dialog .row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-cont
 </div>
 
 <dialog id="dlg"><div id="dlgBody"></div></dialog>
+<dialog id="insp" aria-label="A story, up close"></dialog>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script src="engine.js"></script>
 <script src="game.js"></script>
@@ -272,6 +434,7 @@ const INK={Find:'#f3c22f',Chain:'#e2486f',Risk:'#c4622c',Spare:'#6f9148',Repeat:
 const KIND={sitting:'Sitting',holdout:'Holdout',road:'The road',arch:'An arch',courthouse:'Courthouse',bridge:'The bridge'};
 const KICON={sitting:'story',holdout:'holdout',road:'ties',arch:'keepsake',courthouse:'filing',bridge:'sign'};
 let G,sel=[],P=null;
+const PHONE=matchMedia('(max-width:760px)'),UIDS=new Map();
 const first=n=>n.split(' ')[0];
 
 /* ---------- barn quilts, drawn by code: each keepsake is a block ---------- */
@@ -298,17 +461,17 @@ function quilt(cv,key){
   // printed on barn boards: a little grain
   for(let k=0;k<W*H/40;k++){x.fillStyle=`rgba(255,255,255,${Math.random()*.12})`;x.fillRect(Math.random()*W,Math.random()*H,1.2,1.2)}}
 const quiltEl=(k,size=72)=>{const c=document.createElement('canvas');c.width=c.height=size*2;quilt(c,k);c.setAttribute('aria-hidden','true');return c};
-function renderKeeps(){const h=$('#keeps');h.innerHTML='';if(!G.keeps.length){h.textContent='none yet';return}
+function renderKeeps(){const h=$('#keeps');h.innerHTML='';if(!G.keeps.length){h.textContent=PHONE.matches?'no keepsakes':'none yet';return}
   for(const k of G.keeps){const b=document.createElement('button');b.type='button';b.title=`${KEEPS[k].name}: ${KEEPS[k].text}`;b.setAttribute('aria-label',b.title);b.appendChild(quiltEl(k,30));b.onclick=()=>keepsDialog();h.appendChild(b)}}
 
 /* ---------- a card, in the fixed order: cost, title, art, keyword, rule, voice, score ---------- */
 function art(c){const a=c.art;
   if(a.kind==='render')return`<div class="art render"><img class="ph" src="${a.src}" alt=""><span class="ink" style="background:${INK[c.event]||'#9a8f7c'}"></span>${a.over?`<img class="ov" src="${a.over}" alt="">`:''}</div>`;
   return`<div class="art ${a.kind}"><img src="${a.src}" alt=""></div>`}
-function cardHTML(c,{pressed=false,cant=false,tag='button',extra=''}={}){
+function cardHTML(c,{pressed=false,cant=false,tag='button',extra='',full=false}={}){UIDS.set(String(c.uid),c);
   const tags=[c.theme,PLACE[c.place]||c.place,c.era].join(' · '),cost=K.costOf(G,c);
   const credit=c.retold?`Retold by ${first(c.retold)}`:c.borrowed?`Theirs, for now`:c.art.credit||(c.people.length?`Told by ${c.people.map(p=>TELLER[p]?first(TELLER[p].name):p[0].toUpperCase()+p.slice(1)).join(' & ')}`:'Yours');
-  return`<${tag} class="card th-${c.theme}${c.rare?' rare':''}${cant?' cant':''}" ${tag==='button'?`type="button" data-uid="${c.uid}" aria-pressed="${pressed}"`:''} aria-label="${c.title}. Costs ${cost} trust. Weight ${c.w}, vivid ${c.v}. ${c.event?c.event+': '+RULE[c.event]:'Small talk.'}">
+  return`<${tag} class="card th-${c.theme}${c.rare?' rare':''}${cant?' cant':''}${full?' full':''}" data-uid="${c.uid}" ${tag==='button'?`type="button" aria-pressed="${pressed}"`:''} aria-label="${c.title}. Costs ${cost} trust. Weight ${c.w}, vivid ${c.v}. ${c.event?c.event+': '+RULE[c.event]:'Small talk.'}">
     <div class="hd"><span class="cost${cost?'':' free'}">${cost}</span><span class="ti">${c.title}</span></div>
     ${art(c)}${c.retold?'<span class="flag">Retold</span>':c.borrowed?'<span class="flag">Theirs</span>':c.holdout?'<span class="flag">Unsigned</span>':c.retellings?`<span class="flag">+${c.retellings} vivid</span>`:''}
     <div class="ty">${c.event?`<img src="icons/${c.event.toLowerCase()}.svg" alt="">${c.event}`:'Small talk'} <span>· ${tags}</span></div>
@@ -354,7 +517,16 @@ function drawLines(){
     const mx=(a[0]+b[0])/2+((a[0]*7+b[1])%23-11),my=(a[1]+b[1])/2;h+=`<path d="M${a[0]} ${a[1]+a[2]} Q${mx} ${my} ${b[0]} ${b[1]-b[2]}" fill="none" stroke="${walked?'#e2486f':'rgba(31,27,46,.35)'}" stroke-width="${walked?4:2}" stroke-dasharray="${walked?'':'5 6'}" stroke-linecap="round"/>`}));
   svg.innerHTML=h}
 addEventListener('resize',()=>{if(!$('#mapView').hidden)drawLines()});
-$('#mrows').onclick=e=>{const b=e.target.closest('[data-id]');if(!b||b.disabled)return;HSOUND.play('step');visit(K.goTo(G,b.dataset.id))};
+$('#mrows').onclick=e=>{const b=e.target.closest('[data-id]');if(!b)return;const go=()=>{HSOUND.play('step');visit(K.goTo(G,b.dataset.id))};
+  if(PHONE.matches)return peek(K.nodeById(G,b.dataset.id),!b.disabled,go);if(!b.disabled)go()};
+function peek(n,can,go){const T=n.teller&&TELLER[n.teller];
+  const face=T?`<img src="${T.drawing}" alt="">`:`<img class="ic" src="icons/${KICON[n.kind]}.svg" alt="">`;
+  const name=T?T.name:n.kind==='road'?K.ROAD[n.road].title:n.kind==='courthouse'?'The Register of Deeds':n.kind==='arch'?'An arch on the road':KIND[n.kind];
+  const what=T?`${T.placeName}. Wants <b>${T.want}</b>. You’ll need <b>${K.threshold(n)}</b> credibility.${n.kind==='holdout'?' Never signed: harder, and a keepsake if you win.':''}`:
+    n.kind==='road'?'Something on the road. You choose what to do about it.':n.kind==='arch'?'Rest (+3 standing) or retell one story to make it more vivid.':n.kind==='courthouse'?'File stories into the record for score, and take a keepsake.':'';
+  open(`<div class="peek-hd"><span class="dot">${face}</span><div><div class="k">${KIND[n.kind]}</div><h2 style="margin:0">${name}</h2></div></div><p class="sub">${what}</p>
+    <div class="row">${can?'<button class="btn quiet" id="no">Not yet</button><button class="btn" id="go">Go</button>':`<span class="sub" style="margin:0">${G.visited.includes(n.id)?'Already visited.':'Not reachable from here.'}</span><button class="btn quiet" id="no">Close</button>`}</div>`,
+    b=>{b.querySelector('#no').onclick=close;if(can)b.querySelector('#go').onclick=()=>{close();go()}},'peek')}
 function visit(n){
   if(n.teller)return enterSitting(n);
   if(n.kind==='road')return roadDialog(n);
@@ -369,26 +541,87 @@ async function enterSitting(node){
   setLight(node.c,T.id);HSOUND.motif(MOTIF[T.place]||'sandhills');pollenFor();if(SC)SC.destroy();SC=await HSCENE.mount($('#band'),T,node);
   P=await HE.makePortrait({drawing:T.drawing,photo:T.photo});
   note(node.kind==='holdout'?`Frank never signed the agreement. His stories can’t be filed, but beat his doubt and he’ll give you a keepsake.`:node.kind==='bridge'?`The last sitting. Imani decides how you leave the Survey.`:`Read what they’ll do today, then pick stories from your hand and tell them.`);render()}
-function note(h){$('#note').innerHTML=h}
+function note(h){$('#note').innerHTML=h;if(PHONE.matches&&h)toast(h)}
+let toastT=0;function toast(h){const t=$('#toast');t.innerHTML=h;t.classList.add('on');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('on'),3400)}
+/* on a phone, what they'll do today sits on the scene */
+function placeIntent(){const i=$('#intent');if(PHONE.matches){if(i.parentElement!==$('.band'))$('.band').appendChild(i)}else if(i.parentElement!==$('.sitter'))$('.sitter').appendChild(i)}
+/* the hand fans to fit the width: cost, title and numbers sit on each card's left edge */
+function fanHand(){const h=$('#hand'),cards=[...h.children],n=cards.length;
+  if(!PHONE.matches||!n){h.style.removeProperty('--ov');return}
+  const W=h.clientWidth,cw=cards[0].offsetWidth||104,need=n*cw+(n-1)*6,ov=n>1&&need>W?(need-W)/(n-1)+6:-6;h.style.setProperty('--ov',ov.toFixed(1)+'px');
+  cards.forEach((c,i)=>{const t=n>1?i/(n-1)-.5:0;c.style.setProperty('--r',(t*(n>3?7:3)).toFixed(2)+'deg');c.style.setProperty('--y',(t*t*(n>3?18:6)).toFixed(1)+'px')})}
+/* the teller, in full (on a phone the header only has room for the short version) */
+function tellerSheet(){const S=G.S;if(!S||!PHONE.matches)return;const T=S.T;
+  open(`<h2>${T.name}</h2><p class="sub" style="font:400 21px/1.2 var(--hand)">“${T.line}”</p><p class="sub">${T.placeName}. Wants <b>${T.want}</b>.</p>
+    <p class="sub"><b>Reservation${S.reservation?'':' (answered)'}:</b> ${T.reservation.text}. Until it’s answered, your Vivid is halved.</p>
+    <p class="sub"><b>Today they</b> ${$('#intent .what').textContent.trim().toLowerCase()}. ${$('#intent p').textContent}</p>
+    <div class="row"><button class="btn" id="x">Back to the sitting</button></div>`,b=>b.querySelector('#x').onclick=close)}
+$('.sitter').addEventListener('click',tellerSheet);$('#intent').addEventListener('click',tellerSheet);
+/* hold any card (or right-click it) to read it up close */
+const insp=$('#insp');let held=null,heldT=0,swallow=false;
+function inspect(c){const S=G.S,inHand=S&&!S.result&&!dlg.open&&S.hand.includes(c)&&!sel.includes(c),can=inHand&&sel.length<3&&K.costOf(G,c)<=S.trust-cost();
+  const sc=Math.max(.8,Math.min(1.6,(innerWidth-32)/212,(innerHeight-120)/340));
+  insp.innerHTML=`<div style="width:${212*sc}px;height:${340*sc}px"><div style="width:212px;transform:scale(${sc});transform-origin:0 0">${cardHTML(c,{tag:'div',full:true})}</div></div>
+    <div class="row">${can?'<button class="btn" id="iTell">Add to the telling</button>':''}<button class="btn quiet" id="iClose">Close</button></div>`;
+  insp.showModal();insp.querySelector('#iClose').onclick=()=>insp.close();
+  if(can)insp.querySelector('#iTell').onclick=()=>{insp.close();sel.push(c);HSOUND.play('pick');render()}}
+insp.addEventListener('click',e=>{if(e.target===insp)insp.close()});
+document.addEventListener('pointerdown',e=>{swallow=false;const el=e.target.closest('.card[data-uid]');if(!el||el.closest('#insp'))return;held={el,x:e.clientX,y:e.clientY};clearTimeout(heldT);
+  heldT=setTimeout(()=>{if(!held)return;const c=UIDS.get(held.el.dataset.uid);held=null;if(c){swallow=true;inspect(c)}},430)});
+document.addEventListener('pointermove',e=>{if(held&&Math.hypot(e.clientX-held.x,e.clientY-held.y)>10){held=null;clearTimeout(heldT)}});
+['pointerup','pointercancel'].forEach(t=>document.addEventListener(t,()=>{held=null;clearTimeout(heldT)}));
+document.addEventListener('click',e=>{if(swallow){swallow=false;e.stopPropagation();e.preventDefault()}},true);
+document.addEventListener('contextmenu',e=>{const el=e.target.closest('.card[data-uid]');if(!el||el.closest('#insp'))return;e.preventDefault();if(insp.open)return;e.preventDefault();const c=UIDS.get(el.dataset.uid);if(c)inspect(c)});
+/* paging: what doesn't fit turns into pages you flip, with ‹ › or a swipe */
+const PAGE={};
+function paginate(box){const key=box.dataset.pg||box.id||'pg',kids=[...box.children];
+  let nav=box.nextElementSibling;if(!nav||!nav.classList.contains('pgnav')){nav=document.createElement('div');nav.className='pgnav';box.after(nav)}
+  nav.hidden=false;nav.innerHTML='<button type="button" disabled>‹</button><span>1 of 1</span><button type="button" disabled>›</button>';
+  const over=()=>box.scrollHeight>box.clientHeight+4;
+  kids.forEach(k=>{k.hidden=false;k.style.zoom=''});
+  if(!over()){nav.hidden=true;return}
+  /* if even one item is too tall for the space, scale the items down to fit (never below 60%) */
+  kids.forEach((k,x)=>k.hidden=x>0);if(over()&&kids[0]){const z=Math.max(.6,(box.clientHeight-4)/kids[0].getBoundingClientRect().height);kids.forEach(k=>k.style.zoom=z.toFixed(3))}
+  const pages=[];let i=0;
+  while(i<kids.length){kids.forEach(k=>k.hidden=true);let j=i;while(j<kids.length){kids[j].hidden=false;if(j>i&&over()){kids[j].hidden=true;break}j++}pages.push([i,j]);i=j}
+  let p=Math.min(PAGE[key]||0,pages.length-1);
+  const show=()=>{PAGE[key]=p;kids.forEach((k,x)=>k.hidden=!(x>=pages[p][0]&&x<pages[p][1]));
+    nav.innerHTML=`<button type="button" aria-label="Previous page" ${p?'':'disabled'}>‹</button><span aria-live="polite">${p+1} of ${pages.length}</span><button type="button" aria-label="Next page" ${p<pages.length-1?'':'disabled'}>›</button>`;
+    const [a,b]=nav.querySelectorAll('button');a.onclick=()=>{p--;show()};b.onclick=()=>{p++;show()}};
+  show();
+  let x0=null;box.onpointerdown=e=>{x0=e.clientX};box.onpointerup=e=>{if(x0==null)return;const dx=e.clientX-x0;x0=null;if(Math.abs(dx)>50){const q=Math.max(0,Math.min(pages.length-1,p+(dx<0?1:-1)));if(q!==p){p=q;swallow=true;show()}}}}
+function repage(){if(dlg.open)body.querySelectorAll('.pg').forEach(paginate)}
+addEventListener('resize',()=>{repage();if(G&&G.S&&!$('#sitView').hidden)fanHand()});
+PHONE.addEventListener('change',()=>{placeIntent();if(G&&G.S&&!$('#sitView').hidden)render();else if(G)showMap()});
+/* the menu, on a phone: everything that isn't play */
+$('#menuBtn').onclick=()=>{const draw=()=>open(`<h2>Halsey Sittings</h2><div class="menu">
+    <button class="btn quiet" id="mSound">${HSOUND.on?'Sound is on: turn it off':'Sound is off: turn it on'}</button>
+    <button class="btn quiet" id="mDeck">Your deck (${G.deck.length})</button><button class="btn quiet" id="mHow">How it works</button>
+    <button class="btn quiet" id="mCred">Image credits</button><a class="btn quiet" href="editor.html" target="_blank" rel="noopener" style="text-decoration:none">Card editor</a>
+    <button class="btn quiet" id="mNew">Start a new run</button></div><div class="row"><button class="btn" id="x">Back to the game</button></div>`,b=>{
+    b.querySelector('#mSound').onclick=async()=>{await sb.onclick();draw()};b.querySelector('#mDeck').onclick=()=>$('#deckBtn').click();
+    b.querySelector('#mHow').onclick=()=>$('#howBtn').click();b.querySelector('#mCred').onclick=()=>$('#creditsBtn').click();
+    b.querySelector('#mNew').onclick=()=>$('#newBtn').click();b.querySelector('#x').onclick=close});draw()};
 function render(){
   const S=G.S,T=S.T;renderTop();
   $('#tname').textContent=T.name;$('#tline').textContent=`“${T.line}”`;$('#tfirst').textContent=first(T.name);
-  $('#tchips').innerHTML=`<span class="chip">Wants <b>${T.want}</b></span><span class="chip res${S.reservation?'':' done'}" title="Halves your Vivid until answered">Reservation: <b>${T.reservation.text}</b></span>`;
+  const ph=PHONE.matches;placeIntent();
+  $('#tchips').innerHTML=`<span class="chip">Wants <b>${T.want}</b></span><span class="chip res${S.reservation?'':' done'}" title="Halves your Vivid until answered">Reservation: <b>${ph?(S.reservation?'½ Vivid':'answered'):T.reservation.text}</b></span>`;
   const I=S.intent,ic={ask:'place',doubt:'holdout',own:'story',quiet:'trust'}[I.kind],bp=G.keeps.includes('bearpaw');
-  const what={ask:I.label,doubt:`Doubt ${I.n}`,own:'Tells one of their own',quiet:'Goes quiet'}[I.kind];
+  const what=ph?{ask:`${I.label}: fits weigh ×2`,doubt:`Doubt ${I.n}, unless ${T.want}`,own:'Tells one of theirs',quiet:'Goes quiet: −1 trust'}[I.kind]:{ask:I.label,doubt:`Doubt ${I.n}`,own:'Tells one of their own',quiet:'Goes quiet'}[I.kind];
   const why={ask:`Stories that fit weigh double today.`,doubt:`At the end of the day they knock ${I.n} off your credibility${bp?'':' and you lose 1 standing'}, unless you tell them something about ${T.want}.`,own:`One of their stories is in your hand today. Tell it back to them for a Thread.`,quiet:`You’ll have one less trust tomorrow.`}[I.kind];
   $('#intent').innerHTML=`<span class="lab">Today they</span><span class="what"><img src="icons/${ic}.svg" alt="">${what}</span><p>${why}</p>`;
   $('#cred').textContent=S.cred;$('#thr').textContent=S.threshold;$('#barFill').style.width=Math.min(100,S.cred/S.threshold*100)+'%';
   $('#warmTag').textContent=S.warm?'· warm':'';
   $('#dayNo').innerHTML=`<b>Day ${Math.min(S.day,DAYS)} of ${DAYS}</b>`;
   $('#trustPips').innerHTML=Array.from({length:Math.max(S.trustMax,S.trust)},(_,i)=>`<i class="${i<S.trust-cost()?'on':''}"></i>`).join('')+` <b>${S.trust-cost()}</b>`;
-  $('#heldNote').textContent=S.spareBonus?`Held back: +${S.spareBonus} Weight on your next telling`:'';
+  $('#heldNote').textContent=S.spareBonus?(ph?`+${S.spareBonus} held`:`Held back: +${S.spareBonus} Weight on your next telling`):'';
   $('#slots').innerHTML=[0,1,2].map(i=>sel[i]?`<button type="button" class="slot" data-uid="${sel[i].uid}" title="Take it back"><span class="c">${K.costOf(G,sel[i])}</span>${sel[i].title}</button>`:`<span class="slot empty">Story ${i+1}</span>`).join('');
   const e=K.evaluate(S,sel);
-  $('#calc').innerHTML=sel.length?`<span class="num-w">${e.weight}</span><span>Weight</span><span>×</span><span class="num-v">${e.vivid}</span><span>Vivid</span><span>=</span><span class="num-t">${e.total}</span><span>credibility</span>`:`<span>Pick up to three stories from your hand. Stories that share a theme, place, era or person tell better together.</span>`;
+  $('#calc').innerHTML=ph?(sel.length?`<span class="num-w">${e.weight}</span><span>×</span><span class="num-v">${e.vivid}</span><span>=</span><span class="num-t">${e.total}</span>`:`<span class="hint">Tap a story to tell it. Hold one to read it.</span>`):sel.length?`<span class="num-w">${e.weight}</span><span>Weight</span><span>×</span><span class="num-v">${e.vivid}</span><span>Vivid</span><span>=</span><span class="num-t">${e.total}</span><span>credibility</span>`:`<span>Pick up to three stories from your hand. Stories that share a theme, place, era or person tell better together.</span>`;
   $('#parts').innerHTML=e.parts.map(p=>`<span class="${p.k}">${p.label}</span>`).join('');
   $('#tellBtn').disabled=!K.canTell(S,sel);
-  $('#hand').innerHTML=S.hand.map(c=>sel.includes(c)?'':cardHTML(c,{cant:K.costOf(G,c)>S.trust-cost()||sel.length>=3})).join('')}
+  $('#hand').innerHTML=S.hand.map(c=>sel.includes(c)?'':cardHTML(c,{cant:K.costOf(G,c)>S.trust-cost()||sel.length>=3})).join('');fanHand()}
 const cost=()=>sel.reduce((a,c)=>a+K.costOf(G,c),0);
 $('#hand').onclick=e=>{const b=e.target.closest('[data-uid]');if(!b)return;const c=G.S.hand.find(c=>c.uid==b.dataset.uid);if(!c||sel.length>=3||K.costOf(G,c)>G.S.trust-cost())return;sel.push(c);HSOUND.play('pick');render()};
 $('#slots').onclick=e=>{const b=e.target.closest('[data-uid]');if(!b)return;sel=sel.filter(c=>c.uid!=b.dataset.uid);HSOUND.play('unpick');render()};
@@ -416,39 +649,41 @@ $('#endBtn').onclick=()=>{
 
 /* ---------- between ---------- */
 const dlg=$('#dlg'),body=$('#dlgBody');
-function open(html,wire){body.innerHTML=html;if(!dlg.open)dlg.showModal();wire&&wire(body)}
+function open(html,wire,kind=''){dlg.className=kind;body.innerHTML=html;if(!dlg.open)dlg.showModal();wire&&wire(body);body.querySelectorAll('.pg').forEach(paginate)}
 function close(){if(dlg.open)dlg.close()}
 function back(){close();if(G.over)return endRun();showMap()}
 function keepChoice(b,opts,onPick){const row=b.querySelector('#kpick');opts.forEach(k=>{const o=document.createElement('button');o.type='button';o.className='kopt';o.dataset.k=k;o.setAttribute('aria-pressed','false');o.insertAdjacentHTML('beforeend',`<img class="barn" src="img/quilts/${k}.jpg" alt="${KEEPS[k].name}, painted on a barn">`);o.appendChild(quiltEl(k));o.insertAdjacentHTML('beforeend',`<span><b>${KEEPS[k].name}</b>${KEEPS[k].text}</span>`);o.onclick=()=>{row.querySelectorAll('.kopt').forEach(x=>x.setAttribute('aria-pressed',x===o));onPick(k)};row.appendChild(o)})}
 function tradeDialog(){
   const S=G.S,T=S.T,off=K.offers(G),hold=S.node.kind==='holdout',kopts=hold?K.keepOffer(G,2):[];let take=null,give=null,keep=null,noTake=false,noGive=false;
-  const dv=c=>{const d=K.draftValue(G,c);return`<span class="filev" style="color:${d>=0?'var(--good)':'var(--warn)'}">${d>=0?'+':''}${d} vs your deck</span>`};
-  const draw=()=>open(`<h2>${first(T.name)} trades with you</h2><p class="sub">You reached ${S.cred} credibility (${S.scored} counts toward your score: past the threshold it counts half). Take one of their stories and give one of yours, or skip either. A story below your deck’s average (<b>${K.deckAverage(G)}</b> per trust) makes your hands worse; giving one away makes them better. Stories you give may come back retold.${hold?' His stories are unsigned: they can’t be filed.':''}</p>
-    <p class="sub"><b>Take one</b> <button class="btn quiet" id="noTake" aria-pressed="${noTake}" style="padding:2px 10px;font-size:14px;margin-left:8px">${noTake?'Taking nothing ✓':'Take nothing'}</button></p><div class="pick" id="takeRow">${off.map(c=>cardHTML(c,{pressed:take===c,extra:dv(c)})).join('')}</div>
-    <p class="sub"><b>Give one</b> <button class="btn quiet" id="noGive" aria-pressed="${noGive}" style="padding:2px 10px;font-size:14px;margin-left:8px">${noGive?'Giving nothing ✓':'Give nothing'}</button></p><div class="handwrap"><div class="hand" id="giveRow">${G.deck.map(c=>cardHTML(c,{pressed:give===c,extra:dv(c)})).join('')}</div></div>
-    ${hold?`<p class="sub"><b>And a keepsake, for beating a holdout</b></p><div class="kpick" id="kpick"></div>`:''}
-    <div class="row"><button class="btn" id="ok" ${(take||noTake)&&(give||noGive)&&(!hold||keep)?'':'disabled'}>Trade</button></div>`,b=>{
+  const dv=c=>{const d=K.draftValue(G,c);return`<span class="filev" style="color:${d>=0?'var(--good)':'var(--warn)'}">${d>=0?'+':''}${d} vs <span class="long">your </span>deck</span>`};
+  const draw=()=>open(`<h2>${first(T.name)} trades with you</h2><p class="sub">You reached ${S.cred} credibility<span class="long"> (${S.scored} counts toward your score: past the threshold it counts half)</span>. <span class="ph-only">Take one, give one, or skip either. Hold a card to read it.</span><span class="long">Take one of their stories and give one of yours, or skip either. A story below your deck’s average (<b>${K.deckAverage(G)}</b> per trust) makes your hands worse; giving one away makes them better. Stories you give may come back retold.${hold?' His stories are unsigned: they can’t be filed.':''}</span></p>
+    <p class="sub"><b>Take one</b> <button class="btn quiet" id="noTake" aria-pressed="${noTake}" style="padding:2px 10px;font-size:14px;margin-left:8px">${noTake?'Taking nothing ✓':'Take nothing'}</button></p><div class="pick pg" id="takeRow" data-pg="take">${off.map(c=>cardHTML(c,{pressed:take===c,extra:dv(c)})).join('')}</div>
+    <p class="sub"><b>Give one</b> <button class="btn quiet" id="noGive" aria-pressed="${noGive}" style="padding:2px 10px;font-size:14px;margin-left:8px">${noGive?'Giving nothing ✓':'Give nothing'}</button></p><div class="pg" id="giveRow" data-pg="give">${G.deck.map(c=>cardHTML(c,{pressed:give===c,extra:dv(c)})).join('')}</div>
+    <div class="row"><button class="btn" id="ok" ${(take||noTake)&&(give||noGive)?'':'disabled'}>${hold?'Trade, then the keepsake':'Trade'}</button></div>`,b=>{
       b.querySelector('#takeRow').onclick=e=>{const x=e.target.closest('[data-uid]');if(x){take=off.find(c=>c.uid==x.dataset.uid);noTake=false;draw()}};
       b.querySelector('#giveRow').onclick=e=>{const x=e.target.closest('[data-uid]');if(x){give=G.deck.find(c=>c.uid==x.dataset.uid);noGive=false;draw()}};
       b.querySelector('#noTake').onclick=()=>{noTake=!noTake;if(noTake)take=null;draw()};
       b.querySelector('#noGive').onclick=()=>{noGive=!noGive;if(noGive)give=null;draw()};
-      if(hold){keepChoice(b,kopts,k=>{keep=k;b.querySelector('#ok').disabled=!((take||noTake)&&(give||noGive))});if(keep)b.querySelector(`[data-k="${keep}"]`).setAttribute('aria-pressed','true')}
-      b.querySelector('#ok').onclick=async()=>{const gEl=b.querySelector('#giveRow [aria-pressed="true"]'),from=(gEl||$('#hand')).getBoundingClientRect();K.trade(G,take,give);HSOUND.play('shuffle');if(keep){K.takeKeep(G,keep);setTimeout(()=>HSOUND.play('keepsake'),300)}
-        close();if(take||give)await weave(from,$('#portrait').getBoundingClientRect(),{strands:3,ms:850});back()}});
-  draw()}
+      b.querySelector('#ok').onclick=()=>{const gEl=b.querySelector('#giveRow [aria-pressed="true"]'),from=(gEl&&!gEl.hidden?gEl:$('#hand')).getBoundingClientRect(),traded=take||give;K.trade(G,take,give);HSOUND.play('shuffle');
+        const finish=async()=>{close();if(traded)await weave(from,$('#portrait').getBoundingClientRect(),{strands:3,ms:850});back()};
+        if(!hold)return finish();
+        open(`<h2>${first(T.name)} gives you a keepsake</h2><p class="sub">For beating a holdout. Keepsakes are barn quilts: each one changes a rule for the rest of the run.</p><div class="kpick pg col" id="kpick"></div><div class="row"><button class="btn" id="ok" disabled>Take it</button></div>`,bb=>{
+          keepChoice(bb,kopts,k=>{keep=k;bb.querySelector('#ok').disabled=false});
+          bb.querySelector('#ok').onclick=()=>{K.takeKeep(G,keep);setTimeout(()=>HSOUND.play('keepsake'),300);finish()}})}});
+  PAGE.take=0;PAGE.give=0;draw()}
 function lostDialog(){const S=G.S;open(`<h2>Night comes down</h2><p class="sub">${first(S.T.name)} didn’t believe enough of it: ${S.cred} of ${S.threshold}. You lose 3 standing and leave without trading.</p><div class="row"><button class="btn" id="ok">Walk on</button></div>`,b=>b.querySelector('#ok').onclick=back)}
 function archDialog(){
-  let pick=null;
+  let pick=null;PAGE.arch=0;
   const draw=()=>open(`<h2>An arch on the road</h2><p class="sub">Rest here (+3 standing, now ${G.standing}), or retell one story as you walk (+1 vivid on it for the rest of the run).</p>
-    <div class="handwrap"><div class="hand" id="row">${G.deck.map(c=>cardHTML(c,{pressed:pick===c})).join('')}</div></div>
+    <div class="pg" id="row" data-pg="arch">${G.deck.map(c=>cardHTML(c,{pressed:pick===c})).join('')}</div>
     <div class="row"><button class="btn quiet" id="rest">Rest</button><button class="btn" id="retell" ${pick?'':'disabled'}>Retell ${pick?'“'+pick.title+'”':'a story'}</button></div>`,b=>{
       b.querySelector('#row').onclick=e=>{const x=e.target.closest('[data-uid]');if(x){pick=G.deck.find(c=>c.uid==x.dataset.uid);draw()}};
       b.querySelector('#rest').onclick=()=>{K.arch(G,'rest');HSOUND.play('warm');back()};b.querySelector('#retell').onclick=()=>{K.arch(G,'retell',pick);HSOUND.play('answer');back()}});
   draw()}
 function courtDialog(){HSOUND.motif('courthouse');
-  const kopts=K.keepOffer(G,2);let picks=[],keep=null;
-  const draw=()=>open(`<h2>The Register of Deeds</h2><p class="sub">File up to two stories into the record. They leave your deck for good and add to your score. Small decks draw their best stories more often. Unsigned stories can’t be filed, and you keep at least 8.</p>
-    <div class="handwrap"><div class="hand" id="row">${G.deck.map(c=>cardHTML(c,{pressed:picks.includes(c),cant:!K.canFile(G,c),extra:`<span class="filev">${K.canFile(G,c)?`File for +${K.fileValue(c)}`:'Can’t be filed'}</span>`})).join('')}</div></div>
+  const kopts=K.keepOffer(G,2);let picks=[],keep=null;PAGE.court=0;
+  const draw=()=>open(`<h2>The Register of Deeds</h2><p class="sub">File up to two stories into the record<span class="long">. They leave your deck for good and add to your score. Small decks draw their best stories more often. Unsigned stories can’t be filed, and you keep at least 8</span><span class="ph-only">, for score. Then take a keepsake</span>.</p>
+    <div class="pg" id="row" data-pg="court">${G.deck.map(c=>cardHTML(c,{pressed:picks.includes(c),cant:!K.canFile(G,c),extra:`<span class="filev">${K.canFile(G,c)?`File for +${K.fileValue(c)}`:'Can’t be filed'}</span>`})).join('')}</div>
     <p class="sub"><b>Take a keepsake</b></p><div class="kpick" id="kpick"></div>
     <div class="row"><span class="sub" style="margin:0">${picks.length?`Filing ${picks.length}: +${picks.reduce((a,c)=>a+K.fileValue(c),0)} to your score`:'Filing nothing'}</span><button class="btn" id="ok" ${keep||!kopts.length?'':'disabled'}>Done</button></div>`,b=>{
       b.querySelector('#row').onclick=e=>{const x=e.target.closest('[data-uid]');if(!x)return;const c=G.deck.find(c=>c.uid==x.dataset.uid);if(!K.canFile(G,c))return;
@@ -467,28 +702,28 @@ function endings(){
     b=>b.querySelectorAll('[data-e]').forEach(x=>x.onclick=()=>{G.ending=x.dataset.e;G.over=true;endRun()}))}
 function endRun(){
   const fs=K.finalScore(G),e=G.ending&&K.ENDINGS[G.ending];renderTop();
-  open(`<h2>${G.struck?'Your testimony is struck':e?e.title:'The record'}</h2>${e?`<p class="sub" style="font:400 21px/1.2 var(--hand)">${e.text}</p>`:''}<p class="rank">${K.rank(G)}</p>
+  PAGE.end=0;open(`<h2>${G.struck?'Your testimony is struck':e?e.title:'The record'}</h2><div class="pg col" data-pg="end"><p class="rank" style="margin:0">${K.rank(G)}</p>${e?`<p class="sub" style="font:400 21px/1.2 var(--hand)">${e.text}</p>`:''}
     <div class="hist">${G.history.map(h=>`<div>${TELLER[h.teller].name}${h.kind==='holdout'?' (holdout)':''}: ${h.cred} of ${h.threshold} · ${h.result==='won'?'won':'not believed'}</div>`).join('')}</div>
-    <p class="sub">Credibility and filing ${G.score} + standing ${Math.max(0,G.standing)} × 20 = <b>${fs}</b>.<br>Ranks: ${K.RANKS.map(([n,r])=>`${r} ${n}+`).join(' · ')}.</p>
+    <p class="sub">Credibility and filing ${G.score} + standing ${Math.max(0,G.standing)} × 20 = <b>${fs}</b>.<br>Ranks: ${K.RANKS.map(([n,r])=>`${r} ${n}+`).join(' · ')}.</p></div>
     <div class="row"><button class="btn" id="again">Go again</button></div>`,b=>b.querySelector('#again').onclick=()=>{close();newRun()})}
-function keepsDialog(){open(`<h2>Your keepsakes</h2><div class="kpick" id="kpick"></div><div class="row"><button class="btn" id="x">Close</button></div>`,b=>{keepChoice(b,G.keeps,()=>{});b.querySelector('#x').onclick=close})}
-$('#deckBtn').onclick=()=>open(`<h2>Your deck</h2><p class="sub">${G.deck.length} stories.</p><div class="handwrap"><div class="hand">${G.deck.map(c=>cardHTML(c,{tag:'div'})).join('')}</div></div><div class="row"><button class="btn" id="x">Close</button></div>`,b=>b.querySelector('#x').onclick=close);
+function keepsDialog(){open(`<h2>Your keepsakes</h2><div class="kpick pg col" id="kpick" data-pg="keeps"></div><div class="row"><button class="btn" id="x">Close</button></div>`,b=>{keepChoice(b,G.keeps,()=>{});b.querySelector('#x').onclick=close})}
+$('#deckBtn').onclick=()=>(PAGE.deck=0,open(`<h2>Your deck</h2><p class="sub">${G.deck.length} stories.</p><div class="pg" data-pg="deck">${G.deck.map(c=>cardHTML(c,{tag:'div'})).join('')}</div><div class="row"><button class="btn" id="x">Close</button></div>`,b=>b.querySelector('#x').onclick=close));
 $('#newBtn').onclick=()=>{close();newRun()};
 $('#creditsBtn').onclick=async()=>{let list=[];try{list=await (await fetch('public/credits.json')).json()}catch(e){}
-  open(`<h2>Image credits</h2><p class="sub">Outside photographs and prints in the game, each checked against its source’s own license record. Under the map: USDA aerial photography indexes (NARA): Nebraska National Forest 1960, Frontier County 1952, Otoe County 1949. Everything else is your drawings, sculptures, paintings and auroras, Gemini renders, or drawn by code.</p>
-    <div class="credits">${list.map(c=>`<div><img src="public/${c.id}.jpg" alt=""><span><b>${c.title.replace(/</g,'&lt;')}</b>${c.date?`, ${c.date}`:''}<br>${(c.by||'Unknown').replace(/</g,'&lt;')} · ${c.rights} · ${c.source}${c.link?` · <a href="${c.link}" target="_blank" rel="noopener">source</a>`:''}</span></div>`).join('')}</div>
+  PAGE.credits=0;open(`<h2>Image credits</h2><div class="credits pg col" data-pg="credits"><p class="sub">Outside photographs and prints in the game, each checked against its source’s own license record. Under the map: USDA aerial photography indexes (NARA): Nebraska National Forest 1960, Frontier County 1952, Otoe County 1949. Everything else is your drawings, sculptures, paintings and auroras, Gemini renders, or drawn by code.</p>
+    ${list.map(c=>`<div><img src="public/${c.id}.jpg" alt=""><span><b>${c.title.replace(/</g,'&lt;')}</b>${c.date?`, ${c.date}`:''}<br>${(c.by||'Unknown').replace(/</g,'&lt;')} · ${c.rights} · ${c.source}${c.link?` · <a href="${c.link}" target="_blank" rel="noopener">source</a>`:''}</span></div>`).join('')}</div>
     <div class="row"><button class="btn" id="x">Close</button></div>`,b=>b.querySelector('#x').onclick=close)};
 const sb=$('#soundBtn');const paintSound=()=>{sb.setAttribute('aria-pressed',HSOUND.on);sb.textContent=HSOUND.on?'Sound on':'Sound off'};
 sb.onclick=async()=>{await HSOUND.toggle();paintSound();if(G)setLight(G.S&&!$('#sitView').hidden?G.S.node.c:(G.at?K.nodeById(G,G.at).c:0),G.S&&!$('#sitView').hidden?G.S.T.id:null)};
 if(HSOUND.wanted())addEventListener('pointerdown',async function once(){removeEventListener('pointerdown',once);if(!HSOUND.on){await HSOUND.toggle(true);paintSound()}},{once:true});
-$('#howBtn').onclick=()=>open(`<h2>How the Survey works</h2><div class="sub" style="display:grid;gap:8px;max-width:64ch">
+$('#howBtn').onclick=()=>(PAGE.how=0,open(`<h2>How the Survey works</h2><div class="sub pg col" data-pg="how" style="max-width:64ch">
   <p><b>The map.</b> Walk from Halsey to the bridge over the Missouri. Each step is a sitting, a holdout, the road, an arch or a courthouse.</p>
   <p><b>Trust is what you spend.</b> Each story costs trust (the pink circle). You get ${K.TRUST} a day, and one more once they’re warm (halfway to their threshold).</p>
   <p><b>Credibility is what you win.</b> Tell one to three stories at once: Weight × Vivid. Stories that share a theme, place, era or person raise Vivid. So does a story about what they want.</p>
   <p><b>Reach their threshold within ${DAYS} days</b> and they trade: take one of theirs, give one of yours. Fall short and you lose 3 standing.</p>
   <p><b>Standing is your health</b> for the whole run. Unanswered doubts and risky stories cost it. At zero your testimony is struck.</p>
   <p><b>Courthouses</b> file stories into the record for score, and give you a keepsake: a barn quilt that changes the rules.</p>
-  <p><b>Your score</b> is the credibility you earned (past a teller’s threshold it counts half), plus filing, plus standing × 20. It decides your rank.</p><p><b>Words on the cards.</b> <i>Retain</i>: stays in hand at day’s end. <i>Ethereal</i>: gone if not told today. Giving a story away or filing it removes it for the rest of the run.</p></div><div class="row"><button class="btn" id="x">Got it</button></div>`,b=>b.querySelector('#x').onclick=close);
+  <p><b>Your score</b> is the credibility you earned (past a teller’s threshold it counts half), plus filing, plus standing × 20. It decides your rank.</p><p><b>Words on the cards.</b> <i>Retain</i>: stays in hand at day’s end. <i>Ethereal</i>: gone if not told today. Giving a story away or filing it removes it for the rest of the run.</p></div><div class="row"><button class="btn" id="x">Got it</button></div>`,b=>b.querySelector('#x').onclick=close));
 
 /* the portrait develops as credibility rises */
 let lastT=performance.now();

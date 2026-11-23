@@ -4,7 +4,28 @@ The goal: on a phone, every screen of Halsey, Nebraska fits in the window. Nothi
 
 Each piece below is independent and comes back as its own file. Claude wires them into the game. The rules in `docs/neon-menu.md` still apply: plain ES2020, no libraries, offline, seeded, reduced motion respected, the shared palette, CC0 or MIT.
 
-## Where it stands now
+## Status: a first pass is in the game
+
+Claude built a working first pass of the phone layout in `prototypes/sitting/sitting.html`. Every screen fits at 360 × 640, 390 × 844 and 412 × 915, checked by playing a whole run, from Halsey through the ending, with an automated fit check on each screen.
+
+| Piece | First pass, built here | What's still wanted from Neon |
+|---|---|---|
+| U1 fit checker | A Playwright script (outside the repo for now) | The in-browser `frames.html` and `fitCheck()`, so the designer can check on their own |
+| U2 mini card | The full card, restyled with CSS to 104 × 160 | A purpose-built face with better art cropping; a title that reads better when overlapped |
+| U3 hand fan | Overlaps and arcs to fit; tap to pick | Drag into the tray; a smoother re-flow when a card leaves |
+| U4 card inspect | Hold or right-click a card; "Add to the telling" | The grow-from-the-card animation |
+| U5 pager | ‹ ›, swipe, "2 of 4"; items scale down if even one won't fit | Snap animation; page dots |
+| U6 sheets | Every dialog is a full-screen sheet on a phone; the map uses a short bottom sheet | Rise and fall motion; focus polish |
+| U7 teller header | Scene, inset portrait, intent plate, chips; tap for the full teller | Better portrait framing; a clearer intent icon set |
+| U8 tray | Slots, formula, link chips, Tell and End on one row | A formula that counts up in place; link chips that never clip |
+| U9 top strip | Standing pips, score, keepsakes, ☰ menu | Standing that reads more like health |
+| U10 compact map | All 8 rows fit; tap a place for a peek and Go | Labels that never collide; a clearer "you are here" |
+| U11 toasts | Notes appear as a toast on a phone | The queue for fast plays |
+| U12 landscape | Not started | All of it |
+
+The measurements below are from **before** this pass.
+
+## Where it stood
 
 Measured in the current build (`prototypes/sitting/sitting.html`):
 
