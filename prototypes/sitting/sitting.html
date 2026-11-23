@@ -17,7 +17,7 @@
 [hidden]{display:none!important}
 html,body{height:auto}
 body{background:var(--paper);color:var(--ink);font-family:var(--text);font-size:16px;line-height:1.4;margin:0}
-.wrap>*{min-width:0}
+.wrap>*,#sitView>*,#mapView>*{min-width:0}
 .wrap{max-width:1040px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:12px 40px;display:grid;gap:14px}
 button{font:inherit;color:inherit;cursor:pointer}
 button:focus-visible{outline:3px solid var(--weight);outline-offset:2px}
@@ -121,7 +121,47 @@ dialog .pick{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:12px}
 dialog .row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:flex-end}
 .rank{font:400 46px/1 var(--hand)}
 .hist{display:grid;gap:4px;font-size:15px;margin:10px 0}
+
+/* the map: west at the top, the Missouri at the bottom */
+.view-h{display:flex;flex-wrap:wrap;gap:4px 16px;align-items:baseline;justify-content:space-between}
+.view-h h2{font:400 32px/1 var(--hand);margin:0}
+.view-h p{margin:0;font-size:15px;color:var(--muted)}
+.map{position:relative;border:2px solid var(--ink);border-radius:8px;background:#fbf7ec;padding:16px 8px;box-shadow:3px 4px 0 var(--ink)}
+.map svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.mrows{position:relative;display:grid;gap:22px}
+.mrow{display:flex;justify-content:space-evenly;align-items:flex-start;gap:6px}
+.mrow .col{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:700;position:absolute;left:8px}
+.node{display:grid;justify-items:center;gap:3px;background:none;border:0;padding:0;width:96px;text-align:center}
+.node .dot{width:58px;height:58px;border-radius:50%;border:2.5px solid var(--ink);background:var(--card);display:grid;place-items:center;overflow:hidden;position:relative}
+.node .dot img.face{width:100%;height:100%;object-fit:cover;object-position:50% 20%;mix-blend-mode:multiply}
+.node .dot img.ic{width:34px;height:34px}
+.node .kind{font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+.node .nm{font-size:13.5px;line-height:1.15}
+.node.hold .dot{border-color:var(--warn);border-width:3.5px}
+.node.boss .dot{width:72px;height:72px;border-width:3.5px}
+.node:disabled{cursor:default}
+.node:disabled .dot{opacity:.5}
+.node.done .dot{opacity:1;background:#e6dfcf}
+.node.done .dot::after{content:"✓";position:absolute;right:-2px;bottom:-2px;background:var(--ink);color:#fff;border-radius:50%;width:22px;height:22px;display:grid;place-items:center;font-size:13px}
+.node.here .dot{box-shadow:0 0 0 4px var(--yellow),0 0 0 6px var(--ink)}
+.node.can .dot{box-shadow:0 0 0 4px var(--yellow);animation:glow 1.6s ease-in-out infinite}
+.node.can:hover .dot{transform:scale(1.06)}
+@keyframes glow{50%{box-shadow:0 0 0 7px rgba(243,194,47,.55)}}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:13.5px;color:var(--muted)}
+.legend span{display:inline-flex;gap:5px;align-items:center}.legend img{width:20px;height:20px}
+.keeps{display:inline-flex;gap:5px;align-items:center;vertical-align:middle}
+.keeps button{padding:0;border:1.5px solid var(--ink);border-radius:3px;background:none;width:30px;height:30px;line-height:0}
+.keeps canvas{width:100%;height:100%}
+.kpick{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:12px}
+.kopt{display:grid;grid-template-columns:72px 1fr;gap:10px;align-items:center;text-align:left;background:var(--card);border:2px solid var(--ink);border-radius:8px;padding:8px 12px;max-width:340px;box-shadow:2px 3px 0 var(--ink)}
+.kopt[aria-pressed="true"]{border-color:var(--trust);box-shadow:3px 6px 0 var(--ink);transform:translateY(-3px)}
+.kopt canvas{width:72px;height:72px;border:1.5px solid var(--ink)}
+.kopt b{display:block;font-size:16px}
+.road-choices{display:grid;gap:8px;max-width:560px}
+.road-choices .btn{text-align:left}
+.filev{display:block;font-size:12.5px;font-weight:700;color:var(--good);text-align:center;margin-top:4px}
 @media (max-width:760px){
+  .node{width:76px}.node .dot{width:48px;height:48px}.node.boss .dot{width:60px;height:60px}.node .nm{font-size:12px}
   .sitter{grid-template-columns:110px minmax(0,1fr)}
   .intent{grid-column:1/-1}
   .play{grid-template-columns:1fr}
@@ -137,12 +177,20 @@ dialog .row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-cont
     <div class="stats" aria-live="polite">
       <span>Standing <span class="pips" id="standPips"></span> <b id="stand"></b></span>
       <span>Score <b id="score"></b></span>
-      <span id="sitNo"></span>
+      <span>Keepsakes <span class="keeps" id="keeps"></span></span>
     </div>
   </div>
+
+  <section id="mapView" aria-label="The road to the Missouri" style="display:grid;gap:12px">
+    <div class="view-h"><h2>The road to the Missouri</h2><p id="mapNote"></p></div>
+    <div class="map" id="map"><svg id="mapLines" aria-hidden="true"></svg><div class="mrows" id="mrows"></div></div>
+    <div class="legend"><span><img src="icons/story.svg" alt="">Sitting: a teller</span><span><img src="icons/holdout.svg" alt="">Holdout: harder, and a keepsake</span><span><img src="icons/ties.svg" alt="">The road</span><span><img src="icons/keepsake.svg" alt="">Arch: rest or retell</span><span><img src="icons/filing.svg" alt="">Courthouse: file stories, take a keepsake</span><span><img src="icons/sign.svg" alt="">The bridge</span></div>
+  </section>
+
+  <div id="sitView" hidden style="display:grid;gap:14px">
   <div class="band"><canvas id="band" width="960" height="250" aria-hidden="true"></canvas><span class="where" id="where"></span></div>
   <section class="sitter" aria-label="Who you are sitting with">
-    <canvas id="portrait" width="360" height="480" aria-label="Their portrait: your drawing of them, developing into a photograph as you earn credibility"></canvas>
+    <canvas id="portrait" width="360" height="480" aria-label="Their portrait: a drawing of them, developing into a photograph as you earn credibility"></canvas>
     <div class="who">
       <h2 id="tname"></h2>
       <p class="line" id="tline"></p>
@@ -168,7 +216,8 @@ dialog .row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-cont
   </section>
   <p class="note" id="note"></p>
   <section aria-label="Your hand"><div class="handwrap"><div class="hand" id="hand"></div></div></section>
-  <div class="foot"><span id="pileInfo"></span><button type="button" id="deckBtn">See your whole deck</button><button type="button" id="howBtn">How it works</button></div>
+  </div>
+  <div class="foot"><span id="pileInfo"></span><button type="button" id="deckBtn">See your whole deck</button><button type="button" id="howBtn">How it works</button><button type="button" id="newBtn">Start a new run</button></div>
 </div>
 
 <dialog id="dlg"><div id="dlgBody"></div></dialog>
@@ -178,124 +227,208 @@ dialog .row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-cont
 <script>
 (()=>{
 "use strict";
-const K=SITTING,{TELLERS,DAYS}=K,$=s=>document.querySelector(s);
+const K=SITTING,{DAYS,TELLER,KEEPS,PLACE}=K,$=s=>document.querySelector(s);
 const RULE={Find:'Draw 2 cards.',Chain:'+4 Weight if it shares a theme or place with your last telling.',Risk:'+5 Weight. Costs 1 standing if they aren’t warm yet.',Spare:'Hold it at day’s end: +4 Weight to your next telling.',Repeat:'Copies the strongest other event in this telling.'};
 const INK={Find:'#f3c22f',Chain:'#e2486f',Risk:'#c4622c',Spare:'#6f9148',Repeat:'#3a78c3'};
-const PLACE={halsey:'Halsey',sandhills:'Sandhills',platte:'the Platte',loup:'the Loup',courthouse:'Courthouse'};
+const KIND={sitting:'Sitting',holdout:'Holdout',road:'The road',arch:'An arch',courthouse:'Courthouse',bridge:'The bridge'};
+const KICON={sitting:'story',holdout:'holdout',road:'ties',arch:'keepsake',courthouse:'filing',bridge:'sign'};
 let G,sel=[],P=null;
+const first=n=>n.split(' ')[0];
+
+/* ---------- barn quilts, drawn by code: each keepsake is a block ---------- */
+const QC={r:'#b7352c',w:'#f3ecdc',k:'#1f1b2e',y:'#e9b53a',g:'#5f8640',b:'#3a6aa8',p:'#c9577a'};
+const BLOCKS={ // rows of cells: "a" solid, "a/b" or "a\\b" split corner to corner (first color top)
+  sawtooth:['r/w r/w r/w r/w','w w w w','r/w r/w r/w r/w','w w w w'],
+  ohiostar:['w w/b b\\w w','b\\w r r w/b','w/b r r b\\w','w b\\w w/b w'],
+  logcabin:['y y y g','r b b g','r b k g','r r r g'],
+  geese:['w/g g\\w w/g g\\w','g/w w\\g g/w w\\g','w/g g\\w w/g g\\w','g/w w\\g g/w w\\g'],
+  pinwheel:['r/w w\\b','b\\w w/r'],
+  bearpaw:['g g w g g','g g w g g','w w r w w','g g w g g','g g w g g'],
+  lonestar:['w w/y y\\w w','w/y r r y\\w','y\\w r r w/y','w y\\w w/y w'],
+  churndash:['b/w w b\\w','w y w','w\\b w w/b'],
+  dresden:['w p\\w w/p w','w/p y y p\\w','p\\w y y w/p','w w/p p\\w w'],
+  drunkard:['k/w w\\k','w\\k k/w']};
+function quilt(cv,key){
+  const x=cv.getContext('2d'),rows=BLOCKS[KEEPS[key].block].map(r=>r.split(' ')),n=rows.length,m=rows[0].length,W=cv.width,H=cv.height,cw=W/m,ch=H/n;
+  x.fillStyle=QC.w;x.fillRect(0,0,W,H);
+  rows.forEach((row,j)=>row.forEach((cell,i)=>{const X=i*cw,Y=j*ch;
+    if(cell.includes('/')){const[a,b]=cell.split('/');x.fillStyle=QC[a];x.beginPath();x.moveTo(X,Y);x.lineTo(X+cw,Y);x.lineTo(X,Y+ch);x.fill();x.fillStyle=QC[b];x.beginPath();x.moveTo(X+cw,Y);x.lineTo(X+cw,Y+ch);x.lineTo(X,Y+ch);x.fill()}
+    else if(cell.includes('\\')){const[a,b]=cell.split('\\');x.fillStyle=QC[a];x.beginPath();x.moveTo(X,Y);x.lineTo(X+cw,Y);x.lineTo(X+cw,Y+ch);x.fill();x.fillStyle=QC[b];x.beginPath();x.moveTo(X,Y);x.lineTo(X+cw,Y+ch);x.lineTo(X,Y+ch);x.fill()}
+    else{x.fillStyle=QC[cell];x.fillRect(X,Y,cw+.5,ch+.5)}}));
+  x.strokeStyle='rgba(31,27,46,.35)';x.lineWidth=Math.max(1,W/90);x.strokeRect(1,1,W-2,H-2);
+  // printed on barn boards: a little grain
+  for(let k=0;k<W*H/40;k++){x.fillStyle=`rgba(255,255,255,${Math.random()*.12})`;x.fillRect(Math.random()*W,Math.random()*H,1.2,1.2)}}
+const quiltEl=(k,size=72)=>{const c=document.createElement('canvas');c.width=c.height=size*2;quilt(c,k);c.setAttribute('aria-hidden','true');return c};
+function renderKeeps(){const h=$('#keeps');h.innerHTML='';if(!G.keeps.length){h.textContent='none yet';return}
+  for(const k of G.keeps){const b=document.createElement('button');b.type='button';b.title=`${KEEPS[k].name}: ${KEEPS[k].text}`;b.setAttribute('aria-label',b.title);b.appendChild(quiltEl(k,30));b.onclick=()=>keepsDialog();h.appendChild(b)}}
 
 /* ---------- a card, in the fixed order: cost, title, art, keyword, rule, voice, score ---------- */
 function art(c){const a=c.art;
   if(a.kind==='render')return`<div class="art render"><img class="ph" src="${a.src}" alt=""><span class="ink" style="background:${INK[c.event]||'#9a8f7c'}"></span>${a.over?`<img class="ov" src="${a.over}" alt="">`:''}</div>`;
   return`<div class="art ${a.kind}"><img src="${a.src}" alt=""></div>`}
-function cardHTML(c,{pressed=false,cant=false,tag='button'}={}){
-  const tags=[c.theme,PLACE[c.place]||c.place,c.era].join(' · ');
-  const credit=c.retold?`Retold by ${c.retold.split(' ')[0]}`:c.borrowed?`Theirs, for now`:c.art.credit||(c.people.length?`Told by ${c.people.map(p=>p[0].toUpperCase()+p.slice(1)).join(' & ')}`:'Yours');
-  return`<${tag} class="card${c.rare?' rare':''}${cant?' cant':''}" ${tag==='button'?`type="button" data-uid="${c.uid}" aria-pressed="${pressed}"`:''} aria-label="${c.title}. Costs ${c.cost} trust. Weight ${c.w}, vivid ${c.v}. ${c.event?c.event+': '+RULE[c.event]:'Small talk.'}">
-    <div class="hd"><span class="cost${c.cost?'':' free'}">${c.cost}</span><span class="ti">${c.title}</span></div>
-    ${art(c)}${c.retold?'<span class="flag">Retold</span>':c.borrowed?'<span class="flag">Theirs</span>':c.retellings?`<span class="flag">+${c.retellings} vivid</span>`:''}
+function cardHTML(c,{pressed=false,cant=false,tag='button',extra=''}={}){
+  const tags=[c.theme,PLACE[c.place]||c.place,c.era].join(' · '),cost=K.costOf(G,c);
+  const credit=c.retold?`Retold by ${first(c.retold)}`:c.borrowed?`Theirs, for now`:c.art.credit||(c.people.length?`Told by ${c.people.map(p=>TELLER[p]?first(TELLER[p].name):p[0].toUpperCase()+p.slice(1)).join(' & ')}`:'Yours');
+  return`<${tag} class="card${c.rare?' rare':''}${cant?' cant':''}" ${tag==='button'?`type="button" data-uid="${c.uid}" aria-pressed="${pressed}"`:''} aria-label="${c.title}. Costs ${cost} trust. Weight ${c.w}, vivid ${c.v}. ${c.event?c.event+': '+RULE[c.event]:'Small talk.'}">
+    <div class="hd"><span class="cost${cost?'':' free'}">${cost}</span><span class="ti">${c.title}</span></div>
+    ${art(c)}${c.retold?'<span class="flag">Retold</span>':c.borrowed?'<span class="flag">Theirs</span>':c.holdout?'<span class="flag">Unsigned</span>':c.retellings?`<span class="flag">+${c.retellings} vivid</span>`:''}
     <div class="ty">${c.event?`<img src="icons/${c.event.toLowerCase()}.svg" alt="">${c.event}`:'Small talk'} <span>· ${tags}</span></div>
     <div class="ru">${c.event?`<b>${c.event}:</b> ${RULE[c.event]}`:'Free to tell. Good to give away.'}</div>
     <div class="qu">“${c.quote.replace(/^“|”$/g,'')}”</div>
-    <div class="ft"><div class="wv"><span class="w" title="Weight">${c.w}</span><span class="v" title="Vivid">${c.v}</span></div><div class="cr">${credit}</div></div>
+    <div class="ft"><div class="wv"><span class="w" title="Weight">${c.w}</span><span class="v" title="Vivid">${c.v}</span></div><div class="cr">${credit}</div></div>${extra}
   </${tag}>`}
 
-/* ---------- the run ---------- */
-function newRun(){G=K.newRun(Date.now()%100000);K.startSitting(G);enterSitting()}
-async function enterSitting(){
-  const S=G.S,T=S.T;sel=[];
-  $('#where').textContent=T.placeName;
-  const im=await HE.load(T.img),pc=HE.cover(im,960,250),pr=HE.separate(pc,HE.makePaper(960,250,G.sitting+2),G.sitting*31+5);
+/* ---------- top bar ---------- */
+function renderTop(){
+  const live=G.S&&!G.S.result?G.S.cred:0;
+  $('#stand').textContent=`${Math.max(0,G.standing)}`;
+  $('#standPips').innerHTML=Array.from({length:K.MAX_STANDING},(_,i)=>`<i class="${i<G.standing?'on':''}"></i>`).join('');$('#standPips').classList.toggle('low',G.standing<=4);
+  $('#score').textContent=G.score+live;renderKeeps();
+  $('#pileInfo').textContent=G.S&&!G.S.result?`Draw pile ${G.S.draw.length} · Told today ${G.S.discard.length} · Deck ${G.deck.length}`:`Deck ${G.deck.length} · Filed ${G.filed}`}
+
+/* ---------- the map ---------- */
+function showMap(){
+  $('#sitView').hidden=true;$('#mapView').hidden=false;renderTop();
+  const can=new Set(K.reachable(G).map(n=>n.id)),vis=new Set(G.visited);
+  $('#mapNote').textContent=G.at?'Pick where to go next. The glowing places are the ones you can reach from here.':'Your Survey starts at Halsey, with Ruth.';
+  $('#mrows').innerHTML=G.map.map((col,c)=>`<div class="mrow">${col.map(n=>{const T=n.teller&&TELLER[n.teller];
+    const face=T?`<img class="face" src="${T.drawing}" alt="">`:`<img class="ic" src="icons/${KICON[n.kind]}.svg" alt="">`;
+    const nm=T?first(T.name):n.kind==='road'?K.ROAD[n.road].title:n.kind==='courthouse'?'Register of Deeds':n.kind==='arch'?'Rest or retell':'';
+    const cls=['node',n.kind==='holdout'?'hold':'',n.kind==='bridge'?'boss':'',vis.has(n.id)?'done':'',G.at===n.id?'here':'',can.has(n.id)?'can':''].join(' ');
+    return`<button type="button" class="${cls}" data-id="${n.id}" ${can.has(n.id)?'':'disabled'} aria-label="${KIND[n.kind]}${T?', '+T.name+', '+T.placeName:''}${nm&&!T?', '+nm:''}"><span class="dot">${face}</span><span class="kind">${KIND[n.kind]}</span><span class="nm">${nm}${T?`<br><span style="color:var(--muted)">${PLACE[T.place]}</span>`:''}</span></button>`}).join('')}</div>`).join('');
+  requestAnimationFrame(drawLines)}
+function drawLines(){
+  const map=$('#map'),svg=$('#mapLines'),R=map.getBoundingClientRect();svg.setAttribute('viewBox',`0 0 ${R.width} ${R.height}`);
+  const pos=id=>{const d=map.querySelector(`[data-id="${id}"] .dot`);if(!d)return null;const r=d.getBoundingClientRect();return[r.left-R.left+r.width/2,r.top-R.top+r.height/2,r.height/2]};
+  let h='';const vis=new Set(G.visited);
+  G.map.flat().forEach(n=>n.next.forEach(m=>{const a=pos(n.id),b=pos(m);if(!a||!b)return;const walked=vis.has(n.id)&&vis.has(m)&&G.visited.indexOf(m)===G.visited.indexOf(n.id)+1;
+    const mx=(a[0]+b[0])/2+((a[0]*7+b[1])%23-11),my=(a[1]+b[1])/2;h+=`<path d="M${a[0]} ${a[1]+a[2]} Q${mx} ${my} ${b[0]} ${b[1]-b[2]}" fill="none" stroke="${walked?'#e2486f':'rgba(31,27,46,.35)'}" stroke-width="${walked?4:2}" stroke-dasharray="${walked?'':'5 6'}" stroke-linecap="round"/>`}));
+  svg.innerHTML=h}
+addEventListener('resize',()=>{if(!$('#mapView').hidden)drawLines()});
+$('#mrows').onclick=e=>{const b=e.target.closest('[data-id]');if(!b||b.disabled)return;visit(K.goTo(G,b.dataset.id))};
+function visit(n){
+  if(n.teller)return enterSitting(n);
+  if(n.kind==='road')return roadDialog(n);
+  if(n.kind==='arch')return archDialog();
+  if(n.kind==='courthouse')return courtDialog()}
+
+/* ---------- a sitting ---------- */
+async function enterSitting(node){
+  K.startSitting(G,node);const S=G.S,T=S.T;sel=[];
+  $('#mapView').hidden=true;$('#sitView').hidden=false;scrollTo({top:0});
+  $('#where').textContent=T.placeName+(node.kind==='holdout'?' · a holdout':node.kind==='bridge'?' · the end of the Survey':'');
+  const im=await HE.load(T.img),pc=HE.cover(im,960,250),pr=HE.separate(pc,HE.makePaper(960,250,node.c+2),node.c*31+5);
   $('#band').getContext('2d').drawImage(pr,0,0);
   P=await HE.makePortrait({drawing:T.drawing,photo:T.photo});
-  note(`Read what they’ll do today, then pick stories from your hand and tell them.`);render()}
+  note(node.kind==='holdout'?`Frank never signed the agreement. His stories can’t be filed, but beat his doubt and he’ll give you a keepsake.`:node.kind==='bridge'?`The last sitting. Imani decides how you leave the Survey.`:`Read what they’ll do today, then pick stories from your hand and tell them.`);render()}
 function note(h){$('#note').innerHTML=h}
 function render(){
-  const S=G.S,T=S.T;
-  $('#stand').textContent=`${Math.max(0,G.standing)}/${K.START_STANDING}`;
-  $('#standPips').innerHTML=Array.from({length:K.START_STANDING},(_,i)=>`<i class="${i<G.standing?'on':''}"></i>`).join('');$('#standPips').classList.toggle('low',G.standing<=4);
-  $('#score').textContent=G.score+S.cred;$('#sitNo').textContent=`Sitting ${G.sitting+1} of ${TELLERS.length}`;
-  $('#tname').textContent=T.name;$('#tline').textContent=`“${T.line}”`;$('#tfirst').textContent=T.name.split(' ')[0];
+  const S=G.S,T=S.T;renderTop();
+  $('#tname').textContent=T.name;$('#tline').textContent=`“${T.line}”`;$('#tfirst').textContent=first(T.name);
   $('#tchips').innerHTML=`<span class="chip">Wants <b>${T.want}</b></span><span class="chip res${S.reservation?'':' done'}" title="Halves your Vivid until answered">Reservation: <b>${T.reservation.text}</b></span>`;
-  const I=S.intent,ic={ask:'place',doubt:'holdout',own:'story',quiet:'trust'}[I.kind];
+  const I=S.intent,ic={ask:'place',doubt:'holdout',own:'story',quiet:'trust'}[I.kind],bp=G.keeps.includes('bearpaw');
   const what={ask:I.label,doubt:`Doubt ${I.n}`,own:'Tells one of their own',quiet:'Goes quiet'}[I.kind];
-  const why={ask:`Stories that fit weigh double today.`,doubt:`At the end of the day they knock ${I.n} off your credibility and you lose 1 standing, unless you tell them something about ${T.want}.`,own:`One of their stories is in your hand today. Tell it back to them for a Thread.`,quiet:`You’ll have one less trust tomorrow.`}[I.kind];
+  const why={ask:`Stories that fit weigh double today.`,doubt:`At the end of the day they knock ${I.n} off your credibility${bp?'':' and you lose 1 standing'}, unless you tell them something about ${T.want}.`,own:`One of their stories is in your hand today. Tell it back to them for a Thread.`,quiet:`You’ll have one less trust tomorrow.`}[I.kind];
   $('#intent').innerHTML=`<span class="lab">Today they</span><span class="what"><img src="icons/${ic}.svg" alt="">${what}</span><p>${why}</p>`;
-  $('#cred').textContent=S.cred;$('#thr').textContent=T.threshold;$('#barFill').style.width=Math.min(100,S.cred/T.threshold*100)+'%';
+  $('#cred').textContent=S.cred;$('#thr').textContent=S.threshold;$('#barFill').style.width=Math.min(100,S.cred/S.threshold*100)+'%';
   $('#warmTag').textContent=S.warm?'· warm':'';
   $('#dayNo').innerHTML=`<b>Day ${Math.min(S.day,DAYS)} of ${DAYS}</b>`;
-  $('#trustPips').innerHTML=Array.from({length:S.trustMax},(_,i)=>`<i class="${i<S.trust-cost()?'on':''}"></i>`).join('')+` <b>${S.trust-cost()}</b>`;
+  $('#trustPips').innerHTML=Array.from({length:Math.max(S.trustMax,S.trust)},(_,i)=>`<i class="${i<S.trust-cost()?'on':''}"></i>`).join('')+` <b>${S.trust-cost()}</b>`;
   $('#heldNote').textContent=S.spareBonus?`Held back: +${S.spareBonus} Weight on your next telling`:'';
-  $('#slots').innerHTML=[0,1,2].map(i=>sel[i]?`<button type="button" class="slot" data-uid="${sel[i].uid}" title="Take it back"><span class="c">${sel[i].cost}</span>${sel[i].title}</button>`:`<span class="slot empty">Story ${i+1}</span>`).join('');
+  $('#slots').innerHTML=[0,1,2].map(i=>sel[i]?`<button type="button" class="slot" data-uid="${sel[i].uid}" title="Take it back"><span class="c">${K.costOf(G,sel[i])}</span>${sel[i].title}</button>`:`<span class="slot empty">Story ${i+1}</span>`).join('');
   const e=K.evaluate(S,sel);
   $('#calc').innerHTML=sel.length?`<span class="num-w">${e.weight}</span><span>Weight</span><span>×</span><span class="num-v">${e.vivid}</span><span>Vivid</span><span>=</span><span class="num-t">${e.total}</span><span>credibility</span>`:`<span>Pick up to three stories from your hand. Stories that share a theme, place, era or person tell better together.</span>`;
   $('#parts').innerHTML=e.parts.map(p=>`<span class="${p.k}">${p.label}</span>`).join('');
   $('#tellBtn').disabled=!K.canTell(S,sel);
-  $('#hand').innerHTML=S.hand.map(c=>sel.includes(c)?'':cardHTML(c,{cant:c.cost>S.trust-cost()||sel.length>=3})).join('');
-  $('#pileInfo').textContent=`Draw pile ${S.draw.length} · Told today ${S.discard.length} · Deck ${G.deck.length}`;
-}
-const cost=()=>sel.reduce((a,c)=>a+c.cost,0);
-$('#hand').onclick=e=>{const b=e.target.closest('[data-uid]');if(!b)return;const c=G.S.hand.find(c=>c.uid==b.dataset.uid);if(!c||sel.length>=3||c.cost>G.S.trust-cost())return;sel.push(c);render()};
+  $('#hand').innerHTML=S.hand.map(c=>sel.includes(c)?'':cardHTML(c,{cant:K.costOf(G,c)>S.trust-cost()||sel.length>=3})).join('')}
+const cost=()=>sel.reduce((a,c)=>a+K.costOf(G,c),0);
+$('#hand').onclick=e=>{const b=e.target.closest('[data-uid]');if(!b)return;const c=G.S.hand.find(c=>c.uid==b.dataset.uid);if(!c||sel.length>=3||K.costOf(G,c)>G.S.trust-cost())return;sel.push(c);render()};
 $('#slots').onclick=e=>{const b=e.target.closest('[data-uid]');if(!b)return;sel=sel.filter(c=>c.uid!=b.dataset.uid);render()};
-
 function floatAt(el,text,bad){const r=el.getBoundingClientRect(),f=document.createElement('div');f.className='float'+(bad?' bad':'');f.textContent=text;f.style.left=(r.left+r.width/2-40)+'px';f.style.top=(r.top-10)+'px';document.body.appendChild(f);setTimeout(()=>f.remove(),1400)}
 $('#tellBtn').onclick=()=>{
   const S=G.S,cards=[...sel],e=K.tell(G,cards);if(!e)return;sel=[];
   floatAt($('#calc'),`+${e.total}`);if(e.standing)setTimeout(()=>floatAt($('#stand'),`${e.standing} standing`,true),300);
   const last=S.log[S.log.length-2];
-  note(`You told ${cards.map(c=>`“${c.title}”`).join(', ')}.${e.answer?` <b>${S.T.name.split(' ')[0]}’s reservation is answered.</b>`:''}${last&&last.t==='warm'?` <b>They open up: +1 trust a day.</b>`:''}`);
+  note(`You told ${cards.map(c=>`“${c.title}”`).join(', ')}.${e.answer?` <b>${first(S.T.name)}’s reservation is answered.</b>`:''}${last&&last.t==='warm'?` <b>They open up: +1 trust a day.</b>`:''}`);
   if(G.over)return endRun();render()};
 $('#endBtn').onclick=()=>{
-  const S=G.S,before=S.cred,out=K.endTurn(G);sel=[];
-  if(out.doubt){floatAt($('#bar'),`−${out.doubt} doubt`,true);}
+  const S=G.S,out=K.endTurn(G);sel=[];
+  if(out.doubt)floatAt($('#bar'),`−${out.doubt} doubt`,true);
   if(out.standing)setTimeout(()=>floatAt($('#stand'),'−1 standing',true),250);
   if(G.over)return endRun();
-  if(out.result){return out.result==='won'?tradeDialog():lostDialog()}
-  const I=S.intent;note(out.doubt?`They didn’t hear what they wanted. −${out.doubt} credibility, −1 standing.`:`Day ${S.day}.${I.kind==='own'?' They tell you one of theirs.':''}`);render()};
+  if(out.result){if(S.node.kind==='bridge')return endings();return out.result==='won'?tradeDialog():lostDialog()}
+  note(out.doubt?`They didn’t hear what they wanted. −${out.doubt} credibility${out.standing?', −1 standing':''}.`:`Day ${S.day}.${S.intent.kind==='own'?' They tell you one of theirs.':''}`);render()};
 
-/* ---------- between sittings ---------- */
+/* ---------- between ---------- */
 const dlg=$('#dlg'),body=$('#dlgBody');
 function open(html,wire){body.innerHTML=html;if(!dlg.open)dlg.showModal();wire&&wire(body)}
+function close(){if(dlg.open)dlg.close()}
+function back(){close();if(G.over)return endRun();showMap()}
+function keepChoice(b,opts,onPick){const row=b.querySelector('#kpick');opts.forEach(k=>{const o=document.createElement('button');o.type='button';o.className='kopt';o.dataset.k=k;o.setAttribute('aria-pressed','false');o.appendChild(quiltEl(k));o.insertAdjacentHTML('beforeend',`<span><b>${KEEPS[k].name}</b>${KEEPS[k].text}</span>`);o.onclick=()=>{row.querySelectorAll('.kopt').forEach(x=>x.setAttribute('aria-pressed',x===o));onPick(k)};row.appendChild(o)})}
 function tradeDialog(){
-  const S=G.S,T=S.T,off=K.offers(G);let take=null,give=null;
-  const draw=()=>open(`<h2>${T.name.split(' ')[0]} trades with you</h2><p class="sub">You reached ${S.cred} credibility. Take one of their stories, and give one of yours back. Giving away a weak story makes your deck better; stories you give may come back retold.</p>
+  const S=G.S,T=S.T,off=K.offers(G),hold=S.node.kind==='holdout',kopts=hold?K.keepOffer(G,2):[];let take=null,give=null,keep=null;
+  const draw=()=>open(`<h2>${first(T.name)} trades with you</h2><p class="sub">You reached ${S.cred} credibility. Take one of their stories, and give one of yours back. Giving away a weak story makes your deck better, and stories you give may come back retold.${hold?' His stories are unsigned: they can’t be filed.':''}</p>
     <p class="sub"><b>Take one</b></p><div class="pick" id="takeRow">${off.map(c=>cardHTML(c,{pressed:take===c})).join('')}</div>
     <p class="sub"><b>Give one</b></p><div class="handwrap"><div class="hand" id="giveRow">${G.deck.map(c=>cardHTML(c,{pressed:give===c})).join('')}</div></div>
-    <div class="row"><button class="btn" id="ok" ${take&&give?'':'disabled'}>Trade</button></div>`,b=>{
+    ${hold?`<p class="sub"><b>And a keepsake, for beating a holdout</b></p><div class="kpick" id="kpick"></div>`:''}
+    <div class="row"><button class="btn" id="ok" ${take&&give&&(!hold||keep)?'':'disabled'}>Trade</button></div>`,b=>{
       b.querySelector('#takeRow').onclick=e=>{const x=e.target.closest('[data-uid]');if(x){take=off.find(c=>c.uid==x.dataset.uid);draw()}};
       b.querySelector('#giveRow').onclick=e=>{const x=e.target.closest('[data-uid]');if(x){give=G.deck.find(c=>c.uid==x.dataset.uid);draw()}};
-      b.querySelector('#ok').onclick=()=>{K.trade(G,take,give);archDialog()}});
+      if(hold){keepChoice(b,kopts,k=>{keep=k;b.querySelector('#ok').disabled=!(take&&give)});if(keep)b.querySelector(`[data-k="${keep}"]`).setAttribute('aria-pressed','true')}
+      b.querySelector('#ok').onclick=()=>{K.trade(G,take,give);if(keep)K.takeKeep(G,keep);back()}});
   draw()}
-function lostDialog(){
-  const S=G.S;open(`<h2>Night comes down</h2><p class="sub">${S.T.name.split(' ')[0]} didn’t believe enough of it: ${S.cred} of ${S.T.threshold}. You lose 3 standing and leave without trading.</p><div class="row"><button class="btn" id="ok">Walk on</button></div>`,b=>b.querySelector('#ok').onclick=()=>G.over?endRun():archDialog())}
+function lostDialog(){const S=G.S;open(`<h2>Night comes down</h2><p class="sub">${first(S.T.name)} didn’t believe enough of it: ${S.cred} of ${S.threshold}. You lose 3 standing and leave without trading.</p><div class="row"><button class="btn" id="ok">Walk on</button></div>`,b=>b.querySelector('#ok').onclick=back)}
 function archDialog(){
-  if(G.sitting>=TELLERS.length-1){dlg.close();return endRun()}
   let pick=null;
-  const draw=()=>open(`<h2>An arch on the road</h2><p class="sub">Rest here (+2 standing, now ${G.standing}), or retell one story as you walk (+1 vivid on it for the rest of the run).</p>
+  const draw=()=>open(`<h2>An arch on the road</h2><p class="sub">Rest here (+3 standing, now ${G.standing}), or retell one story as you walk (+1 vivid on it for the rest of the run).</p>
     <div class="handwrap"><div class="hand" id="row">${G.deck.map(c=>cardHTML(c,{pressed:pick===c})).join('')}</div></div>
     <div class="row"><button class="btn quiet" id="rest">Rest</button><button class="btn" id="retell" ${pick?'':'disabled'}>Retell ${pick?'“'+pick.title+'”':'a story'}</button></div>`,b=>{
       b.querySelector('#row').onclick=e=>{const x=e.target.closest('[data-uid]');if(x){pick=G.deck.find(c=>c.uid==x.dataset.uid);draw()}};
-      b.querySelector('#rest').onclick=()=>{K.arch(G,'rest');next()};b.querySelector('#retell').onclick=()=>{K.arch(G,'retell',pick);next()}});
+      b.querySelector('#rest').onclick=()=>{K.arch(G,'rest');back()};b.querySelector('#retell').onclick=()=>{K.arch(G,'retell',pick);back()}});
   draw()}
-function next(){dlg.close();K.nextSitting(G);if(G.over)return endRun();enterSitting()}
+function courtDialog(){
+  const kopts=K.keepOffer(G,2);let picks=[],keep=null;
+  const draw=()=>open(`<h2>The Register of Deeds</h2><p class="sub">File up to two stories into the record. They leave your deck for good and add to your score. Small decks draw their best stories more often. Unsigned stories can’t be filed, and you keep at least 8.</p>
+    <div class="handwrap"><div class="hand" id="row">${G.deck.map(c=>cardHTML(c,{pressed:picks.includes(c),cant:!K.canFile(G,c),extra:`<span class="filev">${K.canFile(G,c)?`File for +${K.fileValue(c)}`:'Can’t be filed'}</span>`})).join('')}</div></div>
+    <p class="sub"><b>Take a keepsake</b></p><div class="kpick" id="kpick"></div>
+    <div class="row"><span class="sub" style="margin:0">${picks.length?`Filing ${picks.length}: +${picks.reduce((a,c)=>a+K.fileValue(c),0)} to your score`:'Filing nothing'}</span><button class="btn" id="ok" ${keep||!kopts.length?'':'disabled'}>Done</button></div>`,b=>{
+      b.querySelector('#row').onclick=e=>{const x=e.target.closest('[data-uid]');if(!x)return;const c=G.deck.find(c=>c.uid==x.dataset.uid);if(!K.canFile(G,c))return;
+        if(picks.includes(c))picks=picks.filter(p=>p!==c);else if(picks.length<2&&G.deck.length-picks.length>8)picks.push(c);draw()};
+      keepChoice(b,kopts,k=>{keep=k;b.querySelector('#ok').disabled=false});if(keep)b.querySelector(`[data-k="${keep}"]`).setAttribute('aria-pressed','true');
+      b.querySelector('#ok').onclick=()=>{const pts=K.file(G,picks);K.takeKeep(G,keep);if(pts)floatAt($('#score'),`+${pts}`);back()}});
+  draw()}
+function roadDialog(n){
+  const ev=K.ROAD[n.road];
+  open(`<h2>${ev.title}</h2><p class="sub" style="font:400 21px/1.2 var(--hand)">${ev.text}</p><div class="road-choices">${ev.choices.map((c,i)=>`<button class="btn${i?' quiet':''}" data-i="${i}">${c.text}</button>`).join('')}</div>`,b=>b.querySelectorAll('[data-i]').forEach(x=>x.onclick=()=>{
+    const out=K.roadChoose(G,ev,ev.choices[+x.dataset.i]);
+    open(`<h2>${ev.title}</h2><p class="sub">${out.text.length?out.text.join(' · ')+'.':'Nothing changes.'}</p><div class="row"><button class="btn" id="ok">Walk on</button></div>`,bb=>bb.querySelector('#ok').onclick=back)}))}
+function endings(){
+  const S=G.S,won=S.result==='won';
+  open(`<h2>The bridge over the Missouri</h2><p class="sub">${won?`Imani believes you: ${S.cred} of ${S.threshold}.`:`Imani isn’t sure about you (${S.cred} of ${S.threshold}), and you lose 3 standing. You still choose how you leave.`} Everyone ends the Survey here, one of three ways.</p><div class="road-choices">${Object.entries(K.ENDINGS).map(([k,e],i)=>`<button class="btn${i?' quiet':''}" data-e="${k}">${e.title}</button>`).join('')}</div>`,
+    b=>b.querySelectorAll('[data-e]').forEach(x=>x.onclick=()=>{G.ending=x.dataset.e;G.over=true;endRun()}))}
 function endRun(){
-  const fs=K.finalScore(G);
-  open(`<h2>${G.struck?'Your testimony is struck':'The record'}</h2><p class="rank">${K.rank(G)}</p>
-    <div class="hist">${G.history.map(h=>`<div>${TELLERS.find(t=>t.id===h.teller).name}: ${h.cred} of ${h.threshold} · ${h.result==='won'?'traded':'no trade'}</div>`).join('')}</div>
-    <p class="sub">Credibility ${G.score} + standing ${Math.max(0,G.standing)} × 15 = <b>${fs}</b>. Ranks: ${K.RANKS.map(([n,r])=>`${r} ${n}+`).join(' · ')}.</p>
-    <div class="row"><button class="btn" id="again">Go again</button></div>`,b=>b.querySelector('#again').onclick=()=>{dlg.close();newRun()})}
-$('#deckBtn').onclick=()=>open(`<h2>Your deck</h2><p class="sub">${G.deck.length} stories.</p><div class="handwrap"><div class="hand">${G.deck.map(c=>cardHTML(c,{tag:'div'})).join('')}</div></div><div class="row"><button class="btn" id="x">Close</button></div>`,b=>b.querySelector('#x').onclick=()=>dlg.close());
-$('#howBtn').onclick=()=>open(`<h2>How a sitting works</h2><div class="sub" style="display:grid;gap:8px;max-width:62ch">
+  const fs=K.finalScore(G),e=G.ending&&K.ENDINGS[G.ending];renderTop();
+  open(`<h2>${G.struck?'Your testimony is struck':e?e.title:'The record'}</h2>${e?`<p class="sub" style="font:400 21px/1.2 var(--hand)">${e.text}</p>`:''}<p class="rank">${K.rank(G)}</p>
+    <div class="hist">${G.history.map(h=>`<div>${TELLER[h.teller].name}${h.kind==='holdout'?' (holdout)':''}: ${h.cred} of ${h.threshold} · ${h.result==='won'?'traded':'no trade'}</div>`).join('')}</div>
+    <p class="sub">Credibility and filing ${G.score} + standing ${Math.max(0,G.standing)} × 20 = <b>${fs}</b>.<br>Ranks: ${K.RANKS.map(([n,r])=>`${r} ${n}+`).join(' · ')}.</p>
+    <div class="row"><button class="btn" id="again">Go again</button></div>`,b=>b.querySelector('#again').onclick=()=>{close();newRun()})}
+function keepsDialog(){open(`<h2>Your keepsakes</h2><div class="kpick" id="kpick"></div><div class="row"><button class="btn" id="x">Close</button></div>`,b=>{keepChoice(b,G.keeps,()=>{});b.querySelector('#x').onclick=close})}
+$('#deckBtn').onclick=()=>open(`<h2>Your deck</h2><p class="sub">${G.deck.length} stories.</p><div class="handwrap"><div class="hand">${G.deck.map(c=>cardHTML(c,{tag:'div'})).join('')}</div></div><div class="row"><button class="btn" id="x">Close</button></div>`,b=>b.querySelector('#x').onclick=close);
+$('#newBtn').onclick=()=>{close();newRun()};
+$('#howBtn').onclick=()=>open(`<h2>How the Survey works</h2><div class="sub" style="display:grid;gap:8px;max-width:64ch">
+  <p><b>The map.</b> Walk from Halsey to the bridge over the Missouri. Each step is a sitting, a holdout, the road, an arch or a courthouse.</p>
   <p><b>Trust is what you spend.</b> Each story costs trust (the pink circle). You get ${K.TRUST} a day, and one more once they’re warm (halfway to their threshold).</p>
-  <p><b>Credibility is what you win.</b> Tell one to three stories at once: Weight × Vivid. Stories that share a theme, place, era or person raise Vivid. A story about what they want raises it too.</p>
+  <p><b>Credibility is what you win.</b> Tell one to three stories at once: Weight × Vivid. Stories that share a theme, place, era or person raise Vivid. So does a story about what they want.</p>
   <p><b>Reach their threshold within ${DAYS} days</b> and they trade: take one of theirs, give one of yours. Fall short and you lose 3 standing.</p>
   <p><b>Standing is your health</b> for the whole run. Unanswered doubts and risky stories cost it. At zero your testimony is struck.</p>
-  <p><b>Your score</b> is all the credibility you earned plus your standing × 15. It decides your rank.</p></div><div class="row"><button class="btn" id="x">Got it</button></div>`,b=>b.querySelector('#x').onclick=()=>dlg.close());
+  <p><b>Courthouses</b> file stories into the record for score, and give you a keepsake: a barn quilt that changes the rules.</p>
+  <p><b>Your score</b> is all the credibility you earned, plus filing, plus standing × 20. It decides your rank.</p></div><div class="row"><button class="btn" id="x">Got it</button></div>`,b=>b.querySelector('#x').onclick=close);
 
 /* the portrait develops as credibility rises */
-function frame(){if(P&&G&&G.S){const t=Math.min(9,G.S.cred/G.S.T.threshold*9);P.draw($('#portrait').getContext('2d'),t)}requestAnimationFrame(frame)}
+function frame(){if(P&&G&&G.S&&!$('#sitView').hidden){const t=Math.min(9,G.S.cred/G.S.threshold*9);P.draw($('#portrait').getContext('2d'),t)}requestAnimationFrame(frame)}
 requestAnimationFrame(frame);
+function newRun(){G=K.newRun(Date.now()%100000);G.S=null;showMap()}
 newRun();
-window.__sit={get G(){return G},clear:()=>{sel=[];render()},pick:i=>{const c=G.S.hand[i];if(c&&!sel.includes(c)&&sel.length<3&&c.cost<=G.S.trust-cost()){sel.push(c);render()}},tell:()=>$('#tellBtn').click(),end:()=>$('#endBtn').click()};
+window.__sit={get G(){return G},clear:()=>{sel=[];render()},pick:i=>{const c=G.S.hand[i];if(c&&!sel.includes(c)&&sel.length<3&&K.costOf(G,c)<=G.S.trust-cost()){sel.push(c);render()}},tell:()=>$('#tellBtn').click(),end:()=>$('#endBtn').click(),visit:id=>{const b=document.querySelector(`[data-id="${id}"]`);if(b&&!b.disabled)b.click()}};
 })();
 </script>

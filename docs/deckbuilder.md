@@ -105,3 +105,14 @@ One sitting, fully playable: 15 starting stories, three tellers with intents, wa
 ## First playable: `prototypes/sitting/`
 
 Three sittings (Ruth at Halsey, Tomás on the North Loup, Odette at the Register of Deeds), a 12-story starting deck, trust 3 a day (4 once they're warm), four days a sitting, the trade after each win, an arch between sittings (rest or retell), and the final rank. Rules live in `game.js` with no drawing code, so `tools/playtest/sitting-bot.js` can play them: with thresholds of 140, 240 and 340, a brute-force bot wins about 100%, 99% and 94% of the three sittings, and its final scores spread across Recorded, Indexed and Bound into the record. People play worse than the bot, so this should feel fair. Tune from real play.
+
+## The full run (v2)
+
+- **The map:** eight rows from Halsey (Ruth, always first) to the bridge over the Missouri (Imani, always last). Each row between has two or three stops: sittings, the road, arches, courthouses, and one holdout per run (Frank at the Dismal). No two of the same stop sit side by side. Tellers appear where they live: Priya and Deshawn early, Walt and Tomás in the middle, Ada, Gus, Marisol, Arne and Odette late.
+- **Thresholds rise with distance:** 120 at Halsey, about +44 a row, holdouts ×1.25, the bridge 350.
+- **Keepsakes:** ten barn quilts drawn by code, each a rule change (Sawtooth, Ohio Star, Log Cabin, Flying Geese, Pinwheel, Bear's Paw, Lone Star, Churn Dash, Dresden Plate, Drunkard's Path). One from each courthouse, one for beating the holdout, sometimes one from the road.
+- **Courthouses:** file up to two stories for Weight × Vivid × 6 to your score. They leave your deck for good; you keep at least 8, and unsigned (holdout) stories can't be filed.
+- **The road:** six written encounters with two choices each (standing, a new story, a retelling, a keepsake).
+- **The bridge:** Imani opens by telling one of her own Leaving stories, so you can answer her reservation with her own words. Win or lose, you choose an ending: sign, refuse and stay, or take the water.
+- **Score:** credibility + filing + standing × 20. Ranks: Noted, Entered 1300, Recorded 1900, Indexed 2400, Bound into the record 2800.
+- **Bot balance:** early sittings ~100%, middle ~92%, late ~80%, the holdout ~90%, the bridge ~49%. About 1 run in 8 ends struck. Median final score ~2100 (Recorded).
