@@ -1,0 +1,1935 @@
+{
+ "note": "Exported from prototypes/sitting/game.js. Weight (w) is derived from the value budget; edit cost, v, event, theme, place, era, people, art, title and quote.",
+ "budget": {
+  "basic": [
+   2,
+   6,
+   13
+  ],
+  "uncommon": [
+   4,
+   10,
+   22
+  ],
+  "rare": [
+   6,
+   14,
+   30
+  ]
+ },
+ "eventMultiplier": {
+  "Find": 0.65,
+  "Chain": 0.85,
+  "Risk": 0.9,
+  "Spare": 0.9,
+  "Repeat": 1
+ },
+ "cards": [
+  {
+   "id": "talk-weather",
+   "title": "The weather, mostly",
+   "quote": "It was hot. Then it wasn’t.",
+   "theme": "Weather",
+   "place": "halsey",
+   "era": "Later",
+   "event": null,
+   "cost": 0,
+   "w": 2,
+   "v": 1,
+   "rarity": "basic",
+   "people": [],
+   "art": {
+    "kind": "drawing",
+    "src": "sketches/stars.png"
+   },
+   "small": true
+  },
+  {
+   "id": "talk-kin",
+   "title": "Who’s related to who",
+   "quote": "Your aunt’s my cousin, near enough.",
+   "theme": "Kin",
+   "place": "halsey",
+   "era": "Later",
+   "event": null,
+   "cost": 0,
+   "w": 2,
+   "v": 1,
+   "rarity": "basic",
+   "people": [],
+   "art": {
+    "kind": "drawing",
+    "src": "sketches/traveler.png"
+   },
+   "small": true
+  },
+  {
+   "id": "rows",
+   "title": "Planting the rows by hand",
+   "quote": "Twelve hundred a day with a bar and a bucket.",
+   "theme": "Work",
+   "place": "halsey",
+   "era": "1903",
+   "event": "Repeat",
+   "cost": 1,
+   "w": 6,
+   "v": 1,
+   "rarity": "basic",
+   "people": [],
+   "art": {
+    "kind": "render",
+    "src": "img/halsey-rows.jpg",
+    "over": "sketches/tower.png"
+   }
+  },
+  {
+   "id": "hail",
+   "title": "The hail that flattened the rows",
+   "quote": "Somebody wrote down every broken tree.",
+   "theme": "Weather",
+   "place": "halsey",
+   "era": "1903",
+   "event": "Chain",
+   "cost": 1,
+   "w": 5,
+   "v": 1,
+   "rarity": "basic",
+   "people": [],
+   "art": {
+    "kind": "render",
+    "src": "img/halsey-rows.jpg"
+   }
+  },
+  {
+   "id": "bridge-thing",
+   "title": "The thing under the bridge",
+   "quote": "It didn’t chase me. It just looked.",
+   "theme": "Strange",
+   "place": "halsey",
+   "era": "Later",
+   "event": "Risk",
+   "cost": 2,
+   "w": 12,
+   "v": 1,
+   "rarity": "basic",
+   "people": [],
+   "art": {
+    "kind": "drawing",
+    "src": "sketches/critter.png"
+   }
+  },
+  {
+   "id": "tree-lights",
+   "title": "Lights past the tower",
+   "quote": "They went out when I stopped walking.",
+   "theme": "Strange",
+   "place": "halsey",
+   "era": "1974",
+   "event": "Find",
+   "cost": 1,
+   "w": 4,
+   "v": 1,
+   "rarity": "basic",
+   "people": [
+    "ruth"
+   ],
+   "art": {
+    "kind": "drawing",
+    "src": "sketches/tower.png"
+   }
+  },
+  {
+   "id": "walked-rows",
+   "title": "Something walked the rows",
+   "quote": "Every row had the same track down the middle.",
+   "theme": "Strange",
+   "place": "halsey",
+   "era": "1950",
+   "event": "Repeat",
+   "cost": 1,
+   "w": 6,
+   "v": 1,
+   "rarity": "basic",
+   "people": [],
+   "art": {
+    "kind": "render",
+    "src": "img/night-halsey-rows.jpg"
+   }
+  },
+  {
+   "id": "fence-posts",
+   "title": "We burned the fence posts",
+   "quote": "We kept one. We walk around it.",
+   "theme": "Weather",
+   "place": "sandhills",
+   "era": "1888",
+   "event": "Spare",
+   "cost": 1,
+   "w": 5,
+   "v": 1,
+   "rarity": "basic",
+   "people": [],
+   "art": {
+    "kind": "archive",
+    "src": "public/loc-2005693378.jpg",
+    "credit": "Solomon D. Butcher, 1886 · Library of Congress"
+   }
+  },
+  {
+   "id": "turtle",
+   "title": "The turtle crossing",
+   "quote": "We sat down in the road and waited.",
+   "theme": "Animals",
+   "place": "sandhills",
+   "era": "1950",
+   "event": "Spare",
+   "cost": 1,
+   "w": 5,
+   "v": 1,
+   "rarity": "basic",
+   "people": [],
+   "art": {
+    "kind": "object",
+    "src": "objects/beast-turtle.png"
+   }
+  },
+  {
+   "id": "stock-tank",
+   "title": "Reading by the stock tank",
+   "quote": "The moon on the water was enough.",
+   "theme": "Light",
+   "place": "sandhills",
+   "era": "1888",
+   "event": "Repeat",
+   "cost": 1,
+   "w": 6,
+   "v": 1,
+   "rarity": "basic",
+   "people": [],
+   "art": {
+    "kind": "archive",
+    "src": "public/loc-2005693384.jpg",
+    "credit": "Solomon D. Butcher · Library of Congress"
+   }
+  },
+  {
+   "id": "fog-cranes",
+   "title": "Fog so thick the cranes walked",
+   "quote": "Thousands of feet in the water, nobody flying.",
+   "theme": "Animals",
+   "place": "platte",
+   "era": "Later",
+   "event": "Chain",
+   "cost": 1,
+   "w": 3,
+   "v": 2,
+   "rarity": "basic",
+   "people": [
+    "ada"
+   ],
+   "art": {
+    "kind": "render",
+    "src": "img/platte-cranes.jpg",
+    "over": "sketches/crane-standing.png"
+   }
+  },
+  {
+   "id": "power",
+   "title": "When the power came",
+   "quote": "We stood in the yard looking at the house.",
+   "theme": "Light",
+   "place": "sandhills",
+   "era": "1950",
+   "event": "Find",
+   "cost": 1,
+   "w": 4,
+   "v": 1,
+   "rarity": "basic",
+   "people": [
+    "arne"
+   ],
+   "art": {
+    "kind": "archive",
+    "src": "public/loc-2005693387.jpg",
+    "credit": "Solomon D. Butcher · Library of Congress"
+   }
+  },
+  {
+   "id": "ruth-page",
+   "title": "My great-nephew’s page",
+   "quote": "“Gus. Will want to leave.”",
+   "theme": "Kin",
+   "place": "halsey",
+   "era": "Later",
+   "event": "Risk",
+   "cost": 2,
+   "w": 9,
+   "v": 3,
+   "rarity": "rare",
+   "people": [
+    "ruth",
+    "gus"
+   ],
+   "art": {
+    "kind": "render",
+    "src": "img/halsey-rows.jpg",
+    "over": "sketches/drawn-gus.png"
+   }
+  },
+  {
+   "id": "ruth-foreman",
+   "title": "What the foreman said",
+   "quote": "“Plant them like you’ll be here when they’re grown.”",
+   "theme": "Work",
+   "place": "halsey",
+   "era": "1903",
+   "event": "Find",
+   "cost": 1,
+   "w": 3,
+   "v": 2,
+   "rarity": "uncommon",
+   "people": [
+    "ruth"
+   ],
+   "art": {
+    "kind": "drawing",
+    "src": "sketches/drawn-ruth.png"
+   }
+  },
+  {
+   "id": "ruth-twelve",
+   "title": "Twelve hundred a day",
+   "quote": "My hands still count.",
+   "theme": "Work",
+   "place": "halsey",
+   "era": "1903",
+   "event": "Chain",
+   "cost": 1,
+   "w": 9,
+   "v": 1,
+   "rarity": "uncommon",
+   "people": [
+    "ruth"
+   ],
+   "art": {
+    "kind": "render",
+    "src": "img/halsey-rows.jpg",
+    "over": "sketches/drawn-ruth.png"
+   }
+  },
+  {
+   "id": "ruth-ledger",
+   "title": "A page for every tree",
+   "quote": "Some pages have more in them than the tree.",
+   "theme": "Work",
+   "place": "halsey",
+   "era": "1903",
+   "event": "Spare",
+   "cost": 1,
+   "w": 5,
+   "v": 2,
+   "rarity": "uncommon",
+   "people": [
+    "ruth"
+   ],
+   "art": {
+    "kind": "object",
+    "src": "objects/arch-red-blue.png"
+   }
+  },
+  {
+   "id": "priya-green",
+   "title": "A green sky over Thedford",
+   "quote": "The bees came home at noon.",
+   "theme": "Weather",
+   "place": "thedford",
+   "era": "1974",
+   "event": "Find",
+   "cost": 1,
+   "w": 3,
+   "v": 2,
+   "rarity": "uncommon",
+   "people": [
+    "priya",
+    "walt"
+   ],
+   "art": {
+    "kind": "render",
+    "src": "img/thedford.jpg",
+    "over": "sketches/drawn-priya.png"
+   }
+  },
+  {
+   "id": "priya-rabbits",
+   "title": "The jackrabbit census",
+   "quote": "You can’t count them. They count you.",
+   "theme": "Animals",
+   "place": "thedford",
+   "era": "Later",
+   "event": "Repeat",
+   "cost": 1,
+   "w": 5,
+   "v": 2,
+   "rarity": "uncommon",
+   "people": [
+    "priya"
+   ],
+   "art": {
+    "kind": "object",
+    "src": "objects/beast-jackrabbit.png"
+   }
+  },
+  {
+   "id": "priya-shape",
+   "title": "The shape over Thedford",
+   "quote": "Ten thousand birds, asking something.",
+   "theme": "Animals",
+   "place": "thedford",
+   "era": "Later",
+   "event": "Chain",
+   "cost": 2,
+   "w": 9,
+   "v": 3,
+   "rarity": "rare",
+   "people": [
+    "priya"
+   ],
+   "art": {
+    "kind": "drawing",
+    "src": "sketches/crane-wings.png"
+   }
+  },
+  {
+   "id": "priya-wind",
+   "title": "Three days of wind",
+   "quote": "The sand came into the kitchen and lay down.",
+   "theme": "Weather",
+   "place": "thedford",
+   "era": "1888",
+   "event": "Risk",
+   "cost": 2,
+   "w": 20,
+   "v": 1,
+   "rarity": "uncommon",
+   "people": [
+    "priya",
+    "deshawn"
+   ],
+   "art": {
+    "kind": "archive",
+    "src": "public/loc-2005693385.jpg",
+    "credit": "Solomon D. Butcher · Library of Congress"
+   }
+  },
+  {
+   "id": "deshawn-mill",
+   "title": "A windmill lies about the wind",
+   "quote": "It tells you which way. Then it lies.",
+   "theme": "Weather",
+   "place": "sandhills",
+   "era": "Later",
+   "event": "Repeat",
+   "cost": 1,
+   "w": 10,
+   "v": 1,
+   "rarity": "uncommon",
+   "people": [
+    "deshawn"
+   ],
+   "art": {
+    "kind": "render",
+    "src": "img/sandhills-windmill.jpg",
+    "over": "sketches/face3.png"
+   }
+  },
+  {
+   "id": "deshawn-well",
+   "title": "The well that went sweet",
+   "quote": "Sixty years of pennies. Then it didn’t.",
+   "theme": "Water",
+   "place": "sandhills",
+   "era": "Later",
+   "event": "Spare",
+   "cost": 1,
+   "w": 5,
+   "v": 2,
+   "rarity": "uncommon",
+   "people": [
+    "deshawn",
+    "tomas"
+   ],
+   "art": {
+    "kind": "render",
+    "src": "img/sandhills-windmill.jpg"
+   }
+  },
+  {
+   "id": "deshawn-poles",
+   "title": "Setting poles on the Ord line",
+   "quote": "You can see every pole you ever set.",
+   "theme": "Work",
+   "place": "sandhills",
+   "era": "1950",
+   "event": "Chain",
+   "cost": 1,
+   "w": 9,
+   "v": 1,
+   "rarity": "uncommon",
+   "people": [
+    "deshawn",
+    "arne"
+   ],
+   "art": {
+    "kind": "archive",
+    "src": "public/loc-2005693377.jpg",
+    "credit": "Solomon D. Butcher · Library of Congress"
+   }
+  },
+  {
+   "id": "deshawn-arch",
+   "title": "The arch that moved",
+   "quote": "Nobody saw it go.",
+   "theme": "Strange",
+   "place": "sandhills",
+   "era": "Later",
+   "event": "Repeat",
+   "cost": 0,
+   "w": 4,
+   "v": 1,
+   "rarity": "uncommon",
+   "people": [
+    "deshawn"
+   ],
+   "art": {
+    "kind": "object",
+    "src": "objects/arch-black.png"
+   }
+  },
+  {
+   "id": "frank-door",
+   "title": "The door in the hill",
+   "quote": "It’s lit inside. It isn’t for me yet.",
+   "theme": "Strange",
+   "place": "door",
+   "era": "Later",
+   "event": "Find",
+   "cost": 1,
+   "w": 3,
+   "v": 3,
+   "rarity": "rare",
+   "people": [
+    "frank"
+   ],
+   "art": {
+    "kind": "render",
+    "src": "img/painting-door-in-the-hill.jpg"
+   },
+   "holdout": true
+  },
+  {
+   "id": "frank-clay",
+   "title": "The clay one by the cellar",
+   "quote": "It looked like old paper. Then it blinked.",
+   "theme": "Strange",
+   "place": "dismal",
+   "era": "Later",
+   "event": "Spare",
+   "cost": 1,
+   "w": 5,
+   "v": 2,
+   "rarity": "uncommon",
+   "people": [
+    "frank"
+   ],
+   "art": {
+    "kind": "object",
+    "src": "objects/beast-crumple.png"
+   },
+   "holdout": true
+  },
+  {
+   "id": "frank-coyote",
+   "title": "The coyote that walked us home",
+   "quote": "At the gate it sat down.",
+   "theme": "Animals",
+   "place": "dismal",
+   "era": "1974",
+   "event": "Risk",
+   "cost": 2,
+   "w": 10,
+   "v": 2,
+   "rarity": "uncommon",
+   "people": [
+    "frank"
+   ],
+   "art": {
+    "kind": "object",
+    "src": "objects/beast-coyote.png"
+   },
+   "holdout": true
+  },
+  {
+   "id": "frank-unsigned",
+   "title": "Not signed",
+   "quote": "Write it down. It won’t count.",
+   "theme": "Kin",
+   "place": "dismal",
+   "era": "Later",
+   "event": "Chain",
+   "cost": 1,
+   "w": 9,
+   "v": 1,
+   "rarity": "uncommon",
+   "people": [
+    "frank",
+    "lou"
+   ],
+   "art": {
+    "kind": "drawing",
+    "src": "sketches/drawn-frank.png"
+   },
+   "holdout": true
+  },
+  {
+   "id": "walt-seed",
+   "title": "The seed packet with my name",
+   "quote": "Mine is sweet corn.",
+   "theme": "Kin",
+   "place": "brokenbow",
+   "era": "1950",
+   "event": "Spare",
+   "cost": 1,
+   "w": 5,
+   "v": 2,
+   "rarity": "uncommon",
+   "people": [
+    "walt"
+   ],
+   "art": {
+    "kind": "drawing",
+    "src": "sketches/face1.png"
+   }
+  },
+  {
+   "id": "walt-count",
+   "title": "My aunt heard it count",
+   "quote": "To a number that doesn’t exist.",
+   "theme": "Strange",
+   "place": "brokenbow",
+   "era": "1903",
+   "event": "Chain",
+   "cost": 2,
+   "w": 9,
+   "v": 2,
+   "rarity": "uncommon",
+   "people": [
+    "walt"
+   ],
+   "art": {
+    "kind": "archive",
+    "src": "public/loc-2005693388.jpg",
+    "credit": "Solomon D. Butcher · Library of Congress"
+   }
+  },
+  {
+   "id": "walt-aurora",
+   "title": "Aurora over Broken Bow",
+   "quote": "Pink first, then green like grass.",
+   "theme": "Light",
+   "place": "brokenbow",
+   "era": "Later",
+   "event": "Chain",
+   "cost": 1,
+   "w": 4,
+   "v": 2,
+   "rarity": "uncommon",
+   "people": [
+    "walt",
+    "arne"
+   ],
+   "art": {
+    "kind": "render",
+    "src": "img/night-broken-bow.jpg"
+   }
+  },
+  {
+   "id": "walt-sod",
+   "title": "A sod house on the Middle Loup",
+   "quote": "Grandmother kept a goat on the roof.",
+   "theme": "Kin",
+   "place": "brokenbow",
+   "era": "1888",
+   "event": "Find",
+   "cost": 1,
+   "w": 7,
+   "v": 1,
+   "rarity": "uncommon",
+   "people": [
+    "walt"
+   ],
+   "art": {
+    "kind": "archive",
+    "src": "public/loc-2005693381.jpg",
+    "credit": "Solomon D. Butcher · Library of Congress"
+   }
+  },
+  {
+   "id": "tomas-landing",
+   "title": "The landing moved forty feet",
+   "quote": "The river doesn’t ask. I just move the post.",
+   "theme": "Water",
+   "place": "loup",
+   "era": "Later",
+   "event": "Repeat",
+   "cost": 1,
+   "w": 5,
+   "v": 2,
+   "rarity": "uncommon",
+   "people": [
+    "tomas"
+   ],
+   "art": {
+    "kind": "render",
+    "src": "img/loup-fog.jpg",
+    "over": "sketches/drawn-tomas.png"
+   }
+  },
+  {
+   "id": "tomas-ada",
+   "title": "Teaching Ada to pole",
+   "quote": "She doesn’t fight the river. She asks it.",
+   "theme": "Kin",
+   "place": "loup",
+   "era": "Later",
+   "event": "Find",
+   "cost": 1,
+   "w": 3,
+   "v": 2,
+   "rarity": "uncommon",
+   "people": [
+    "tomas",
+    "ada"
+   ],
+   "art": {
+    "kind": "drawing",
+    "src": "sketches/drawn-ada.png"
+   }
+  },
+  {
+   "id": "tomas-ice",
+   "title": "Ice thick enough to drive",
+   "quote": "We walked it anyway, in the dark, listening.",
+   "theme": "Water",
+   "place": "loup",
+   "era": "1974",
+   "event": "Risk",
+   "cost": 2,
+   "w": 10,
+   "v": 2,
+   "rarity": "uncommon",
+   "people": [
+    "tomas"
+   ],
+   "art": {
+    "kind": "render",
+    "src": "img/night-loup-fog.jpg"
+   }
+  },
+  {
+   "id": "tomas-pivot",
+   "title": "An owl on the pivot",
+   "quote": "We named the pipe, not the owl.",
+   "theme": "Animals",
+   "place": "loup",
+   "era": "2000",
+   "event": "Chain",
+   "cost": 1,
+   "w": 9,
+   "v": 1,
+   "rarity": "uncommon",
+   "people": [
+    "tomas",
+    "ada"
+   ],
+   "art": {
+    "kind": "object",
+    "src": "objects/beast-owl.png"
+   }
+  },
+  {
+   "id": "ada-412",
+   "title": "Four hundred and twelve cranes",
+   "quote": "Then they all stood up and I lost count.",
+   "theme": "Animals",
+   "place": "platte",
+   "era": "Later",
+   "event": "Chain",
+   "cost": 2,
+   "w": 9,
+   "v": 3,
+   "rarity": "rare",
+   "people": [
+    "ada"
+   ],
+   "art": {
+    "kind": "render",
+    "src": "img/platte-cranes.jpg",
+    "over": "sketches/crane-dance-arms.png"
+   }
+  },
+  {
+   "id": "ada-fours",
+   "title": "Counting by fours",
+   "quote": "You count the legs and divide.",
+   "theme": "Animals",
+   "place": "platte",
+   "era": "Later",
+   "event": "Find",
+   "cost": 1,
+   "w": 3,
+   "v": 2,
+   "rarity": "uncommon",
+   "people": [
+    "ada"
+   ],
+   "art": {
+    "kind": "drawing",
+    "src": "sketches/crane-step.png"
+   }
+  },
+  {
+   "id": "ada-still",
+   "title": "The one that stood still",
+   "quote": "All night. I watched it the whole time.",
+   "theme": "Animals",
+   "place": "platte",
+   "era": "Later",
+   "event": "Spare",
+   "cost": 1,
+   "w": 5,
+   "v": 2,
+   "rarity": "uncommon",
+   "people": [
+    "ada"
+   ],
+   "art": {
+    "kind": "object",
+    "src": "objects/beast-crane.png"
+   }
+  },
+  {
+   "id": "ada-landing",
+   "title": "He moved the post",
+   "quote": "So I moved my count.",
+   "theme": "Kin",
+   "place": "loup",
+   "era": "Later",
+   "event": "Repeat",
+   "cost": 1,
+   "w": 10,
+   "v": 1,
+   "rarity": "uncommon",
+   "people": [
+    "ada",
+    "tomas"
+   ],
+   "art": {
+    "kind": "drawing",
+    "src": "sketches/drawn-ada.png"
+   }
+  },
+  {
+   "id": "gus-sister",
+   "title": "My sister took the water",
+   "quote": "She waved from the middle like it was nothing.",
+   "theme": "Leaving",
+   "place": "bridge",
+   "era": "Later",
+   "event": "Chain",
+   "cost": 1,
+   "w": 4,
+   "v": 2,
+   "rarity": "uncommon",
+   "people": [
+    "gus",
+    "imani"
+   ],
+   "art": {
+    "kind": "drawing",
+    "src": "sketches/drawn-gus.png"
+   }
+  },
+  {
+   "id": "gus-looked",
+   "title": "It looked at me",
+   "quote": "Long legs, like sticks that made up their mind.",
+   "theme": "Strange",
+   "place": "halsey",
+   "era": "Later",
+   "event": "Risk",
+   "cost": 2,
+   "w": 10,
+   "v": 2,
+   "rarity": "uncommon",
+   "people": [
+    "gus",
+    "ruth"
+   ],
+   "art": {
+    "kind": "object",
+    "src": "objects/beast-critter.png"
+   }
+  },
+  {
+   "id": "gus-notebook",
+   "title": "The survey that never came back",
+   "quote": "Every page filled. No name.",
+   "theme": "Leaving",
+   "place": "archway",
+   "era": "Later",
+   "event": "Find",
+   "cost": 1,
+   "w": 3,
+   "v": 2,
+   "rarity": "uncommon",
+   "people": [
+    "gus",
+    "imani"
+   ],
+   "art": {
+    "kind": "render",
+    "src": "img/archway.jpg"
+   }
+  },
+  {
+   "id": "gus-old",
+   "title": "When I’m old enough",
+   "quote": "I’m going too.",
+   "theme": "Leaving",
+   "place": "archway",
+   "era": "Later",
+   "event": "Spare",
+   "cost": 1,
+   "w": 5,
+   "v": 2,
+   "rarity": "uncommon",
+   "people": [
+    "gus"
+   ],
+   "art": {
+    "kind": "render",
+    "src": "img/archway.jpg",
+    "over": "sketches/traveler.png"
+   }
+  },
+  {
+   "id": "marisol-cousins",
+   "title": "Cousins in Columbus",
+   "quote": "Half signed, half didn’t. We still do Christmas.",
+   "theme": "Kin",
+   "place": "columbus",
+   "era": "1974",
+   "event": "Repeat",
+   "cost": 1,
+   "w": 5,
+   "v": 2,
+   "rarity": "uncommon",
+   "people": [
+    "marisol",
+    "odette"
+   ],
+   "art": {
+    "kind": "render",
+    "src": "img/columbus.jpg",
+    "over": "sketches/drawn-marisol.png"
+   }
+  },
+  {
+   "id": "marisol-quilt",
+   "title": "Everyone’s initials",
+   "quote": "Ninety squares. Some are only initials now.",
+   "theme": "Kin",
+   "place": "columbus",
+   "era": "1950",
+   "event": "Spare",
+   "cost": 1,
+   "w": 5,
+   "v": 2,
+   "rarity": "uncommon",
+   "people": [
+    "marisol"
+   ],
+   "art": {
+    "kind": "drawing",
+    "src": "sketches/drawn-marisol.png"
+   }
+  },
+  {
+   "id": "marisol-rivers",
+   "title": "Where the two rivers argue",
+   "quote": "For a mile they won’t mix.",
+   "theme": "Water",
+   "place": "columbus",
+   "era": "1974",
+   "event": "Chain",
+   "cost": 1,
+   "w": 9,
+   "v": 1,
+   "rarity": "uncommon",
+   "people": [
+    "marisol",
+    "tomas"
+   ],
+   "art": {
+    "kind": "render",
+    "src": "img/columbus.jpg"
+   }
+  },
+  {
+   "id": "marisol-star",
+   "title": "The star hung upside down",
+   "quote": "On purpose. Three of us and a ladder.",
+   "theme": "Work",
+   "place": "columbus",
+   "era": "1974",
+   "event": "Find",
+   "cost": 1,
+   "w": 3,
+   "v": 2,
+   "rarity": "uncommon",
+   "people": [
+    "marisol"
+   ],
+   "art": {
+    "kind": "object",
+    "src": "objects/arch-red-hook.png"
+   }
+  },
+  {
+   "id": "arne-wire",
+   "title": "The last wire into Omaha",
+   "quote": "The whole city came on, and only I saw.",
+   "theme": "Light",
+   "place": "omaha",
+   "era": "1974",
+   "event": "Risk",
+   "cost": 2,
+   "w": 10,
+   "v": 2,
+   "rarity": "uncommon",
+   "people": [
+    "arne"
+   ],
+   "art": {
+    "kind": "render",
+    "src": "img/omaha.jpg",
+    "over": "sketches/face2.png"
+   }
+  },
+  {
+   "id": "arne-bulb",
+   "title": "The bulb that never burns out",
+   "quote": "We left it on a year. It got brighter.",
+   "theme": "Light",
+   "place": "mainstreet",
+   "era": "Later",
+   "event": "Spare",
+   "cost": 1,
+   "w": 5,
+   "v": 2,
+   "rarity": "uncommon",
+   "people": [
+    "arne",
+    "odette"
+   ],
+   "art": {
+    "kind": "drawing",
+    "src": "sketches/bulb.png"
+   }
+  },
+  {
+   "id": "arne-poles",
+   "title": "Every pole you ever set",
+   "quote": "Look back and there they all are.",
+   "theme": "Work",
+   "place": "mainstreet",
+   "era": "1950",
+   "event": "Chain",
+   "cost": 1,
+   "w": 9,
+   "v": 1,
+   "rarity": "uncommon",
+   "people": [
+    "arne",
+    "deshawn"
+   ],
+   "art": {
+    "kind": "drawing",
+    "src": "sketches/face2.png"
+   }
+  },
+  {
+   "id": "arne-north",
+   "title": "Lights in the north",
+   "quote": "Mother said, remember this. I have.",
+   "theme": "Weather",
+   "place": "mainstreet",
+   "era": "2000",
+   "event": "Find",
+   "cost": 1,
+   "w": 3,
+   "v": 3,
+   "rarity": "rare",
+   "people": [
+    "arne"
+   ],
+   "art": {
+    "kind": "render",
+    "src": "img/night-mainstreet.jpg"
+   }
+  },
+  {
+   "id": "odette-survey",
+   "title": "Her grandmother’s Survey",
+   "quote": "The baby is in four of the stories.",
+   "theme": "Kin",
+   "place": "courthouse",
+   "era": "1903",
+   "event": "Chain",
+   "cost": 1,
+   "w": 4,
+   "v": 2,
+   "rarity": "uncommon",
+   "people": [
+    "odette"
+   ],
+   "art": {
+    "kind": "archive",
+    "src": "public/loc-2005693386.jpg",
+    "credit": "Solomon D. Butcher · Library of Congress"
+   }
+  },
+  {
+   "id": "odette-copy",
+   "title": "Copying the deed books",
+   "quote": "My hand will be in the record longer than I will.",
+   "theme": "Work",
+   "place": "courthouse",
+   "era": "Later",
+   "event": "Spare",
+   "cost": 1,
+   "w": 5,
+   "v": 2,
+   "rarity": "uncommon",
+   "people": [
+    "odette"
+   ],
+   "art": {
+    "kind": "drawing",
+    "src": "sketches/drawn-odette.png"
+   }
+  },
+  {
+   "id": "odette-lamp",
+   "title": "The lamp they keep",
+   "quote": "Nobody pays for it. It’s in the agreement.",
+   "theme": "Light",
+   "place": "courthouse",
+   "era": "1903",
+   "event": "Spare",
+   "cost": 2,
+   "w": 9,
+   "v": 3,
+   "rarity": "rare",
+   "people": [
+    "odette"
+   ],
+   "art": {
+    "kind": "drawing",
+    "src": "sketches/bulb.png"
+   }
+  },
+  {
+   "id": "odette-bees",
+   "title": "Bees in the courthouse wall",
+   "quote": "The deeds smell like honey in July.",
+   "theme": "Animals",
+   "place": "courthouse",
+   "era": "Later",
+   "event": "Find",
+   "cost": 1,
+   "w": 3,
+   "v": 2,
+   "rarity": "uncommon",
+   "people": [
+    "odette",
+    "priya"
+   ],
+   "art": {
+    "kind": "render",
+    "src": "img/courthouse.jpg",
+    "over": "sketches/crane-small.png"
+   }
+  },
+  {
+   "id": "imani-water",
+   "title": "Taking the water at Brownville",
+   "quote": "You get in, and then you’re from somewhere else.",
+   "theme": "Leaving",
+   "place": "bridge",
+   "era": "Later",
+   "event": "Risk",
+   "cost": 2,
+   "w": 9,
+   "v": 3,
+   "rarity": "rare",
+   "people": [
+    "imani"
+   ],
+   "art": {
+    "kind": "render",
+    "src": "img/bridge.jpg"
+   }
+  },
+  {
+   "id": "imani-count",
+   "title": "Who crosses the bridge",
+   "quote": "I count them both ways.",
+   "theme": "Leaving",
+   "place": "bridge",
+   "era": "Later",
+   "event": "Repeat",
+   "cost": 1,
+   "w": 5,
+   "v": 2,
+   "rarity": "uncommon",
+   "people": [
+    "imani"
+   ],
+   "art": {
+    "kind": "drawing",
+    "src": "sketches/drawn-imani.png"
+   }
+  },
+  {
+   "id": "imani-brown",
+   "title": "Brown water at Omaha",
+   "quote": "Every handful is from somewhere.",
+   "theme": "Water",
+   "place": "omaha",
+   "era": "Later",
+   "event": "Chain",
+   "cost": 1,
+   "w": 4,
+   "v": 2,
+   "rarity": "uncommon",
+   "people": [
+    "imani",
+    "marisol"
+   ],
+   "art": {
+    "kind": "render",
+    "src": "img/omaha.jpg"
+   }
+  },
+  {
+   "id": "imani-back",
+   "title": "More come back than you’d think",
+   "quote": "They come back carrying something.",
+   "theme": "Kin",
+   "place": "bridge",
+   "era": "Later",
+   "event": "Spare",
+   "cost": 1,
+   "w": 5,
+   "v": 2,
+   "rarity": "uncommon",
+   "people": [
+    "imani",
+    "gus"
+   ],
+   "art": {
+    "kind": "render",
+    "src": "img/night-bridge.jpg"
+   }
+  },
+  {
+   "id": "peaches",
+   "title": "Peaches from Dunning",
+   "quote": "She said they were spare.",
+   "theme": "Kin",
+   "place": "sandhills",
+   "era": "Later",
+   "event": "Spare",
+   "cost": 0,
+   "w": 4,
+   "v": 1,
+   "rarity": "uncommon",
+   "people": [],
+   "art": {
+    "kind": "drawing",
+    "src": "sketches/traveler.png"
+   }
+  },
+  {
+   "id": "cousin",
+   "title": "A man who knows your cousin",
+   "quote": "You’re Odette’s cousin’s kid. I knew it.",
+   "theme": "Kin",
+   "place": "brokenbow",
+   "era": "Later",
+   "event": "Chain",
+   "cost": 1,
+   "w": 4,
+   "v": 2,
+   "rarity": "uncommon",
+   "people": [
+    "odette",
+    "marisol",
+    "walt"
+   ],
+   "art": {
+    "kind": "drawing",
+    "src": "sketches/face3.png"
+   }
+  },
+  {
+   "id": "cranes-lift",
+   "title": "They lifted all at once",
+   "quote": "Furious and enormous.",
+   "theme": "Animals",
+   "place": "platte",
+   "era": "Later",
+   "event": "Risk",
+   "cost": 1,
+   "w": 5,
+   "v": 2,
+   "rarity": "uncommon",
+   "people": [],
+   "art": {
+    "kind": "drawing",
+    "src": "sketches/crane-dance.png"
+   }
+  },
+  {
+   "id": "culvert",
+   "title": "Waiting out the storm",
+   "quote": "A stranger who keeps bees shared the culvert.",
+   "theme": "Weather",
+   "place": "thedford",
+   "era": "Later",
+   "event": "Find",
+   "cost": 1,
+   "w": 3,
+   "v": 2,
+   "rarity": "uncommon",
+   "people": [
+    "priya"
+   ],
+   "art": {
+    "kind": "render",
+    "src": "img/thedford.jpg"
+   }
+  }
+ ],
+ "tellers": [
+  {
+   "id": "ruth",
+   "name": "Ruth Ebersole",
+   "place": "halsey",
+   "want": "Work",
+   "line": "Every tree in these rows has a page. Sit down.",
+   "reservation": {
+    "text": "Only trusts people who’ve planted something",
+    "tag": [
+     "theme",
+     "Work"
+    ]
+   },
+   "intents": [
+    {
+     "kind": "ask",
+     "tag": [
+      "place",
+      "halsey"
+     ],
+     "label": "Asks about Halsey"
+    },
+    {
+     "kind": "doubt",
+     "n": 12
+    },
+    {
+     "kind": "own"
+    },
+    {
+     "kind": "quiet"
+    }
+   ],
+   "stories": [
+    "ruth-page",
+    "ruth-foreman",
+    "ruth-twelve",
+    "ruth-ledger"
+   ],
+   "cols": [
+    0
+   ]
+  },
+  {
+   "id": "priya",
+   "name": "Priya Raman",
+   "place": "thedford",
+   "want": "Weather",
+   "line": "The bees know the weather a day early. I write down what they say.",
+   "reservation": {
+    "text": "Won’t talk to someone who’s never stopped for an animal",
+    "tag": [
+     "theme",
+     "Animals"
+    ]
+   },
+   "intents": [
+    {
+     "kind": "ask",
+     "tag": [
+      "theme",
+      "Weather"
+     ],
+     "label": "Asks about the sky"
+    },
+    {
+     "kind": "doubt",
+     "n": 14
+    },
+    {
+     "kind": "own"
+    },
+    {
+     "kind": "quiet"
+    }
+   ],
+   "stories": [
+    "priya-green",
+    "priya-rabbits",
+    "priya-shape",
+    "priya-wind"
+   ],
+   "cols": [
+    1,
+    2
+   ]
+  },
+  {
+   "id": "deshawn",
+   "name": "Deshawn Price",
+   "place": "sandhills",
+   "want": "Weather",
+   "line": "A windmill tells you which way everything is going. Then it lies.",
+   "reservation": {
+    "text": "Doesn’t trust anyone who hasn’t seen the Sandhills",
+    "tag": [
+     "place",
+     "sandhills"
+    ]
+   },
+   "intents": [
+    {
+     "kind": "own"
+    },
+    {
+     "kind": "ask",
+     "tag": [
+      "place",
+      "sandhills"
+     ],
+     "label": "Asks about the Sandhills"
+    },
+    {
+     "kind": "doubt",
+     "n": 14
+    },
+    {
+     "kind": "ask",
+     "tag": [
+      "theme",
+      "Work"
+     ],
+     "label": "Asks about work"
+    }
+   ],
+   "stories": [
+    "deshawn-mill",
+    "deshawn-well",
+    "deshawn-poles",
+    "deshawn-arch"
+   ],
+   "cols": [
+    1,
+    2
+   ]
+  },
+  {
+   "id": "frank",
+   "name": "Frank Dvorak",
+   "place": "dismal",
+   "want": "Strange",
+   "line": "I’m not signed. You can write it down. It won’t count.",
+   "reservation": {
+    "text": "Not signed: he only listens to something strange",
+    "tag": [
+     "theme",
+     "Strange"
+    ]
+   },
+   "intents": [
+    {
+     "kind": "doubt",
+     "n": 22
+    },
+    {
+     "kind": "ask",
+     "tag": [
+      "theme",
+      "Strange"
+     ],
+     "label": "Asks what you’ve seen"
+    },
+    {
+     "kind": "doubt",
+     "n": 22
+    },
+    {
+     "kind": "own"
+    }
+   ],
+   "stories": [
+    "frank-door",
+    "frank-clay",
+    "frank-coyote",
+    "frank-unsigned"
+   ],
+   "cols": [
+    2,
+    3,
+    5
+   ],
+   "holdout": true
+  },
+  {
+   "id": "walt",
+   "name": "Walt Okamoto",
+   "place": "brokenbow",
+   "want": "Kin",
+   "line": "I keep a packet for every child born in the county. Ask me yours.",
+   "reservation": {
+    "text": "Wants to know whose child you are",
+    "tag": [
+     "theme",
+     "Kin"
+    ]
+   },
+   "intents": [
+    {
+     "kind": "own"
+    },
+    {
+     "kind": "ask",
+     "tag": [
+      "era",
+      "1903"
+     ],
+     "label": "Asks about 1903"
+    },
+    {
+     "kind": "doubt",
+     "n": 18
+    },
+    {
+     "kind": "quiet"
+    }
+   ],
+   "stories": [
+    "walt-seed",
+    "walt-count",
+    "walt-aurora",
+    "walt-sod"
+   ],
+   "cols": [
+    3,
+    4
+   ]
+  },
+  {
+   "id": "tomas",
+   "name": "Tomás Arriaga",
+   "place": "loup",
+   "want": "Water",
+   "line": "The river moved forty feet this spring. Talk slow.",
+   "reservation": {
+    "text": "Won’t talk to someone in a hurry",
+    "tag": [
+     "event",
+     "Spare"
+    ]
+   },
+   "intents": [
+    {
+     "kind": "doubt",
+     "n": 18
+    },
+    {
+     "kind": "ask",
+     "tag": [
+      "theme",
+      "Water"
+     ],
+     "label": "Asks about the river"
+    },
+    {
+     "kind": "own"
+    },
+    {
+     "kind": "doubt",
+     "n": 18
+    }
+   ],
+   "stories": [
+    "tomas-landing",
+    "tomas-ada",
+    "tomas-ice",
+    "tomas-pivot"
+   ],
+   "cols": [
+    3,
+    4
+   ]
+  },
+  {
+   "id": "ada",
+   "name": "Ada Nakamura-Hill",
+   "place": "platte",
+   "want": "Animals",
+   "line": "Four hundred and twelve. Then they all stood up and I lost count.",
+   "reservation": {
+    "text": "Won’t listen unless you can find something",
+    "tag": [
+     "event",
+     "Find"
+    ]
+   },
+   "intents": [
+    {
+     "kind": "ask",
+     "tag": [
+      "theme",
+      "Animals"
+     ],
+     "label": "Asks about the cranes"
+    },
+    {
+     "kind": "own"
+    },
+    {
+     "kind": "doubt",
+     "n": 20
+    },
+    {
+     "kind": "ask",
+     "tag": [
+      "place",
+      "platte"
+     ],
+     "label": "Asks about the river"
+    }
+   ],
+   "stories": [
+    "ada-412",
+    "ada-fours",
+    "ada-still",
+    "ada-landing"
+   ],
+   "cols": [
+    4,
+    5
+   ]
+  },
+  {
+   "id": "gus",
+   "name": "Gus Pfeiffer",
+   "place": "archway",
+   "want": "Leaving",
+   "line": "My sister took the water. When I’m old enough I’m going too.",
+   "reservation": {
+    "text": "Doesn’t believe grown-ups unless it’s strange",
+    "tag": [
+     "theme",
+     "Strange"
+    ]
+   },
+   "intents": [
+    {
+     "kind": "own"
+    },
+    {
+     "kind": "doubt",
+     "n": 22
+    },
+    {
+     "kind": "ask",
+     "tag": [
+      "theme",
+      "Leaving"
+     ],
+     "label": "Asks about leaving"
+    },
+    {
+     "kind": "quiet"
+    }
+   ],
+   "stories": [
+    "gus-sister",
+    "gus-looked",
+    "gus-notebook",
+    "gus-old"
+   ],
+   "cols": [
+    5,
+    6
+   ]
+  },
+  {
+   "id": "marisol",
+   "name": "Marisol Ybarra",
+   "place": "columbus",
+   "want": "Kin",
+   "line": "Every block is somebody. You just have to know who to look for.",
+   "reservation": {
+    "text": "Every block is somebody: name someone",
+    "tag": [
+     "people",
+     1
+    ]
+   },
+   "intents": [
+    {
+     "kind": "ask",
+     "tag": [
+      "theme",
+      "Kin"
+     ],
+     "label": "Asks about family"
+    },
+    {
+     "kind": "doubt",
+     "n": 24
+    },
+    {
+     "kind": "own"
+    },
+    {
+     "kind": "ask",
+     "tag": [
+      "place",
+      "columbus"
+     ],
+     "label": "Asks about the rivers"
+    }
+   ],
+   "stories": [
+    "marisol-cousins",
+    "marisol-quilt",
+    "marisol-rivers",
+    "marisol-star"
+   ],
+   "cols": [
+    5,
+    6
+   ]
+  },
+  {
+   "id": "arne",
+   "name": "Arne Lindqvist",
+   "place": "mainstreet",
+   "want": "Light",
+   "line": "I put light in every house from here to the river. Now I’m collecting it back.",
+   "reservation": {
+    "text": "Wants something that lasted since 1950",
+    "tag": [
+     "era",
+     "1950"
+    ]
+   },
+   "intents": [
+    {
+     "kind": "doubt",
+     "n": 24
+    },
+    {
+     "kind": "ask",
+     "tag": [
+      "theme",
+      "Light"
+     ],
+     "label": "Asks about the power"
+    },
+    {
+     "kind": "own"
+    },
+    {
+     "kind": "doubt",
+     "n": 24
+    }
+   ],
+   "stories": [
+    "arne-wire",
+    "arne-bulb",
+    "arne-poles",
+    "arne-north"
+   ],
+   "cols": [
+    5,
+    6
+   ]
+  },
+  {
+   "id": "odette",
+   "name": "Odette Mbeki-Larsen",
+   "place": "courthouse",
+   "want": "Kin",
+   "line": "Everything in this room was signed by somebody’s grandmother.",
+   "reservation": {
+    "text": "Wants it on the record: something from 1903",
+    "tag": [
+     "era",
+     "1903"
+    ]
+   },
+   "intents": [
+    {
+     "kind": "ask",
+     "tag": [
+      "theme",
+      "Kin"
+     ],
+     "label": "Asks about family"
+    },
+    {
+     "kind": "doubt",
+     "n": 26
+    },
+    {
+     "kind": "own"
+    },
+    {
+     "kind": "ask",
+     "tag": [
+      "era",
+      "1903"
+     ],
+     "label": "Asks about 1903"
+    }
+   ],
+   "stories": [
+    "odette-survey",
+    "odette-copy",
+    "odette-lamp",
+    "odette-bees"
+   ],
+   "cols": [
+    6
+   ]
+  },
+  {
+   "id": "imani",
+   "name": "Imani Cole",
+   "place": "bridge",
+   "want": "Leaving",
+   "line": "I count who crosses, both ways. Tell me why you came.",
+   "reservation": {
+    "text": "Wants to know why you’re going",
+    "tag": [
+     "theme",
+     "Leaving"
+    ]
+   },
+   "intents": [
+    {
+     "kind": "own"
+    },
+    {
+     "kind": "ask",
+     "tag": [
+      "theme",
+      "Leaving"
+     ],
+     "label": "Asks why you’re going"
+    },
+    {
+     "kind": "doubt",
+     "n": 26
+    },
+    {
+     "kind": "ask",
+     "tag": [
+      "theme",
+      "Water"
+     ],
+     "label": "Asks about the river"
+    }
+   ],
+   "stories": [
+    "imani-water",
+    "imani-count",
+    "imani-brown",
+    "imani-back"
+   ],
+   "cols": [
+    7
+   ],
+   "boss": true
+  }
+ ],
+ "keepsakes": {
+  "sawtooth": {
+   "name": "Sawtooth",
+   "text": "Your first telling each day gets +1 Vivid."
+  },
+  "ohiostar": {
+   "name": "Ohio Star",
+   "text": "Threads give +2 Vivid instead of +1."
+  },
+  "logcabin": {
+   "name": "Log Cabin",
+   "text": "Retained Spare stories give +7 Weight instead of +4."
+  },
+  "geese": {
+   "name": "Flying Geese",
+   "text": "Chain gives +7 Weight instead of +4."
+  },
+  "pinwheel": {
+   "name": "Pinwheel",
+   "text": "Repeat copies every other event in the telling."
+  },
+  "bearpaw": {
+   "name": "Bear’s Paw",
+   "text": "Unanswered doubts cost credibility, never standing."
+  },
+  "lonestar": {
+   "name": "Lone Star",
+   "text": "Rare stories cost 1 less trust."
+  },
+  "churndash": {
+   "name": "Churn Dash",
+   "text": "+1 trust on the first day of every sitting."
+  },
+  "dresden": {
+   "name": "Dresden Plate",
+   "text": "Small talk gets +4 Weight."
+  },
+  "drunkard": {
+   "name": "Drunkard’s Path",
+   "text": "Risk never costs standing, but gives only +3 Weight."
+  }
+ }
+}
