@@ -80,6 +80,7 @@ The note line, the teller's quote and their reservation, the footer links and th
 - **Touch first.** Tap targets are at least 44 × 44 px. Nothing depends on hover. Long-press does the same as the inspect button.
 - **Readable.** Rules text is at least 14 px, nothing anywhere is under 12 px, and contrast meets WCAG AA. Rules and numbers are in Atkinson Hyperlegible; names and quotes are in Halsey Hand. Never put rules text over a photo.
 - **Views only.** A piece takes plain data (card objects shaped like `prototypes/sitting/cards.json`) plus callbacks. It never reads or changes game state itself.
+- **Weight.** Follow `docs/ui-weight.md`: 3 px ink keylines, a hard lip under every object, press into the lip, values on raised pills or in sunk wells, color only as a label.
 - **Accessible.** Real buttons, ARIA labels, keyboard focus that moves sensibly, Escape closes things. Under reduced motion, animations become cuts.
 - **A demo page for each piece,** like pack 1's `demo.html`, loading `cards.json` and showing the piece at 360 × 640 and 390 × 844.
 

@@ -77,9 +77,13 @@ window.HSOUND = (() => {
 
   /* ---------- effects ---------- */
   const FX = {
-    pick() { burst({ freq: 3200, dur: .05, peak: .25 }); },
-    unpick() { burst({ freq: 1800, dur: .05, peak: .2 }); },
-    tell(total) { const t = now(); burst({ t, freq: 5200, dur: .18, q: .6, peak: .14 }); burst({ t: t + .07, freq: 4600, dur: .16, q: .6, peak: .1 });
+    /* touch sounds are clay and paper: short, low, a little different every time so they never nag */
+    tock(primary) { const t = now(), v = 1 + (Math.random() - .5) * .06; tone((primary ? 260 : 210) * v, { t, type: 'sine', a: .002, peak: primary ? .32 : .24, dec: .07, glide: .55 }); burst({ t, freq: 1700 * v, dur: .018, q: 1.4, peak: .12 }); },
+    pick(n = 1) { const t = now(), v = 1 + (Math.random() - .5) * .05; burst({ t, freq: 3000 * v, dur: .05, q: .8, peak: .14 }); tone(hz(region.key + 12 + PENTA[(n + 1) % PENTA.length]) * v, { t: t + .03, type: 'sine', peak: .12, dec: .12 }); tone(150, { t: t + .03, type: 'sine', a: .002, peak: .3, dec: .08, glide: .6 }); },
+    unpick() { const t = now(); burst({ t, freq: 1600, dur: .05, peak: .14 }); tone(180, { t, type: 'sine', a: .002, peak: .2, dec: .07, glide: .7 }); },
+    nope() { const t = now(); tone(120, { t, type: 'square', a: .002, peak: .06, dec: .06 }); tone(100, { t: t + .08, type: 'square', a: .002, peak: .06, dec: .08 }); },
+    deal(n = 1) { const t = now(); for (let i = 0; i < Math.min(6, n); i++) burst({ t: t + i * .06, freq: 2600 + Math.random() * 1200, dur: .035, q: .9, peak: .1 }); },
+    tell(total) { const t = now(); tone(110, { t, type: 'sine', a: .003, peak: .3 + Math.min(.25, total / 800), dec: .3, glide: .5 }); burst({ t, freq: 5200, dur: .18, q: .6, peak: .14 }); burst({ t: t + .07, freq: 4600, dur: .16, q: .6, peak: .1 });
       const n = Math.min(9, 2 + Math.floor(Math.log2(1 + total / 10))); for (let i = 0; i < n; i++) tone(hz(region.key + 12 + PENTA[i % PENTA.length]), { t: t + .12 + i * .065, peak: .12, dec: .25 }); },
     count(i) { tone(hz(region.key + 12 + PENTA[i % PENTA.length] + 12 * Math.floor(i / PENTA.length)), { peak: .07, dec: .08, type: 'square' }); },
     warm() { const t = now(); [0, 4, 7, 12].forEach((s, i) => tone(hz(region.key + 12 + s), { t: t + i * .05, a: .08, peak: .1, dec: 1.4 })); },
