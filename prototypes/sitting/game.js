@@ -41,7 +41,7 @@ const CARDS = [
   // Priya (Thedford)
   C('priya-green', 'A green sky over Thedford', 'The bees came home at noon.', 'Weather', 'thedford', '1974', 'Find', 1, 6, 2, R('thedford', 'drawn-priya'), { people: ['priya'] }),
   C('priya-rabbits', 'The jackrabbit census', 'You can’t count them. They count you.', 'Animals', 'thedford', 'Later', 'Repeat', 1, 5, 2, O('beast-jackrabbit'), { people: ['priya'] }),
-  C('priya-shape', 'The shape over Thedford', 'Ten thousand birds, asking something.', 'Animals', 'thedford', 'Later', 'Chain', 2, 8, 3, D('crane-wings'), { people: ['priya'], rare: true }),
+  C('priya-shape', 'The shape over Thedford', 'Ten thousand birds, asking something.', 'Animals', 'thedford', 'Later', 'Chain', 2, 8, 3, D('bird-woman'), { people: ['priya'], rare: true }),
   C('priya-wind', 'Three days of wind', 'The sand came into the kitchen and lay down.', 'Weather', 'thedford', '1888', 'Risk', 2, 10, 1, LOC(2005693385), { people: ['priya'] }),
   // Deshawn (the Sandhills)
   C('deshawn-mill', 'A windmill lies about the wind', 'It tells you which way. Then it lies.', 'Weather', 'sandhills', 'Later', 'Repeat', 1, 6, 1, PD('pd_sandhills_print', 'Kady B. Faulkner, Nebraska Sandhills · public domain', 'painting'), { people: ['deshawn'] }),
@@ -56,7 +56,7 @@ const CARDS = [
   C('frank-unsigned', 'Not signed', 'Write it down. It won’t count.', 'Kin', 'dismal', 'Later', 'Chain', 1, 8, 1, D('drawn-frank'), { people: ['frank', 'lou'], holdout: true }),
   // Walt (Broken Bow)
   C('walt-seed', 'The seed packet with my name', 'Mine is sweet corn.', 'Kin', 'brokenbow', '1950', 'Spare', 1, 6, 2, D('face1'), { people: ['walt'] }),
-  C('walt-count', 'My aunt heard it count', 'To a number that doesn’t exist.', 'Strange', 'brokenbow', '1903', 'Chain', 2, 9, 2, LOC(2005693388), { people: ['walt'] }),
+  C('walt-count', 'My aunt heard it count', 'To a number that doesn’t exist.', 'Strange', 'brokenbow', '1903', 'Chain', 2, 9, 2, D('chandelier'), { people: ['walt'] }),
   C('walt-aurora', 'Aurora over Broken Bow', 'Pink first, then green like grass.', 'Light', 'brokenbow', 'Later', 'Chain', 1, 7, 2, R('night-broken-bow'), { people: ['walt'] }),
   C('walt-sod', 'A sod house on the Middle Loup', 'Grandmother kept a goat on the roof.', 'Kin', 'brokenbow', '1888', 'Find', 1, 6, 1, LOC(2005693381), { people: ['walt'] }),
   // Tomás (the North Loup)
@@ -162,7 +162,7 @@ const CARDS = [
   C('cranes-lift', 'They lifted all at once', 'Furious and enormous.', 'Animals', 'platte', 'Later', 'Risk', 1, 8, 2, D('crane-dance')),
   C('trail-ruts', 'The wagon ruts', 'Everybody who ever left went by here. You can see where they leaned.', 'Leaving', 'scottsbluff', '1888', 'Chain', 1, 6, 2, PD('pd_chimney_rock_1904', 'Chimney Rock, 1904 · NARA, public domain'), { people: ['gus'] }),
   C('lookout', 'The lookout tower', 'From the top you can see three counties and nobody in them.', 'Light', 'platte', 'Later', 'Find', 1, 6, 2, PD('pd_platte_tower', 'Platte River State Park tower · public domain, Wikimedia Commons'), { people: ['ada'] }),
-  C('elevator-sunday', 'Sweeping the elevator on Sundays', 'Nobody asked. It’s just that somebody should.', 'Work', 'mainstreet', 'Later', 'Spare', 0, 4, 1, PD('pd_silo_mclean', 'Grain elevator, McLean · public domain, Wikimedia Commons'), { people: ['deshawn'] }),
+  C('elevator-sunday', 'Sweeping the elevator on Sundays', 'Nobody asked. It’s just that somebody should.', 'Work', 'mainstreet', 'Later', 'Spare', 0, 4, 1, D('bin-walker'), { people: ['deshawn'] }),
   C('duffel-east', 'A bag pointed east', 'Somebody set it down facing the river and kept going without it.', 'Leaving', 'sandhills', 'Later', 'Chain', 1, 6, 2, R('road-duffel')),
   C('boot-fence', 'Every boot on the fence', 'One for everybody who walked away and kept walking.', 'Leaving', 'sandhills', '1974', 'Spare', 1, 6, 2, R('road-bootfence')),
   C('kolaches', 'Kolaches after the funeral', 'Apricot, poppy seed, prune. Everybody knew whose were whose.', 'Kin', 'mainstreet', '1950', 'Find', 1, 6, 2, R('road-kolaches')),

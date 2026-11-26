@@ -1,6 +1,6 @@
 # Sketch library
 
-Hand drawings from the Kobo notebooks (*Sketches* and *Tasks*), cropped for use in Halsey. The game is "both and": places, light and layout are generated, while people, creatures and some landmarks are drawn by hand. Each drawing becomes one more ink layer, so it prints in whatever look, inks, paper and texture a scene uses.
+Hand drawings from the Kobo notebooks (*Sketches*, *Tasks* and *Sketch 2*), cropped for use in Halsey. The game is "both and": places, light and layout are generated, while people, creatures and some landmarks are drawn by hand. Each drawing becomes one more ink layer, so it prints in whatever look, inks, paper and texture a scene uses.
 
 | File | From | Use |
 |---|---|---|
@@ -17,6 +17,10 @@ Hand drawings from the Kobo notebooks (*Sketches* and *Tasks*), cropped for use 
 | `bulb.png` | Tasks (May) | Modifier art: Public Power (Nebraska is the only state served entirely by public power) |
 | `medallion.png`, `checker.png`, `starburst.png`, `petal.png`, `stars.png` | Tasks | Emblems painted on barn quilt modifiers |
 | `mainstreet.png` | Tasks | Landmark: a Main Street of storefronts on a Sandhills ridge |
+| `chandelier.png` | Sketch 2 | Creature: the Chandelier, a beaded, dripping bell. Rendered as a live creature (`beast-chandelier`) at the Dismal and Tech High; art for "My aunt heard it count" |
+| `bird-woman.png` | Sketch 2 | Portrait under two birds; art for "The shape over Thedford" |
+| `bin-walker.png` | Sketch 2 | Character taking out the trash; art for "Sweeping the elevator on Sundays" |
+| `faint-figure.png` | Sketch 2 | Character, very light pencil; in the library, not yet used |
 
 `manifest.json` lists each drawing's kind, habitat, source and aspect ratio. Add new drawings with `tools/sketch-intake/`.
 

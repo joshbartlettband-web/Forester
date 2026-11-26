@@ -1,4 +1,20 @@
 {
+ "bin-walker": {
+  "kind": "character",
+  "habitat": [
+   "town"
+  ],
+  "source": "Sketch 2",
+  "ar": 0.8222
+ },
+ "bird-woman": {
+  "kind": "portrait",
+  "habitat": [
+   "prairie"
+  ],
+  "source": "Sketch 2",
+  "ar": 0.8278
+ },
  "bulb": {
   "kind": "emblem",
   "habitat": [
@@ -6,6 +22,14 @@
   ],
   "source": "Tasks, May 2025",
   "ar": 0.5681
+ },
+ "chandelier": {
+  "kind": "creature",
+  "habitat": [
+   "strange"
+  ],
+  "source": "Sketch 2",
+  "ar": 0.6847
  },
  "checker": {
   "kind": "emblem",
@@ -154,6 +178,14 @@
   ],
   "source": "Tasks",
   "ar": 0.6091
+ },
+ "faint-figure": {
+  "kind": "character",
+  "habitat": [
+   "strange"
+  ],
+  "source": "Sketch 2",
+  "ar": 0.7764
  },
  "grass": {
   "kind": "plate",
