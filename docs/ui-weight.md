@@ -106,9 +106,19 @@ From the Instagram pulls in `art/instagram/`:
 | Map | pale nodes, faint paths | a survey plat in a heavy frame; stops are medallions with kind rings and lips; trails dotted in ink; the walked path inked pink; rivers cut in with a dark edge |
 | Sheets | plain panel | speckled slab; on a phone a gold rim along the top, and the map peek has a grabber |
 
+## Zoom: reading a card where it is
+
+Hold a card on a phone, or rest the pointer on it on a computer, and it lifts out of its place and grows large enough to read. This is how Hearthstone and Marvel Snap let you read a hand that's too small to read.
+
+- **Phone.** After 0.3 s of holding, the full card grows out of the small one to about 1.4 times full size, above your finger (or below it, if there's more room there). The rest of the screen dims, and the small card stays behind as a ghost. Keep your finger down and slide along the hand: the big card follows from one card to the next. Let go and it shrinks back into its place. A quick tap still picks the card.
+- **Computer.** After a 0.16 s rest, the card grows upward out of itself to about 1.4 times. Moving to the next card hands over at once, with a short glide. Clicking still picks.
+- **Keyboard.** Tabbing onto a card shows it large; Escape puts it away.
+- **Motion.** It grows from the card's own size and angle with a small overshoot and tilt, then settles; while held it breathes very slightly. Going back is quicker than coming out. It makes a soft paper sound, and on a phone a short buzz. Under reduced motion it just appears.
+- **Everywhere.** It works the same in the hand, the trade, the deck and the courthouse, and it shows above any open sheet.
+
 ## Not done yet
 
 - A truly hand-drawn, scalloped frame for the scene, like your drawing, as an image instead of CSS.
-- Card tilt toward the finger (Hearthstone), and parallax on rare cards.
+- Card tilt toward the finger (Hearthstone), and parallax on rare cards. (Cards now grow out of their place when held or pointed at; see Zoom below.)
 - Particles from a telling to the score (Balatro's trails). The thread from your stories to the portrait does some of this.
 - Landscape phones (U12 in `docs/neon-ui-menu.md`).

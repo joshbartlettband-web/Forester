@@ -19,11 +19,11 @@ window.HSOUND = (() => {
     musicBus = ctx.createGain(); musicBus.gain.value = .32; musicBus.connect(comp);
     ambBus = ctx.createGain(); ambBus.gain.value = .5; ambBus.connect(comp);
     fxBus = ctx.createGain(); fxBus.gain.value = .7; fxBus.connect(comp);
-    /* the Recorder's voice: thin, close, a little like a telephone, with a short slap off a hard wall */
-    voiceBus = ctx.createGain(); voiceBus.gain.value = 1.15;
+    /* the Recorder's voice: close and a little thin, as if through the machine's own speaker, with a short slap off a hard wall */
+    voiceBus = ctx.createGain(); voiceBus.gain.value = 1.1;
     const hp = ctx.createBiquadFilter(), pk = ctx.createBiquadFilter(), lpv = ctx.createBiquadFilter(), slap = ctx.createDelay(.2), slapG = ctx.createGain();
-    hp.type = 'highpass'; hp.frequency.value = 170; pk.type = 'peaking'; pk.frequency.value = 2300; pk.gain.value = 5; pk.Q.value = .9; lpv.type = 'lowpass'; lpv.frequency.value = 6200;
-    slap.delayTime.value = .034; slapG.gain.value = .16;
+    hp.type = 'highpass'; hp.frequency.value = 120; pk.type = 'peaking'; pk.frequency.value = 2500; pk.gain.value = 3; pk.Q.value = .8; lpv.type = 'lowpass'; lpv.frequency.value = 7200;
+    slap.delayTime.value = .034; slapG.gain.value = .11;
     voiceBus.connect(hp); hp.connect(pk); pk.connect(lpv); lpv.connect(comp); lpv.connect(slap); slap.connect(slapG); slapG.connect(comp);
     // a small room: a feedback delay as reverb
     const d = ctx.createDelay(1), fb = ctx.createGain(), lp = ctx.createBiquadFilter(); d.delayTime.value = .23; fb.gain.value = .38; lp.type = 'lowpass'; lp.frequency.value = 2400;
@@ -86,6 +86,8 @@ window.HSOUND = (() => {
     /* touch sounds are clay and paper: short, low, a little different every time so they never nag */
     tock(primary) { const t = now(), v = 1 + (Math.random() - .5) * .06; tone((primary ? 260 : 210) * v, { t, type: 'sine', a: .002, peak: primary ? .32 : .24, dec: .07, glide: .55 }); burst({ t, freq: 1700 * v, dur: .018, q: 1.4, peak: .12 }); },
     pick(n = 1) { const t = now(), v = 1 + (Math.random() - .5) * .05; burst({ t, freq: 3000 * v, dur: .05, q: .8, peak: .14 }); tone(hz(region.key + 12 + PENTA[(n + 1) % PENTA.length]) * v, { t: t + .03, type: 'sine', peak: .12, dec: .12 }); tone(150, { t: t + .03, type: 'sine', a: .002, peak: .3, dec: .08, glide: .6 }); },
+    /* a card lifts out to be read: a soft paper slide and a small high note */
+    lift() { const t = now(), v = 1 + (Math.random() - .5) * .06; burst({ t, freq: 4300 * v, dur: .07, q: .5, peak: .05 }); tone(hz(region.key + 24) * v, { t: t + .02, type: 'sine', peak: .03, dec: .2 }); },
     unpick() { const t = now(); burst({ t, freq: 1600, dur: .05, peak: .14 }); tone(180, { t, type: 'sine', a: .002, peak: .2, dec: .07, glide: .7 }); },
     nope() { const t = now(); tone(120, { t, type: 'square', a: .002, peak: .06, dec: .06 }); tone(100, { t: t + .08, type: 'square', a: .002, peak: .06, dec: .08 }); },
     deal(n = 1) { const t = now(); for (let i = 0; i < Math.min(6, n); i++) burst({ t: t + i * .06, freq: 2600 + Math.random() * 1200, dur: .035, q: .9, peak: .1 }); },

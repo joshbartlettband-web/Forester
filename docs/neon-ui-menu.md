@@ -13,7 +13,7 @@ Claude built a working first pass of the phone layout in `prototypes/sitting/sit
 | U1 fit checker | A Playwright script (outside the repo for now) | The in-browser `frames.html` and `fitCheck()`, so the designer can check on their own |
 | U2 mini card | The full card, restyled with CSS to 104 × 160 | A purpose-built face with better art cropping; a title that reads better when overlapped |
 | U3 hand fan | Overlaps and arcs to fit; tap to pick | Drag into the tray; a smoother re-flow when a card leaves |
-| U4 card inspect | Hold or right-click a card; "Add to the telling" | The grow-from-the-card animation |
+| U4 card zoom | Hold a card (phone) or point at it (computer) and it grows out of its place: above the finger on a phone, slide along the hand to read the next, let go to put it back; the background dims; keyboard focus shows it too | Card tilt toward the finger; an action under the big card (Tell, Give) that doesn't fight the hold-and-release |
 | U5 pager | ‹ ›, swipe, "2 of 4"; items scale down if even one won't fit | Snap animation; page dots |
 | U6 sheets | Every dialog is a full-screen sheet on a phone; the map uses a short bottom sheet | Rise and fall motion; focus polish |
 | U7 teller header | Scene, inset portrait, intent plate, chips; tap for the full teller | Better portrait framing; a clearer intent icon set |

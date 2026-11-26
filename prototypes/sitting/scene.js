@@ -29,6 +29,8 @@ window.HSCENE = (() => {
     lexington:  { img: 'lexington', fy: .55, arch: { k: 'arch-red-hook', cx: .46, ground: .98, h: .42 }, beasts: ['crane', 'coyote'], murmur: true },
     nebraskacity: { img: 'nebraskacity', fy: .55, arch: { k: 'arch-red-blue', cx: .84, ground: .98, h: .5 }, beasts: ['owl', 'jackrabbit'], murmur: true },
     capitol:    { img: 'capitol', fy: .5, arch: { k: 'arch-white', cx: .2, ground: .98, h: .5 }, beasts: ['owl', 'gatewalker'] },
+    ponca:      { img: 'ponca', fy: .55, arch: { k: 'arch-red-blue', cx: .84, ground: .98, h: .46 }, beasts: ['coyote', 'owl'], murmur: true },
+    techhigh:   { img: 'techhigh', fy: .5, arch: { k: 'arch-white', cx: .1, ground: .99, h: .44 }, beasts: ['owl'] },
     bridge:     { img: 'bridge', fy: .5, arch: { k: 'arch-celadon', cx: .14, ground: .99, h: .48 }, beasts: ['gatewalker'] },
   };
   const BEASTS = {

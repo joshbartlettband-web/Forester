@@ -141,6 +141,21 @@ const CARDS = [
   C('dot-weather', 'Weather from three counties', 'From the top you can see it coming. I used to warn the senators.', 'Weather', 'capitol', '1950', 'Find', 1, 6, 2, R('capitol'), { people: ['dot'] }),
   C('dot-dome', 'Checking the dome lights', 'They put the lamps on a timer. I still go up and check.', 'Light', 'capitol', '2000', 'Repeat', 1, 6, 2, R('night-capitol'), { people: ['dot', 'arne'] }),
   C('dot-gate', 'What they say on the way up', 'Senators, schoolchildren. Everybody tells the elevator the truth.', 'Kin', 'capitol', '1950', 'Spare', 1, 6, 2, D('drawn-dot'), { people: ['dot', 'odette'] }),
+  // Metta Brown (Hummel Hill, Ponca): her own words, from the pieces she wrote for the family, 1955 to 1961
+  C('metta-sand', 'Sand bags to the left of me', 'It’s not half bad in the coffee, ’cause it goes right to the bottom.', 'Water', 'ponca', '1950', 'Repeat', 2, 10, 3, R('ponca'), { people: ['metta', 'roy', 'charles'], rare: true }),
+  C('metta-pancake', 'Pan-Cake, with a wet sponge', '“Cut off my legs and call me Shorty!”', 'Kin', 'omaha', '1950', 'Find', 1, 6, 2, D('sk-pancake'), { people: ['metta'] }),
+  C('metta-ruth', 'A month late, on Mother’s Day', 'I wanted to pick violets, and to put my feet on home soil.', 'Kin', 'ponca', '1919', 'Spare', 1, 6, 2, D('sk-buggy'), { people: ['metta', 'roy'] }),
+  C('metta-chain', 'The chain in the cornfield', 'He plowed up a huge chain, not far from the big cottonwood the river boats tied up to.', 'Strange', 'ponca', '1888', 'Chain', 1, 6, 2, D('sk-chain'), { people: ['metta'] }),
+  C('metta-coyote', 'The coyote on the front lawn', 'The cars line up for blocks, to study this situation.', 'Animals', 'ponca', '1950', 'Risk', 1, 6, 2, O('beast-coyote'), { people: ['metta'] }),
+  C('metta-brush', 'Into the brush', '“Born in Rockport, married in Florence, and then moved into the brush!”', 'Leaving', 'ponca', '1888', 'Chain', 1, 6, 2, D('sk-school'), { people: ['metta'] }),
+  C('sahara', 'Signed, “Sahara”', 'You can scrape sand from the bathtub with a spoon.', 'Water', 'ponca', '1950', 'Spare', 0, 4, 1, R('ponca'), { people: ['metta'] }),
+  // Velzoe Brown (Tech High, Omaha): her words, from the memoir she wrote for her parents in 1976 and what she told people later
+  C('velzoe-sunshine', 'Sunshine’s golden trombone', 'She lifted her golden trombone, and to me it was angelic.', 'Light', 'techhigh', '1926', 'Find', 1, 6, 2, D('drawn-velzoe'), { people: ['velzoe'] }),
+  C('velzoe-baldy', 'Go home, Baldy', '“Go home, Baldy!” He always did.', 'Animals', 'ponca', '1926', 'Chain', 1, 6, 2, D('sk-baldy'), { people: ['velzoe'] }),
+  C('velzoe-glad', 'The Glad Girls leave town', 'Into the wide, wild world, with my dear parents’ blessing.', 'Leaving', 'omaha', '1926', 'Risk', 2, 10, 3, D('sk-studebaker'), { people: ['velzoe'], rare: true }),
+  C('velzoe-lights', 'The lights went out at the toll bridge', 'Pitch dark, and the lights went out on the Model T. No problem. I called home.', 'Light', 'bridge', '1926', 'Spare', 1, 6, 2, D('sk-modelt'), { people: ['velzoe'] }),
+  C('velzoe-ragtime', 'Mother played ragtime', 'Mother played Rag-time piano like the great Joplin himself.', 'Kin', 'ponca', '1926', 'Repeat', 1, 6, 2, D('drawn-metta'), { people: ['velzoe', 'metta'] }),
+  C('velzoe-chromatic', 'First chair, and no lessons', '“Dear Lord,” I wondered. “What is a chromatic scale?”', 'Work', 'techhigh', '1926', 'Spare', 0, 4, 1, D('drawn-velzoe'), { people: ['velzoe'] }),
   // found on the road
   C('peaches', 'Peaches from Dunning', 'She said they were spare.', 'Kin', 'sandhills', 'Later', 'Spare', 0, 4, 1, D('traveler')),
   C('cousin', 'A man who knows your cousin', 'You’re Odette’s cousin’s kid. I knew it.', 'Kin', 'brokenbow', 'Later', 'Chain', 1, 5, 2, D('face3'), { people: ['odette', 'marisol', 'walt'] }),
@@ -178,14 +193,14 @@ CARDS.filter(c => c.small).forEach(c => { c.rarity = 'basic'; });
 /* bridges between people (the guide's 30% glue): stories that tie two tellers together */
 const GLUE = { 'tree-lights': ['ruth'], 'fog-cranes': ['ada'], 'power': ['arne'], 'priya-green': ['walt'], 'deshawn-well': ['tomas'], 'walt-aurora': ['arne'],
   'tomas-pivot': ['ada'], 'gus-notebook': ['imani'], 'marisol-rivers': ['tomas'], 'arne-bulb': ['odette'], 'imani-brown': ['marisol'], 'priya-wind': ['deshawn'],
-  'frank-unsigned': ['lou'], 'cal-keeps': ['tomas', 'imani'], 'lan-tracks': ['deshawn'], 'maeve-boat': ['walt'], 'nadia-goods': ['gus'], 'bettina-calf': ['ada'], 'abuk-train': ['arne'], 'abuk-sister': ['imani'], 'femi-ledger': ['ruth'], 'dot-weather': ['priya'] };
+  'frank-unsigned': ['lou'], 'metta-sand': ['velzoe'], 'velzoe-lights': ['imani'], 'metta-pancake': ['velzoe'], 'cal-keeps': ['tomas', 'imani'], 'lan-tracks': ['deshawn'], 'maeve-boat': ['walt'], 'nadia-goods': ['gus'], 'bettina-calf': ['ada'], 'abuk-train': ['arne'], 'abuk-sister': ['imani'], 'femi-ledger': ['ruth'], 'dot-weather': ['priya'] };
 for (const [id, ps] of Object.entries(GLUE)) { const c = CARDS.find(c => c.id === id); if (c) c.people = [...new Set([...c.people, ...ps])]; }
 /* what a card is worth on its own, for comparing a draft to your deck's average */
 const strength = c => Math.round(c.w * c.v / (EVMULT[c.event] ?? 1) / Math.max(1, c.cost) * 10) / 10;
 const CARD = Object.fromEntries(CARDS.map(c => [c.id, c]));
 const START = ['talk-weather', 'talk-kin', 'rows', 'hail', 'bridge-thing', 'tree-lights', 'walked-rows', 'fence-posts', 'turtle', 'stock-tank', 'fog-cranes', 'power'];
 const PLACE = { halsey: 'Halsey', thedford: 'Thedford', sandhills: 'the Sandhills', dismal: 'the Dismal', brokenbow: 'Broken Bow', loup: 'the North Loup', platte: 'the Platte', archway: 'the Archway', columbus: 'Columbus', mainstreet: 'Main Street', courthouse: 'the Courthouse', omaha: 'Omaha', bridge: 'the bridge', door: 'the door in the hill', scottsbluff: 'Scotts Bluff',
-  kingsley: 'Kingsley Dam', niobrara: 'the Niobrara', toadstool: 'Toadstool', oneill: 'O’Neill', ashfall: 'Ashfall', lexington: 'Lexington', nebraskacity: 'Nebraska City', capitol: 'the Capitol' };
+  kingsley: 'Kingsley Dam', niobrara: 'the Niobrara', toadstool: 'Toadstool', oneill: 'O’Neill', ashfall: 'Ashfall', lexington: 'Lexington', nebraskacity: 'Nebraska City', capitol: 'the Capitol', ponca: 'Ponca', techhigh: 'Tech High' };
 
 /* ---------------- tellers ----------------
    intents cycle one per day. ask: stories with that tag weigh double today.
@@ -295,6 +310,16 @@ const TELLERS = [
     reservation: { text: 'Wants one story to lead into the next', tag: ['event', 'Chain'] },
     intents: [{ kind: 'doubt', n: 24 }, ask('theme', 'Light', 'Asks about the tower at night'), { kind: 'own' }, ask('theme', 'Weather', 'Asks what’s coming')],
     stories: ['dot-sower', 'dot-weather', 'dot-dome', 'dot-gate'] },
+  { id: 'velzoe', name: 'Velzoe Brown', place: 'techhigh', placeName: 'Tech High, Omaha', img: 'img/techhigh.jpg', drawing: 'sketches/drawn-velzoe.png', photo: 'img/cast-velzoe.jpg', cols: [5, 6], family: true,
+    want: 'Leaving', line: 'If you tell me you can’t play, I’ll tell you: yes you can!',
+    reservation: { text: 'Wants to hear about a chance you took', tag: ['event', 'Risk'] },
+    intents: [ask('theme', 'Leaving', 'Asks how you left home'), { kind: 'doubt', n: 22 }, { kind: 'own' }, ask('theme', 'Light', 'Asks about the stage lights')],
+    stories: ['velzoe-sunshine', 'velzoe-baldy', 'velzoe-glad', 'velzoe-lights', 'velzoe-ragtime', 'velzoe-chromatic'] },
+  { id: 'metta', name: 'Metta Brown', place: 'ponca', placeName: 'Hummel Hill, Ponca', img: 'img/ponca.jpg', drawing: 'sketches/drawn-metta.png', photo: 'img/cast-metta.jpg', cols: [6], family: true,
+    want: 'Kin', line: 'It is the kind of day which brings reminiscing.',
+    reservation: { text: 'Won’t waste a thing: wants to hear what you kept', tag: ['event', 'Spare'] },
+    intents: [ask('theme', 'Kin', 'Asks whose people you are'), { kind: 'own' }, { kind: 'doubt', n: 22 }, ask('theme', 'Work', 'Asks about the sandbags')],
+    stories: ['metta-sand', 'metta-pancake', 'metta-ruth', 'metta-chain', 'metta-coyote', 'metta-brush'] },
   { id: 'imani', name: 'Imani Cole', place: 'bridge', placeName: 'The bridge over the Missouri', img: 'img/bridge.jpg', drawing: 'sketches/drawn-imani.png', photo: 'img/cast-imani.jpg', cols: [7], boss: true,
     want: 'Leaving', line: 'I count who crosses, both ways. Tell me why you came.',
     reservation: { text: 'Wants to know why you’re going', tag: ['theme', 'Leaving'] },
@@ -325,6 +350,8 @@ const KEEPS = {
 
 /* ---------------- road events (a map node between sittings) ---------------- */
 const ROAD = [
+  { title: 'Sandbags on every fence', text: 'For a mile, every fence is hung with drying sandbags, half flour sacks, half gunny. A woman sweeping her porch says the Brown boys started it.',
+    choices: [{ text: 'Help her hang the rest', card: 'sahara' }, { text: 'Keep walking', standing: 1 }] },
   { title: 'A bicycle with a cart', text: 'A woman pedaling west with a cart of jars. “You’re on Survey? Take one. They’re spare.”',
     choices: [{ text: 'Take a jar', card: 'peaches' }, { text: 'Give her your small talk', dropSmall: true, standing: 1 }] },
   { title: 'Somebody you know', text: 'A man at the crossroads squints at you. “You’re Odette’s cousin’s kid. I knew it.”',

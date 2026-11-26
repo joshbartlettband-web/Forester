@@ -104,6 +104,7 @@ h1{font:400 40px/1 var(--hand);margin:0;color:var(--on);text-shadow:0 3px 0 var(
 .chip{display:inline-flex;gap:6px;align-items:center;border-radius:6px;padding:2px 9px;font-size:14px;color:var(--ink)}
 .chip b{font-weight:700}
 .chip.want{--f:#d7ead9;--fd:#9cc3a6}
+.chip.kin{--f:#f6e3a6;--fd:#d4a73a;font-style:italic}
 .chip.res{--f:#f6d6cf;--fd:#d99c8f}
 .chip.res.done{--f:var(--bisque-d);--fd:var(--bisque-dd);text-decoration:line-through;color:rgba(31,27,46,.6)}
 /* what they'll do today: a plate whose color says the kind */
@@ -290,16 +291,17 @@ dialog .row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-cont
 .pgnav button:active:not(:disabled){transform:translateY(3px);box-shadow:0 1px 0 var(--ink)}
 .pgnav button:disabled{opacity:.35;box-shadow:none;transform:translateY(3px)}
 .ph-only,.menubtn{display:none}
-/* hold a card to read it */
-#insp{background:transparent;border:0;box-shadow:none;padding:0;max-width:none;max-height:none;overflow:visible}
-#insp[open]{display:grid;justify-items:center;gap:18px}
-#insp::backdrop{background:radial-gradient(circle at 50% 45%,rgba(31,27,46,.6),rgba(10,6,16,.88))}
-#insp .row{display:flex;gap:10px;justify-content:center}
-#insp .card{height:auto;min-height:340px}
-#insp .card .face{min-height:324px}
-#insp .big{animation:grow .3s var(--pop)}
-@keyframes grow{0%{transform:scale(.6) translateY(40px);opacity:0}}
-#insp[open]{align-content:center;height:100dvh;margin:0 auto;padding:10px 0}
+/* hold a card (phone) or point at it (computer): it lifts out of its place and grows so you can read it */
+#lens{position:fixed;inset:auto;left:0;top:0;margin:0;padding:0;border:0;background:none;overflow:visible;width:212px;height:auto;color:var(--ink);
+  transform-origin:50% 50%;pointer-events:none;z-index:60;display:none;will-change:transform}
+#lens.on{display:block}
+#lens .card{height:auto;min-height:340px;box-shadow:0 5px 0 var(--ink),inset 0 -3px 0 var(--th-d),inset 0 2px 0 rgba(255,255,255,.5),9px 20px 0 rgba(10,6,16,.42),0 22px 46px rgba(10,6,16,.5);animation:bob 2.6s ease-in-out .3s infinite}
+#lens .card .face{min-height:324px}
+#lens::backdrop{background:transparent;pointer-events:none;transition:background .2s}
+#lens.dim::backdrop{background:rgba(10,6,16,.46)}
+@keyframes bob{50%{transform:translateY(-3px) rotate(.35deg)}}
+.card.lifted{opacity:.32;filter:saturate(.5)}
+.card{transition:transform .18s var(--pop),box-shadow .18s,filter .2s,opacity .15s}
 .toast{position:fixed;left:50%;top:calc(52px + env(safe-area-inset-top,0px));transform:translate(-50%,-8px);width:max-content;max-width:min(92vw,520px);border-radius:10px;padding:7px 14px;font-size:14px;line-height:1.3;z-index:30;opacity:0;pointer-events:none;transition:opacity .25s,transform .3s var(--pop);--lip:4px}
 .toast.on{opacity:1;transform:translate(-50%,0)}
 .peek-hd{display:flex;gap:14px;align-items:center;margin-bottom:8px}
@@ -431,6 +433,7 @@ dialog[open]{display:flex;flex-direction:column;max-height:92dvh;overflow:hidden
   #hand>.card+.card{margin-left:calc(-1 * var(--ov,-6px))}
   #hand>.card:hover{transform:translateY(var(--y,0)) rotate(var(--r,0deg))}
   #hand>.card:active{transform:translateY(-12px)}
+  .card[data-uid]{touch-action:none}
   /* the small card: cost, title, art, event, Weight × Vivid, all on the left edge so a fanned hand still reads */
   .card:not(.full){width:104px;height:160px;padding:3px;border-radius:10px;box-shadow:0 3px 0 var(--ink),inset 0 -2px 0 var(--th-d),inset 0 2px 0 rgba(255,255,255,.5),3px 7px 0 var(--cast)}
   .card:not(.full) .face{grid-template-rows:40px 50px auto 1fr auto;border-width:1.5px;border-radius:7px}
@@ -494,7 +497,7 @@ dialog .readout.on{transform:translate(-50%,0)}
 .rechd .btn{padding:4px 12px;font-size:14px;--lip:3px;margin-bottom:3px}
 @media (max-width:760px){.readout{left:9px;right:9px;top:9px;font-size:12.5px;padding:5px 8px}.readout .rec{font-size:12px}.recsheet{font-size:12.5px;line-height:1.45;padding:8px 9px}}
 @media (prefers-reduced-motion:reduce){.readout .rec::before,.readout .txt::after{animation:none}}
-@media (prefers-reduced-motion:reduce){.card,.bar b,.btn,.node .dot,.kopt{transition:none}.toast{transition:none}.float{animation-duration:.01s}.card.rare .face::after,.node.can .dot,.slot,.num-w,.num-v,.num-t,.card.deal,#insp .big{animation:none}.shake-s,.shake-m,.shake-l{animation:none}}
+@media (prefers-reduced-motion:reduce){.card,.bar b,.btn,.node .dot,.kopt{transition:none}.toast{transition:none}.float{animation-duration:.01s}.card.rare .face::after,.node.can .dot,.slot,.num-w,.num-v,.num-t,.card.deal,#lens .card{animation:none}.shake-s,.shake-m,.shake-l{animation:none}}
 </style>
 
 <div class="wrap">
@@ -549,7 +552,7 @@ dialog .readout.on{transform:translate(-50%,0)}
 </div>
 
 <dialog id="dlg"><div id="dlgBody"></div></dialog>
-<dialog id="insp" aria-label="A story, up close"></dialog>
+<div id="lens" popover="manual" aria-hidden="true"></div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script src="engine.js"></script>
@@ -570,6 +573,8 @@ dialog .readout.on{transform:translate(-50%,0)}
 const K=SITTING,{DAYS,TELLER,KEEPS,PLACE}=K,$=s=>document.querySelector(s);
 const RULE={Find:'Draw 2 cards.',Chain:'+4 Weight if it shares a theme or place with your last telling.',Risk:'+5 Weight. Costs 1 standing if they aren’t warm yet.',Spare:'Retain: it stays in hand at day’s end, and your next telling gets +4 Weight.',Repeat:'Copies the strongest other event in this telling.'};
 const INK={Find:'#f3c22f',Chain:'#e2486f',Risk:'#c4622c',Spare:'#6f9148',Repeat:'#3a78c3'};
+/* tellers who were real people: the Brown family, in their own words */
+const FAMILY='A real person, from the Brown family’s own pages. The stories are in her own words.',FAMILY_SHORT='In her own words';
 const KIND={sitting:'Sitting',holdout:'Holdout',road:'The road',arch:'An arch',courthouse:'Courthouse',bridge:'The bridge'};
 const RING={sitting:'var(--terracotta)',holdout:'var(--glaze-black)',road:'#6f9e88',arch:'var(--lilac)',courthouse:'var(--leaf)',bridge:'var(--cobalt)'};
 const KICON={sitting:'story',holdout:'holdout',road:'ties',arch:'keepsake',courthouse:'filing',bridge:'sign'};
@@ -722,27 +727,69 @@ function fanHand(){const h=$('#hand'),cards=[...h.children],n=cards.length;
   cards.forEach((c,i)=>{const t=n>1?i/(n-1)-.5:0;c.style.setProperty('--r',(t*(n>3?7:3)).toFixed(2)+'deg');c.style.setProperty('--y',(t*t*(n>3?18:6)).toFixed(1)+'px')})}
 /* the teller, in full (on a phone the header only has room for the short version) */
 function tellerSheet(){const S=G.S;if(!S||!PHONE.matches)return;const T=S.T;
-  open(`<h2>${T.name}</h2><p class="sub" style="font:400 21px/1.2 var(--hand)">“${T.line}”</p><p class="sub">${T.placeName}. Wants <b>${T.want}</b>.</p>
+  open(`<h2>${T.name}</h2><p class="sub" style="font:400 21px/1.2 var(--hand)">“${T.line}”</p>${T.family?`<p class="sub"><i>${FAMILY}</i></p>`:''}<p class="sub">${T.placeName}. Wants <b>${T.want}</b>.</p>
     <p class="sub"><b>Reservation${S.reservation?'':' (answered)'}:</b> ${T.reservation.text}. Until it’s answered, your Vivid is halved.</p>
     <p class="sub"><b>Today they</b> ${$('#intent .what').textContent.trim().toLowerCase()}. ${$('#intent p').textContent}</p>
     <div class="row"><button class="btn" id="x">Back to the sitting</button></div>`,b=>b.querySelector('#x').onclick=close)}
 $('.sitter').addEventListener('click',tellerSheet);$('#intent').addEventListener('click',tellerSheet);
-/* hold any card (or right-click it) to read it up close */
-const insp=$('#insp');let held=null,heldT=0,swallow=false;
-function inspect(c){const S=G.S,inHand=S&&!S.result&&!dlg.open&&S.hand.includes(c)&&!sel.includes(c),can=inHand&&sel.length<3&&K.costOf(G,c)<=S.trust-cost();
-  insp.innerHTML=`<div class="big"><div class="sc" style="width:212px;transform-origin:0 0">${cardHTML(c,{tag:'div',full:true})}</div></div>
-    <div class="row">${can?'<button class="btn" id="iTell">Add to the telling</button>':''}<button class="btn quiet" id="iClose">Close</button></div>`;
-  insp.showModal();const cd=insp.querySelector('.card'),ch=cd.offsetHeight,sc=Math.max(.8,Math.min(1.6,(innerWidth-32)/212,(innerHeight-110)/ch));
-  insp.querySelector('.sc').style.transform=`scale(${sc})`;Object.assign(insp.querySelector('.big').style,{width:212*sc+'px',height:ch*sc+'px'});
-  insp.querySelector('#iClose').onclick=()=>insp.close();
-  if(can)insp.querySelector('#iTell').onclick=()=>{insp.close();sel.push(c);HSOUND.play('pick');render()}}
-insp.addEventListener('click',e=>{if(e.target===insp)insp.close()});
-document.addEventListener('pointerdown',e=>{swallow=false;const el=e.target.closest('.card[data-uid]');if(!el||el.closest('#insp'))return;held={el,x:e.clientX,y:e.clientY};clearTimeout(heldT);
-  heldT=setTimeout(()=>{if(!held)return;const c=UIDS.get(held.el.dataset.uid);held=null;if(c){swallow=true;inspect(c)}},430)});
-document.addEventListener('pointermove',e=>{if(held&&Math.hypot(e.clientX-held.x,e.clientY-held.y)>10){held=null;clearTimeout(heldT)}});
-['pointerup','pointercancel'].forEach(t=>document.addEventListener(t,()=>{held=null;clearTimeout(heldT)}));
+/* hold a card (phone) or point at it (computer) and it lifts out of its place and grows so you can read it.
+   On a phone it rises above your finger, and you can slide along the hand to read the next one; let go and it goes back. */
+const lens=$('#lens'),POP=typeof lens.showPopover==='function';
+let pk=null,held=null,heldT=0,hoverT=0,watchT=0,swallow=false;
+const at=(cx,cy,s,rot,W,H)=>`translate(${(cx-W/2).toFixed(1)}px,${(cy-H/2).toFixed(1)}px) rotate(${rot}deg) scale(${s.toFixed(3)})`;
+function fromEl(el,W,H){const r=el.getBoundingClientRect(),rot=parseFloat(el.style.getPropertyValue('--r'))||0;return at(r.left+r.width/2,r.top+r.height/2,Math.max(.3,r.width/W),rot,W,H)}
+function lensBox(el,touch,pt){const W=212,H=lens.firstElementChild.offsetHeight,vw=innerWidth,vh=innerHeight,m=10,r=el.getBoundingClientRect();let s,x,y;
+  if(touch){const gap=42,above=pt.y-gap-m-6,below=vh-pt.y-gap-m,up=above>=below;
+    s=Math.min(1.55,(vw-2*m)/W,(up?above:below)/H);if(s<1.05)s=Math.min(1.15,(vw-2*m)/W,(vh-2*m)/H);
+    x=(vw-W*s)/2;y=up?pt.y-gap-H*s:pt.y+gap}
+  else{s=Math.min(1.5,(vh-2*m)/H,Math.max(1.22,r.width*1.4/W));x=r.left+r.width/2-W*s/2;y=r.bottom+8-H*s}
+  x=Math.max(m,Math.min(vw-m-W*s,x));y=Math.max(m+6,Math.min(vh-m-H*s,y));return{s,cx:x+W*s/2,cy:y+H*s/2,W,H}}
+function showLens(el,{touch=false,pt=null}={}){const c=UIDS.get(el.dataset.uid);if(!c||(pk&&pk.el===el))return;
+  const glide=lens.classList.contains('on')?lens.style.transform:null;
+  if(pk)pk.el.classList.remove('lifted');
+  lens.getAnimations().forEach(a=>a.cancel());
+  lens.innerHTML=cardHTML(c,{tag:'div',full:true});lens.classList.toggle('dim',touch);
+  if(!POP){const host=el.closest('dialog')||document.body;if(lens.parentElement!==host)host.append(lens)}
+  lens.classList.add('on');if(POP&&!lens.matches(':popover-open'))try{lens.showPopover()}catch(e){}
+  if(!pt){const r=el.getBoundingClientRect();pt={x:r.left+r.width/2,y:r.top}}
+  const b=lensBox(el,touch,pt),to=at(b.cx,b.cy,b.s,0,b.W,b.H);lens.style.transform=to;
+  if(touch)el.classList.add('lifted');pk={el,touch,uid:el.dataset.uid};
+  if(!RM.matches){
+    if(glide)lens.animate([{transform:glide},{transform:to}],{duration:170,easing:'cubic-bezier(.25,.75,.35,1)'});
+    /* it lifts, overshoots a touch with a small tilt, and settles */
+    else lens.animate([{transform:fromEl(el,b.W,b.H),opacity:.6,easing:'cubic-bezier(.25,.75,.4,1)'},{offset:.66,transform:at(b.cx,b.cy-5,b.s*1.04,-1.4,b.W,b.H),opacity:1,easing:'cubic-bezier(.45,0,.55,1)'},{transform:to,opacity:1}],{duration:380})}
+  if(!glide){HSOUND.play('lift');if(touch)buzz(8)}else HSOUND.play('deal',1);
+  clearInterval(watchT);watchT=setInterval(()=>{if(!pk){clearInterval(watchT);return}
+    /* the card was redrawn under the pointer: follow it; if it went away, or a dialog came up over it, put the big one away */
+    if(!pk.el.isConnected){const n=[...document.querySelectorAll(`.card[data-uid="${pk.uid}"]`)].find(x=>!x.closest('#lens')&&(pk.touch||x.matches(':hover')));
+      if(n&&!pk.touch){pk.el=n}else hideLens(true)}
+    else if(dlg.open&&!pk.el.closest('dialog'))hideLens(true)},200)}
+function hideLens(now=false){if(!pk)return;const el=pk.el;pk=null;el.classList.remove('lifted');clearInterval(watchT);
+  const done=()=>{if(pk)return;lens.classList.remove('on','dim');if(POP)try{lens.hidePopover()}catch(e){}lens.innerHTML=''};
+  if(now||RM.matches||!el.isConnected||!lens.firstElementChild){lens.getAnimations().forEach(a=>a.cancel());done();return}
+  const H=lens.firstElementChild.offsetHeight,a=lens.animate([{transform:lens.style.transform,opacity:1},{transform:fromEl(el,212,H),opacity:.15}],{duration:200,easing:'cubic-bezier(.55,0,.8,.35)',fill:'forwards'});
+  a.onfinish=()=>{a.cancel();done()}}
+const cardAt=t=>{const el=t&&t.closest&&t.closest('.card[data-uid]');return el&&!el.closest('#lens')?el:null};
+/* a mouse points: the card grows after a moment's rest, and the next card takes over at once */
+document.addEventListener('pointerover',e=>{if(e.pointerType!=='mouse'||held)return;const el=cardAt(e.target);if(!el)return;clearTimeout(hoverT);
+  hoverT=setTimeout(()=>{if(el.isConnected&&el.matches(':hover'))showLens(el)},pk?0:160)});
+document.addEventListener('pointerout',e=>{if(e.pointerType!=='mouse')return;const el=cardAt(e.target);if(!el||(e.relatedTarget&&el.contains(e.relatedTarget)))return;
+  clearTimeout(hoverT);hoverT=setTimeout(()=>{if(pk&&!pk.touch&&!(pk.el.isConnected&&pk.el.matches(':hover')))hideLens()},80)});
+/* a finger holds */
+document.addEventListener('pointerdown',e=>{swallow=false;if(e.pointerType==='mouse')return;const el=cardAt(e.target);if(!el)return;
+  held={el,x:e.clientX,y:e.clientY,id:e.pointerId,on:false};clearTimeout(heldT);
+  heldT=setTimeout(()=>{if(!held)return;held.on=swallow=true;showLens(held.el,{touch:true,pt:{x:held.x,y:held.y}})},300)});
+document.addEventListener('pointermove',e=>{if(!held||e.pointerId!==held.id)return;
+  if(!held.on){if(Math.hypot(e.clientX-held.x,e.clientY-held.y)>10){held=null;clearTimeout(heldT)}return}
+  const el=cardAt(document.elementFromPoint(e.clientX,e.clientY));if(el&&pk&&el!==pk.el){held.el=el;showLens(el,{touch:true,pt:{x:e.clientX,y:held.y}})}});
+['pointerup','pointercancel'].forEach(t=>document.addEventListener(t,e=>{if(held&&held.on&&pk&&pk.touch)hideLens();held=null;clearTimeout(heldT)}));
+/* the keyboard: a focused card shows itself large too */
+document.addEventListener('focusin',e=>{const el=cardAt(e.target);if(el&&el.matches(':focus-visible'))showLens(el)});
+document.addEventListener('focusout',e=>{const el=cardAt(e.target);if(el&&pk&&pk.el===el&&!pk.touch)hideLens()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&pk)hideLens(true)});
+['scroll','resize'].forEach(t=>addEventListener(t,()=>{if(pk&&!pk.touch)hideLens(true)},true));
 document.addEventListener('click',e=>{if(swallow){swallow=false;e.stopPropagation();e.preventDefault()}},true);
-document.addEventListener('contextmenu',e=>{const el=e.target.closest('.card[data-uid]');if(!el||el.closest('#insp'))return;e.preventDefault();if(insp.open)return;e.preventDefault();const c=UIDS.get(el.dataset.uid);if(c)inspect(c)});
+document.addEventListener('contextmenu',e=>{if(cardAt(e.target))e.preventDefault()});
 /* paging: what doesn't fit turns into pages you flip, with ‹ › or a swipe */
 const PAGE={};
 function paginate(box){const key=box.dataset.pg||box.id||'pg',kids=[...box.children];
@@ -764,7 +811,7 @@ function paginate(box){const key=box.dataset.pg||box.id||'pg',kids=[...box.child
     nav.innerHTML=`<button type="button" aria-label="Previous page" ${p?'':'disabled'}>‹</button><span aria-live="polite">${p+1} of ${pages.length}</span><button type="button" aria-label="Next page" ${p<pages.length-1?'':'disabled'}>›</button>`;
     const [a,b]=nav.querySelectorAll('button');a.onclick=()=>{p--;show()};b.onclick=()=>{p++;show()}};
   show();
-  let x0=null;box.onpointerdown=e=>{x0=e.clientX};box.onpointerup=e=>{if(x0==null)return;const dx=e.clientX-x0;x0=null;if(Math.abs(dx)>50){const q=Math.max(0,Math.min(pages.length-1,p+(dx<0?1:-1)));if(q!==p){p=q;swallow=true;show()}}}}
+  let x0=null;box.onpointerdown=e=>{x0=e.clientX};box.onpointerup=e=>{if(x0==null||(held&&held.on)){x0=null;return}const dx=e.clientX-x0;x0=null;if(Math.abs(dx)>50){const q=Math.max(0,Math.min(pages.length-1,p+(dx<0?1:-1)));if(q!==p){p=q;swallow=true;show()}}}}
 function repage(){if(dlg.open)body.querySelectorAll('.pg').forEach(paginate)}
 addEventListener('resize',()=>{repage();if(G&&G.S&&!$('#sitView').hidden)fanHand()});
 PHONE.addEventListener('change',()=>{placeIntent();if(G&&G.S&&!$('#sitView').hidden)render();else if(G)showMap()});
@@ -782,7 +829,7 @@ function render(){
   const S=G.S,T=S.T;renderTop();
   $('#tname').textContent=T.name;$('#tline').textContent=`“${T.line}”`;$('#tfirst').textContent=first(T.name);
   const ph=PHONE.matches;placeIntent();
-  $('#tchips').innerHTML=`<span class="chip want">Wants <b>${T.want}</b></span><span class="chip res${S.reservation?'':' done'}" title="Halves your Vivid until answered">Reservation: <b>${ph?(S.reservation?'½ Vivid':'answered'):T.reservation.text}</b></span>`;
+  $('#tchips').innerHTML=`<span class="chip want">Wants <b>${T.want}</b></span><span class="chip res${S.reservation?'':' done'}" title="Halves your Vivid until answered">Reservation: <b>${ph?(S.reservation?'½ Vivid':'answered'):T.reservation.text}</b></span>${T.family&&!ph?`<span class="chip kin" title="${FAMILY}">${FAMILY_SHORT}</span>`:''}`;
   const I=S.intent,ic={ask:'place',doubt:'holdout',own:'story',quiet:'trust'}[I.kind],bp=G.keeps.includes('bearpaw');
   const what=ph?{ask:`${I.label}: fits weigh ×2`,doubt:`Doubt ${I.n}, unless ${T.want}`,own:'Tells one of theirs',quiet:'Goes quiet: −1 trust'}[I.kind]:{ask:I.label,doubt:`Doubt ${I.n}`,own:'Tells one of their own',quiet:'Goes quiet'}[I.kind];
   const why={ask:`Stories that fit weigh double today.`,doubt:`At the end of the day they knock ${I.n} off your credibility${bp?'':' and you lose 1 standing'}, unless you tell them something about ${T.want}.`,own:`One of their stories is in your hand today. Tell it back to them for a Thread.`,quiet:`You’ll have one less trust tomorrow.`}[I.kind];
@@ -906,7 +953,7 @@ function keepsDialog(){open(`<h2>Your keepsakes</h2><div class="kpick pg col" id
 $('#deckBtn').onclick=()=>(PAGE.deck=0,open(`<h2>Your deck</h2><p class="sub">${G.deck.length} stories.</p><div class="pg" data-pg="deck">${G.deck.map(c=>cardHTML(c,{tag:'div'})).join('')}</div><div class="row"><button class="btn" id="x">Close</button></div>`,b=>b.querySelector('#x').onclick=close));
 $('#newBtn').onclick=()=>{close();newRun()};
 $('#creditsBtn').onclick=async()=>{let list=[];try{list=await (await fetch('public/credits.json')).json()}catch(e){}
-  PAGE.credits=0;open(`<h2>Image credits</h2><div class="credits pg col" data-pg="credits"><p class="sub">Outside photographs and prints in the game, each checked against its source’s own license record. Under the map: USDA aerial photography indexes (NARA): Nebraska National Forest 1960, Frontier County 1952, Otoe County 1949. Everything else is your drawings, sculptures, paintings and auroras, Gemini renders, or drawn by code. The Recorder’s voice was rendered with eSpeak NG’s Klatt synthesizer.</p>
+  PAGE.credits=0;open(`<h2>Image credits</h2><div class="credits pg col" data-pg="credits"><p class="sub">Outside photographs and prints in the game, each checked against its source’s own license record. Under the map: USDA aerial photography indexes (NARA): Nebraska National Forest 1960, Frontier County 1952, Otoe County 1949. Everything else is your drawings, sculptures, paintings and auroras, Gemini renders, or drawn by code. The Recorder’s voice was rendered with Kokoro, an open voice model (Apache 2.0). Metta and Velzoe Brown’s stories are their own words, from the Brown family’s papers, shared by their family. Their portraits are things they held, not faces.</p>
     ${list.map(c=>`<div><img src="public/${c.id}.jpg" alt=""><span><b>${c.title.replace(/</g,'&lt;')}</b>${c.date?`, ${c.date}`:''}<br>${(c.by||'Unknown').replace(/</g,'&lt;')} · ${c.rights} · ${c.source}${c.link?` · <a href="${c.link}" target="_blank" rel="noopener">source</a>`:''}</span></div>`).join('')}</div>
     <div class="row"><button class="btn" id="x">Close</button></div>`,b=>b.querySelector('#x').onclick=close)};
 const recBtn=$('#recBtn');function paintRec(){recBtn.textContent=REC.on?'Turn the Recorder off':'Turn the Recorder on'}
@@ -921,7 +968,7 @@ $('#howBtn').onclick=()=>(PAGE.how=0,open(`<h2>How the Survey works</h2><div cla
   <p><b>Reach their threshold within ${DAYS} days</b> and they trade: take one of theirs, give one of yours. Fall short and you lose 3 standing.</p>
   <p><b>Standing is your health</b> for the whole run. Unanswered doubts and risky stories cost it. At zero your testimony is struck.</p>
   <p><b>Courthouses</b> file stories into the record for score, and give you a keepsake: a barn quilt that changes the rules.</p>
-  <p><b>Your score</b> is the credibility you earned (past a teller’s threshold it counts half), plus filing, plus standing × 20. It decides your rank.</p><p><b>The Recorder</b> is the Survey’s machine. It reads each telling into the record in its own flat voice, closes each sitting, and at the end reads your whole record back, composed from what you actually told. Turn it off from the menu.</p><p><b>Words on the cards.</b> <i>Retain</i>: stays in hand at day’s end. <i>Ethereal</i>: gone if not told today. Giving a story away or filing it removes it for the rest of the run.</p></div><div class="row"><button class="btn" id="x">Got it</button></div>`,b=>b.querySelector('#x').onclick=close));
+  <p><b>Your score</b> is the credibility you earned (past a teller’s threshold it counts half), plus filing, plus standing × 20. It decides your rank.</p><p><b>The Recorder</b> is the Survey’s machine. It reads each telling into the record in its own level voice, closes each sitting, and at the end reads your whole record back, composed from what you actually told. Turn it off from the menu.</p><p><b>Reading a card.</b> Hold it (phone) or point at it (computer) and it lifts out, large. On a phone, keep your finger down and slide along the hand to read the next one.</p><p><b>Words on the cards.</b> <i>Retain</i>: stays in hand at day’s end. <i>Ethereal</i>: gone if not told today. Giving a story away or filing it removes it for the rest of the run.</p></div><div class="row"><button class="btn" id="x">Got it</button></div>`,b=>b.querySelector('#x').onclick=close));
 
 /* the portrait develops as credibility rises */
 let lastT=performance.now();
@@ -947,6 +994,6 @@ function pileIcon(){const c=$('#pileIcon').getContext('2d');c.clearRect(0,0,52,5
 requestAnimationFrame(frame);
 function newRun(){REC.stop();G=K.newRun(Date.now()%100000);G.S=null;RUN={sittings:[],told:0,given:0,entries:0};pileIcon();showMap()}
 newRun();
-window.__sit={get G(){return G},clear:()=>{sel=[];render()},pick:i=>{const c=G.S.hand[i];if(c&&!sel.includes(c)&&sel.length<3&&K.costOf(G,c)<=G.S.trust-cost()){sel.push(c);render()}},tell:()=>$('#tellBtn').click(),end:()=>$('#endBtn').click(),visit:id=>{const b=document.querySelector(`[data-id="${id}"]`);if(b&&!b.disabled)b.click()}};
+window.__sit={get G(){return G},get sel(){return sel.length},clear:()=>{sel=[];render()},pick:i=>{const c=G.S.hand[i];if(c&&!sel.includes(c)&&sel.length<3&&K.costOf(G,c)<=G.S.trust-cost()){sel.push(c);render()}},tell:()=>$('#tellBtn').click(),end:()=>$('#endBtn').click(),visit:id=>{const b=document.querySelector(`[data-id="${id}"]`);if(b&&!b.disabled)b.click()}};
 })();
 </script>
