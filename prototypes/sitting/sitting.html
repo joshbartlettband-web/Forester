@@ -1,7 +1,7 @@
 <title>Halsey Sittings</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Mono:wght@500;700&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap">
 <style>
 @font-face{font-family:"Halsey Hand";src:url(fonts/HalseyHand.woff2) format("woff2");font-display:swap}
 /* Halsey's look: every object is a slab of glazed clay sitting on a dark table.
@@ -32,6 +32,7 @@
   --lip:5px;--k:3px;--cast:rgba(10,6,16,.32);
   --pop:cubic-bezier(.34,1.56,.64,1);
   --hand:"Halsey Hand","Bradley Hand","Segoe Print",cursive;
+  --mono:"Atkinson Hyperlegible Mono",ui-monospace,"SF Mono",Menlo,Consolas,monospace;--phosphor:#9ff5cf;
   --text:"Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",sans-serif;
   color-scheme:light}
 *{box-sizing:border-box}
@@ -472,6 +473,27 @@ dialog[open]{display:flex;flex-direction:column;max-height:92dvh;overflow:hidden
   .credits{font-size:13px}.credits div{grid-template-columns:56px 1fr}.credits img{width:56px;height:42px}
   .rank{font-size:40px}
 }
+/* ---------- the Recorder: the Survey's machine, typing what it says ---------- */
+.readout{position:absolute;left:14px;right:14px;top:14px;z-index:4;display:flex;gap:9px;align-items:flex-start;padding:7px 11px;border:2px solid var(--ink);border-radius:8px;
+  background:rgba(14,10,22,.9);color:var(--phosphor);font:500 14px/1.35 var(--mono);text-shadow:0 0 6px rgba(127,227,181,.45);box-shadow:0 3px 0 var(--ink),inset 0 0 0 1px rgba(159,245,207,.15);
+  opacity:0;transform:translateY(-6px);transition:opacity .25s,transform .25s;pointer-events:none;max-height:calc(1.35em * 3 + 14px);overflow:hidden}
+.readout.on{opacity:1;transform:none}
+.readout .rec{flex:none;font-weight:700;font-size:12px;letter-spacing:.08em;color:#ff7a8f;text-shadow:0 0 6px rgba(255,90,120,.5);padding-top:1px}
+.readout .rec::before{content:"●";margin-right:4px;animation:blink 1s steps(1) infinite}
+.readout .txt::after{content:"▮";margin-left:2px;animation:blink .7s steps(1) infinite}
+.readout.done .txt::after,.readout.done .rec::before{animation:none;opacity:.4}
+@keyframes blink{50%{opacity:0}}
+dialog .readout{position:fixed;left:50%;top:calc(10px + env(safe-area-inset-top,0px));right:auto;width:min(92vw,620px);transform:translate(-50%,-6px)}
+dialog .readout.on{transform:translate(-50%,0)}
+.recsheet{font:500 14px/1.5 var(--mono);background:#14101d;color:#bcd9cc;border:2px solid var(--ink);border-radius:8px;padding:7px 11px;box-shadow:inset 0 2px 0 rgba(0,0,0,.45),0 3px 0 var(--ink);white-space:normal;margin-bottom:3px}
+.pg.col .recline{flex:none}
+.recsheet .said{color:var(--phosphor);text-shadow:0 0 6px rgba(127,227,181,.45)}
+.recsheet .now{background:rgba(159,245,207,.18);border-radius:3px}
+.rechd{display:flex;gap:8px;align-items:center;justify-content:space-between;margin:4px 0 6px}
+.rechd b{font:700 12px var(--mono);letter-spacing:.1em;text-transform:uppercase}
+.rechd .btn{padding:4px 12px;font-size:14px;--lip:3px;margin-bottom:3px}
+@media (max-width:760px){.readout{left:9px;right:9px;top:9px;font-size:12.5px;padding:5px 8px}.readout .rec{font-size:12px}.recsheet{font-size:12.5px;line-height:1.45;padding:8px 9px}}
+@media (prefers-reduced-motion:reduce){.readout .rec::before,.readout .txt::after{animation:none}}
 @media (prefers-reduced-motion:reduce){.card,.bar b,.btn,.node .dot,.kopt{transition:none}.toast{transition:none}.float{animation-duration:.01s}.card.rare .face::after,.node.can .dot,.slot,.num-w,.num-v,.num-t,.card.deal,#insp .big{animation:none}.shake-s,.shake-m,.shake-l{animation:none}}
 </style>
 
@@ -494,7 +516,7 @@ dialog[open]{display:flex;flex-direction:column;max-height:92dvh;overflow:hidden
   </section>
 
   <div id="sitView" hidden style="display:grid;gap:14px">
-  <div class="band"><canvas id="band" width="960" height="360" aria-label="The place, printed over its photograph. Move over it to develop the photograph with your lantern."></canvas><span class="where" id="where"></span></div>
+  <div class="band"><canvas id="band" width="960" height="360" aria-label="The place, printed over its photograph. Move over it to develop the photograph with your lantern."></canvas><span class="where" id="where"></span><div class="readout" id="readout" aria-live="polite"><span class="rec">REC</span><span class="txt"></span></div></div>
   <section class="sitter" aria-label="Who you are sitting with">
     <canvas id="portrait" width="360" height="480" aria-label="Their portrait: a drawing of them, developing into a photograph as you earn credibility"></canvas>
     <div class="who">
@@ -523,7 +545,7 @@ dialog[open]{display:flex;flex-direction:column;max-height:92dvh;overflow:hidden
   <p class="note" id="note"></p>
   <section class="handsec" aria-label="Your hand"><canvas id="pollen" aria-hidden="true"></canvas><div class="handwrap"><div class="hand" id="hand"></div></div></section>
   </div>
-  <div class="foot"><canvas id="pileIcon" width="52" height="52" aria-hidden="true"></canvas><span id="pileInfo"></span><button type="button" id="deckBtn">See your whole deck</button><button type="button" id="howBtn">How it works</button><button type="button" id="creditsBtn">Image credits</button><button type="button" id="newBtn">Start a new run</button><a href="editor.html" target="_blank" rel="noopener">Card editor</a></div>
+  <div class="foot"><canvas id="pileIcon" width="52" height="52" aria-hidden="true"></canvas><span id="pileInfo"></span><button type="button" id="deckBtn">See your whole deck</button><button type="button" id="howBtn">How it works</button><button type="button" id="creditsBtn">Image credits</button><button type="button" id="recBtn"></button><button type="button" id="newBtn">Start a new run</button><a href="editor.html" target="_blank" rel="noopener">Card editor</a></div>
 </div>
 
 <dialog id="dlg"><div id="dlgBody"></div></dialog>
@@ -533,6 +555,7 @@ dialog[open]{display:flex;flex-direction:column;max-height:92dvh;overflow:hidden
 <script src="engine.js"></script>
 <script src="game.js"></script>
 <script src="sound.js"></script>
+<script src="recorder.js"></script>
 <script src="scene.js"></script>
 <!-- Gemini Neon, pack 1 (CC0/MIT): see neon/README.md -->
 <script src="neon/A1-topo.js"></script>
@@ -661,8 +684,33 @@ async function enterSitting(node){
   $('#where').textContent=T.placeName+(node.kind==='holdout'?' · a holdout':node.kind==='bridge'?' · the end of the Survey':'');
   setLight(node.c,T.id);HSOUND.motif(MOTIF[T.place]||'sandhills');pollenFor();if(SC)SC.destroy();SC=await HSCENE.mount($('#band'),T,node);
   P=await HE.makePortrait({drawing:T.drawing,photo:T.photo});
+  RUN.sittings.push({place:T.place,teller:T,tellings:[],result:null});setTimeout(()=>{if(G.S===S&&!S.log.some(l=>l.t==='tell'))recSay(RC.opening({teller:T,placeKey:T.place,threshold:S.threshold}))},900);
   note(node.kind==='holdout'?`Frank never signed the agreement. His stories can’t be filed, but beat his doubt and he’ll give you a keepsake.`:node.kind==='bridge'?`The last sitting. Imani decides how you leave the Survey.`:`Read what they’ll do today, then pick stories from your hand and tell them.`);render()}
-function note(h){$('#note').innerHTML=h;if(PHONE.matches&&h)toast(h)}
+function note(h,{spoken=false}={}){$('#note').innerHTML=h;if(PHONE.matches&&h&&!(spoken&&REC.on))toast(h)}
+/* ---------- the Recorder: the Survey's machine reads what you tell into the record ----------
+   Every telling becomes an entry, every sitting a closing line, and the run a record read back at the end.
+   The words are generated from what you actually told (recorder.js); captions type them out as it speaks. */
+const RC=RECORDER,REC=RC.player;RC.setPlaceNames(k=>PLACE[k]||k);
+let RUN=null,recId=0,sheet=null;
+const readout=$('#readout');let roT=0;
+function placeReadout(){const home=dlg.open?dlg:$('.band');if(readout.parentElement!==home)home.appendChild(readout)}
+REC.caption((said,full,done)=>{
+  const onSheet=sheet&&sheet.isConnected&&dlg.open;
+  placeReadout();clearTimeout(roT);readout.classList.toggle('on',!onSheet);readout.classList.toggle('done',done);
+  readout.querySelector('.txt').textContent=said.length>150?'…'+said.slice(-150):said;
+  if(done)roT=setTimeout(()=>readout.classList.remove('on'),2400);
+  if(sheet&&sheet.isConnected){let at=0;for(const el of sheet.querySelectorAll('.recline')){const t=el.dataset.t,end=at+t.length;
+    if(said.length>=end)el.innerHTML=`<span class="said">${esc(t)}</span>`;else if(said.length>at){el.innerHTML=`<span class="said now">${esc(t.slice(0,said.length-at))}</span>${esc(t.slice(said.length-at))}`;
+      /* the reading turns the page */
+      if(el.hidden){const nav=el.parentElement.nextElementSibling;for(let k=0;k<6&&el.hidden&&nav;k++){const b=nav.querySelectorAll('button')[1];if(!b||b.disabled)break;b.click()}}}
+    else el.textContent=t;at=end+1}}});
+const esc=t=>t.replace(/&/g,'&amp;').replace(/</g,'&lt;');
+function recSay(toks){if(!REC.on||!toks.length)return;const my=++recId;if(HSOUND.on)HSOUND.duck(true);
+  REC.say(toks,{ctx:HSOUND.ctx,bus:HSOUND.voiceBus,sound:HSOUND.on}).then(()=>{if(my===recId)HSOUND.duck(false)})}
+const curSitting=()=>RUN&&RUN.sittings[RUN.sittings.length-1];
+function runRecord(){
+  const sittings=RUN.sittings.map(s=>{const best=[...s.tellings].sort((a,b)=>b.total-a.total)[0];return{place:s.place,teller:s.teller,best:best?best.cards:null,all:s.tellings.flatMap(t=>t.cards),result:s.result||'lost'}});
+  return RC.record({sittings,told:RUN.told,given:RUN.given,filed:G.filed,standing:G.standing,keeps:G.keeps.map(k=>({id:k,name:KEEPS[k].name})),rank:K.rank(G),ending:G.ending,struck:G.struck,seed:G.seed})}
 let toastT=0;function toast(h){const t=$('#toast');t.innerHTML=h;t.classList.add('on');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('on'),3400)}
 /* on a phone, what they'll do today sits on the scene */
 function placeIntent(){const i=$('#intent');if(PHONE.matches){if(i.parentElement!==$('.band'))$('.band').appendChild(i)}else if(i.parentElement!==$('.sitter'))$('.sitter').appendChild(i)}
@@ -723,10 +771,11 @@ PHONE.addEventListener('change',()=>{placeIntent();if(G&&G.S&&!$('#sitView').hid
 /* the menu, on a phone: everything that isn't play */
 $('#menuBtn').onclick=()=>{const draw=()=>open(`<h2>Halsey Sittings</h2><div class="menu">
     <button class="btn quiet" id="mSound">${HSOUND.on?'Sound is on: turn it off':'Sound is off: turn it on'}</button>
+    <button class="btn quiet" id="mRec">${REC.on?'The Recorder is on: turn it off':'The Recorder is off: turn it on'}</button>
     <button class="btn quiet" id="mDeck">Your deck (${G.deck.length})</button><button class="btn quiet" id="mHow">How it works</button>
     <button class="btn quiet" id="mCred">Image credits</button><a class="btn quiet" href="editor.html" target="_blank" rel="noopener" style="text-decoration:none">Card editor</a>
     <button class="btn quiet" id="mNew">Start a new run</button></div><div class="row"><button class="btn" id="x">Back to the game</button></div>`,b=>{
-    b.querySelector('#mSound').onclick=async()=>{await sb.onclick();draw()};b.querySelector('#mDeck').onclick=()=>$('#deckBtn').click();
+    b.querySelector('#mSound').onclick=async()=>{await sb.onclick();draw()};b.querySelector('#mRec').onclick=()=>{recBtn.click();draw()};b.querySelector('#mDeck').onclick=()=>$('#deckBtn').click();
     b.querySelector('#mHow').onclick=()=>$('#howBtn').click();b.querySelector('#mCred').onclick=()=>$('#creditsBtn').click();
     b.querySelector('#mNew').onclick=()=>$('#newBtn').click();b.querySelector('#x').onclick=close});draw()};
 function render(){
@@ -775,14 +824,15 @@ $('#tellBtn').onclick=()=>{
   HSOUND.play('tell',e.total);shake(e.total);if(e.answer)setTimeout(()=>HSOUND.play('answer'),350);
   const ev=cards.map(c=>c.event).find(Boolean)||null;if(SC)SC.tell(ev,e.total);
   const last=S.log[S.log.length-2];
-  note(`You told ${cards.map(c=>`“${c.title}”`).join(', ')}.${e.answer?` <b>${first(S.T.name)}’s reservation is answered.</b>`:''}${last&&last.t==='warm'?` <b>They open up: +1 trust a day.</b>`:''}`);
+  RUN.entries++;RUN.told+=cards.length;curSitting().tellings.push({cards,total:e.total});recSay(RC.entry({n:RUN.entries,cards,e,seed:G.seed+RUN.entries*31}));
+  note(`You told ${cards.map(c=>`“${c.title}”`).join(', ')}.${e.answer?` <b>${first(S.T.name)}’s reservation is answered.</b>`:''}${last&&last.t==='warm'?` <b>They open up: +1 trust a day.</b>`:''}`,{spoken:true});
   if(G.over)return endRun();render();countUp(before,S.cred);if(last&&last.t==='warm')setTimeout(()=>HSOUND.play('warm'),500)};
 $('#endBtn').onclick=()=>{
   const S=G.S,out=K.endTurn(G);sel=[];
   HSOUND.play('day');if(out.doubt){HSOUND.play('doubt');buzz([20,40,30]);floatAt($('#bar'),`−${out.doubt} doubt`,true)}
   if(out.standing)setTimeout(()=>floatAt($('#stand'),'−1 standing',true),250);
   if(G.over)return endRun();
-  if(out.result){HSOUND.play(out.result==='won'?'win':'lose');if(S.node.kind==='bridge')return endings();return out.result==='won'?tradeDialog():lostDialog()}
+  if(out.result){HSOUND.play(out.result==='won'?'win':'lose');curSitting().result=out.result;if(S.node.kind!=='bridge')recSay(RC.close({teller:S.T,result:out.result,cred:S.cred,threshold:S.threshold,holdout:S.node.kind==='holdout'}));if(S.node.kind==='bridge')return endings();return out.result==='won'?tradeDialog():lostDialog()}
   note(out.doubt?`They didn’t hear what they wanted. −${out.doubt} credibility${out.standing?', −1 standing':''}.`:`Day ${S.day}.${S.intent.kind==='own'?' They tell you one of theirs.':''}`);render()};
 
 /* ---------- between ---------- */
@@ -802,7 +852,7 @@ function tradeDialog(){
       b.querySelector('#giveRow').onclick=e=>{const x=e.target.closest('[data-uid]');if(x){give=G.deck.find(c=>c.uid==x.dataset.uid);noGive=false;draw()}};
       b.querySelector('#noTake').onclick=()=>{noTake=!noTake;if(noTake)take=null;draw()};
       b.querySelector('#noGive').onclick=()=>{noGive=!noGive;if(noGive)give=null;draw()};
-      b.querySelector('#ok').onclick=()=>{const gEl=b.querySelector('#giveRow [aria-pressed="true"]'),from=(gEl&&!gEl.hidden?gEl:$('#hand')).getBoundingClientRect(),traded=take||give;K.trade(G,take,give);HSOUND.play('shuffle');
+      b.querySelector('#ok').onclick=()=>{const gEl=b.querySelector('#giveRow [aria-pressed="true"]'),from=(gEl&&!gEl.hidden?gEl:$('#hand')).getBoundingClientRect(),traded=take||give;K.trade(G,take,give);if(give)RUN.given++;HSOUND.play('shuffle');
         const finish=async()=>{close();if(traded)await weave(from,$('#portrait').getBoundingClientRect(),{strands:3,ms:850});back()};
         if(!hold)return finish();
         open(`<h2>${first(T.name)} gives you a keepsake</h2><p class="sub">For beating a holdout. Keepsakes are barn quilts: each one changes a rule for the rest of the run.</p><div class="kpick pg col" id="kpick"></div><div class="row"><button class="btn" id="ok" disabled>Take it</button></div>`,bb=>{
@@ -839,20 +889,30 @@ function endings(){
   open(`<h2>The bridge over the Missouri</h2><p class="sub">${won?`Imani believes you: ${S.cred} of ${S.threshold}.`:`Imani isn’t sure about you (${S.cred} of ${S.threshold}), and you lose 3 standing. You still choose how you leave.`} Everyone ends the Survey here, one of three ways.</p><div class="road-choices">${Object.entries(K.ENDINGS).map(([k,e],i)=>`<button class="btn${i?' quiet':''}" data-e="${k}">${e.title}</button>`).join('')}</div>`,
     b=>b.querySelectorAll('[data-e]').forEach(x=>x.onclick=()=>{G.ending=x.dataset.e;G.over=true;endRun()}))}
 function endRun(){
-  const fs=K.finalScore(G),e=G.ending&&K.ENDINGS[G.ending];renderTop();
+  const fs=K.finalScore(G),e=G.ending&&K.ENDINGS[G.ending],toks=runRecord();renderTop();
   PAGE.end=0;open(`<h2>${G.struck?'Your testimony is struck':e?e.title:'The record'}</h2><div class="pg col" data-pg="end"><p class="rank" style="margin:0">${K.rank(G)}</p>${e?`<p class="sub" style="font:400 21px/1.2 var(--hand)">${e.text}</p>`:''}
+    <div class="rechd"><b>The record, as filed</b><button class="btn quiet" id="hear">${REC.on?'Read it again':'Read it to me'}</button></div>
+    ${recLines(toks)}
     <div class="hist">${G.history.map(h=>`<div>${TELLER[h.teller].name}${h.kind==='holdout'?' (holdout)':''}: ${h.cred} of ${h.threshold} · ${h.result==='won'?'won':'not believed'}</div>`).join('')}</div>
-    <p class="sub">Credibility and filing ${G.score} + standing ${Math.max(0,G.standing)} × 20 = <b>${fs}</b>.<br>Ranks: ${K.RANKS.map(([n,r])=>`${r} ${n}+`).join(' · ')}.</p></div>
-    <div class="row"><button class="btn" id="again">Go again</button></div>`,b=>b.querySelector('#again').onclick=()=>{close();newRun()})}
+    <p class="sub">Credibility and filing ${G.score} + standing ${Math.max(0,G.standing)} × 20 = <b>${fs}</b>.<br>Ranks: ${K.RANKS.map(([n,r])=>`${r} ${n}+`).join(' · ')}.</p>
+</div>
+    <div class="row"><button class="btn" id="again">Go again</button></div>`,b=>{sheet=b;b.querySelector('#again').onclick=()=>{REC.stop();sheet=null;close();newRun()};
+      b.querySelector('#hear').onclick=()=>{if(!REC.on){REC.set(true);paintRec()}recSay(toks)}});
+  setTimeout(()=>recSay(toks),700)}
+/* the record sheet: one block per sitting, so the pages can flow it */
+function recLines(toks){const segs=[];for(const t of toks)(segs[t.seg]||(segs[t.seg]=[])).push(t.text);
+  return segs.filter(Boolean).map((w,i,a)=>{const t=w.join(' ');return`<div class="recsheet recline${i?'':' first'}${i===a.length-1?' last':''}" data-t="${esc(t).replace(/"/g,'&quot;')}">${esc(t)}</div>`}).join('')}
 function keepsDialog(){open(`<h2>Your keepsakes</h2><div class="kpick pg col" id="kpick" data-pg="keeps"></div><div class="row"><button class="btn" id="x">Close</button></div>`,b=>{keepChoice(b,G.keeps,()=>{});b.querySelector('#x').onclick=close})}
 $('#deckBtn').onclick=()=>(PAGE.deck=0,open(`<h2>Your deck</h2><p class="sub">${G.deck.length} stories.</p><div class="pg" data-pg="deck">${G.deck.map(c=>cardHTML(c,{tag:'div'})).join('')}</div><div class="row"><button class="btn" id="x">Close</button></div>`,b=>b.querySelector('#x').onclick=close));
 $('#newBtn').onclick=()=>{close();newRun()};
 $('#creditsBtn').onclick=async()=>{let list=[];try{list=await (await fetch('public/credits.json')).json()}catch(e){}
-  PAGE.credits=0;open(`<h2>Image credits</h2><div class="credits pg col" data-pg="credits"><p class="sub">Outside photographs and prints in the game, each checked against its source’s own license record. Under the map: USDA aerial photography indexes (NARA): Nebraska National Forest 1960, Frontier County 1952, Otoe County 1949. Everything else is your drawings, sculptures, paintings and auroras, Gemini renders, or drawn by code.</p>
+  PAGE.credits=0;open(`<h2>Image credits</h2><div class="credits pg col" data-pg="credits"><p class="sub">Outside photographs and prints in the game, each checked against its source’s own license record. Under the map: USDA aerial photography indexes (NARA): Nebraska National Forest 1960, Frontier County 1952, Otoe County 1949. Everything else is your drawings, sculptures, paintings and auroras, Gemini renders, or drawn by code. The Recorder’s voice was rendered with eSpeak NG’s Klatt synthesizer.</p>
     ${list.map(c=>`<div><img src="public/${c.id}.jpg" alt=""><span><b>${c.title.replace(/</g,'&lt;')}</b>${c.date?`, ${c.date}`:''}<br>${(c.by||'Unknown').replace(/</g,'&lt;')} · ${c.rights} · ${c.source}${c.link?` · <a href="${c.link}" target="_blank" rel="noopener">source</a>`:''}</span></div>`).join('')}</div>
     <div class="row"><button class="btn" id="x">Close</button></div>`,b=>b.querySelector('#x').onclick=close)};
+const recBtn=$('#recBtn');function paintRec(){recBtn.textContent=REC.on?'Turn the Recorder off':'Turn the Recorder on'}
+recBtn.onclick=()=>{REC.set(!REC.on);paintRec();if(!REC.on){readout.classList.remove('on');HSOUND.duck(false)}};paintRec();
 const sb=$('#soundBtn');const paintSound=()=>{sb.setAttribute('aria-pressed',HSOUND.on);sb.textContent=HSOUND.on?'Sound on':'Sound off'};
-sb.onclick=async()=>{await HSOUND.toggle();paintSound();if(G)setLight(G.S&&!$('#sitView').hidden?G.S.node.c:(G.at?K.nodeById(G,G.at).c:0),G.S&&!$('#sitView').hidden?G.S.T.id:null)};
+sb.onclick=async()=>{await HSOUND.toggle();paintSound();if(HSOUND.on)REC.load(HSOUND.ctx);if(G)setLight(G.S&&!$('#sitView').hidden?G.S.node.c:(G.at?K.nodeById(G,G.at).c:0),G.S&&!$('#sitView').hidden?G.S.T.id:null)};
 if(HSOUND.wanted())addEventListener('pointerdown',async function once(){removeEventListener('pointerdown',once);if(!HSOUND.on){await HSOUND.toggle(true);paintSound()}},{once:true});
 $('#howBtn').onclick=()=>(PAGE.how=0,open(`<h2>How the Survey works</h2><div class="sub pg col" data-pg="how" style="max-width:64ch">
   <p><b>The map.</b> Walk from Halsey to the bridge over the Missouri. Each step is a sitting, a holdout, the road, an arch or a courthouse.</p>
@@ -861,7 +921,7 @@ $('#howBtn').onclick=()=>(PAGE.how=0,open(`<h2>How the Survey works</h2><div cla
   <p><b>Reach their threshold within ${DAYS} days</b> and they trade: take one of theirs, give one of yours. Fall short and you lose 3 standing.</p>
   <p><b>Standing is your health</b> for the whole run. Unanswered doubts and risky stories cost it. At zero your testimony is struck.</p>
   <p><b>Courthouses</b> file stories into the record for score, and give you a keepsake: a barn quilt that changes the rules.</p>
-  <p><b>Your score</b> is the credibility you earned (past a teller’s threshold it counts half), plus filing, plus standing × 20. It decides your rank.</p><p><b>Words on the cards.</b> <i>Retain</i>: stays in hand at day’s end. <i>Ethereal</i>: gone if not told today. Giving a story away or filing it removes it for the rest of the run.</p></div><div class="row"><button class="btn" id="x">Got it</button></div>`,b=>b.querySelector('#x').onclick=close));
+  <p><b>Your score</b> is the credibility you earned (past a teller’s threshold it counts half), plus filing, plus standing × 20. It decides your rank.</p><p><b>The Recorder</b> is the Survey’s machine. It reads each telling into the record in its own flat voice, closes each sitting, and at the end reads your whole record back, composed from what you actually told. Turn it off from the menu.</p><p><b>Words on the cards.</b> <i>Retain</i>: stays in hand at day’s end. <i>Ethereal</i>: gone if not told today. Giving a story away or filing it removes it for the rest of the run.</p></div><div class="row"><button class="btn" id="x">Got it</button></div>`,b=>b.querySelector('#x').onclick=close));
 
 /* the portrait develops as credibility rises */
 let lastT=performance.now();
@@ -885,7 +945,7 @@ function drawPollen(dt,now){const cv=$('#pollen'),W=Math.round(cv.clientWidth),H
 /* Neon's A2 pivot: the draw-pile icon, different every run */
 function pileIcon(){const c=$('#pileIcon').getContext('2d');c.clearRect(0,0,52,52);drawPivot(c,52,{seed:G.seed,rings:3})}
 requestAnimationFrame(frame);
-function newRun(){G=K.newRun(Date.now()%100000);G.S=null;pileIcon();showMap()}
+function newRun(){REC.stop();G=K.newRun(Date.now()%100000);G.S=null;RUN={sittings:[],told:0,given:0,entries:0};pileIcon();showMap()}
 newRun();
 window.__sit={get G(){return G},clear:()=>{sel=[];render()},pick:i=>{const c=G.S.hand[i];if(c&&!sel.includes(c)&&sel.length<3&&K.costOf(G,c)<=G.S.trust-cost()){sel.push(c);render()}},tell:()=>$('#tellBtn').click(),end:()=>$('#endBtn').click(),visit:id=>{const b=document.querySelector(`[data-id="${id}"]`);if(b&&!b.disabled)b.click()}};
 })();

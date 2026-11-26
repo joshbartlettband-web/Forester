@@ -5,7 +5,7 @@
    Nothing plays until the player turns sound on (browsers require a tap first). Exposes window.HSOUND. */
 "use strict";
 window.HSOUND = (() => {
-  let hush = 0, ctx = null, master, musicBus, ambBus, fxBus, on = false, amb = null, music = null, region = { key: 0, time: 'day', water: false };
+  let hush = 0, ctx = null, master, musicBus, ambBus, fxBus, voiceBus, on = false, amb = null, music = null, region = { key: 0, time: 'day', water: false };
   const store = { get() { try { return localStorage.getItem('halsey-sound') === 'on'; } catch (e) { return false; } }, set(v) { try { localStorage.setItem('halsey-sound', v ? 'on' : 'off'); } catch (e) {} } };
   const PENTA = [0, 2, 4, 7, 9, 12, 14, 16];
   const hz = semi => 146.83 * Math.pow(2, semi / 12);   // D3
@@ -19,6 +19,12 @@ window.HSOUND = (() => {
     musicBus = ctx.createGain(); musicBus.gain.value = .32; musicBus.connect(comp);
     ambBus = ctx.createGain(); ambBus.gain.value = .5; ambBus.connect(comp);
     fxBus = ctx.createGain(); fxBus.gain.value = .7; fxBus.connect(comp);
+    /* the Recorder's voice: thin, close, a little like a telephone, with a short slap off a hard wall */
+    voiceBus = ctx.createGain(); voiceBus.gain.value = 1.15;
+    const hp = ctx.createBiquadFilter(), pk = ctx.createBiquadFilter(), lpv = ctx.createBiquadFilter(), slap = ctx.createDelay(.2), slapG = ctx.createGain();
+    hp.type = 'highpass'; hp.frequency.value = 170; pk.type = 'peaking'; pk.frequency.value = 2300; pk.gain.value = 5; pk.Q.value = .9; lpv.type = 'lowpass'; lpv.frequency.value = 6200;
+    slap.delayTime.value = .034; slapG.gain.value = .16;
+    voiceBus.connect(hp); hp.connect(pk); pk.connect(lpv); lpv.connect(comp); lpv.connect(slap); slap.connect(slapG); slapG.connect(comp);
     // a small room: a feedback delay as reverb
     const d = ctx.createDelay(1), fb = ctx.createGain(), lp = ctx.createBiquadFilter(); d.delayTime.value = .23; fb.gain.value = .38; lp.type = 'lowpass'; lp.frequency.value = 2400;
     musicBus.connect(d); d.connect(lp); lp.connect(fb); fb.connect(d); lp.connect(comp);
@@ -101,6 +107,9 @@ window.HSOUND = (() => {
 
   return {
     get on() { return on; },
+    get ctx() { return ctx; }, get voiceBus() { return voiceBus; },
+    /* the music and the land go quiet while the Recorder speaks */
+    duck(v) { if (!ctx) return; const t = now(); musicBus.gain.setTargetAtTime(v ? .09 : .32, t, .12); ambBus.gain.setTargetAtTime(v ? .22 : .5, t, .2); },
     wanted: store.get,
     async toggle(v = !on) {
       on = v; store.set(v);
