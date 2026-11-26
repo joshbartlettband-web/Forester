@@ -1,0 +1,12 @@
+{
+ "cut-arch-carved": [
+  "!Keep this exact ceramic sculpture, unchanged in shape, color, glaze, texture and lighting, and replace everything else (the table, wall, block, background, any other objects) with a flat, even, pure chroma-key green (#00b140). Show the whole sculpture, nothing cropped, straight on, centered, with the space under and through the arch also flat green. No shadow, no floor, no text.",
+  "3:4",
+  "art/instagram/arch-carved.jpg"
+ ],
+ "ig-culvert-clean": [
+  "!Remove the small white caption text in the middle of this photograph and fill that area to match the surrounding corrugated pipe and light exactly. Change nothing else at all: same framing, color, light, grain.",
+  "1:1",
+  "art/instagram/culvert-pipe.jpg"
+ ]
+}

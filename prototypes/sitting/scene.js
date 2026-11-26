@@ -11,7 +11,7 @@ window.HSCENE = (() => {
   const PLACES = {
     halsey:     { img: 'halsey-rows', fy: .55, arch: { k: 'arch-red-blue', cx: .3, ground: .97, h: .62 }, beasts: ['critter', 'owl'] },
     thedford:   { img: 'thedford', fy: .5, arch: { k: 'arch-black', cx: .8, ground: .97, h: .42 }, beasts: ['jackrabbit', 'listener'], murmur: true },
-    sandhills:  { img: 'sandhills-windmill', fy: .5, arch: { k: 'arch-black', cx: .24, ground: .95, h: .44 }, beasts: ['turtle', 'gatewalker'], murmur: true },
+    sandhills:  { img: 'sandhills-windmill', fy: .5, arch: { k: 'arch-carved', cx: .24, ground: .95, h: .4 }, beasts: ['turtle', 'gatewalker'], murmur: true },
     dismal:     { img: 'dismal', fy: .5, arch: { k: 'arch-red-hook', cx: .86, ground: .98, h: .52 }, beasts: ['coyote', 'folded', 'chandelier'] },
     brokenbow:  { img: 'broken-bow', fy: .55, arch: { k: 'arch-white', cx: .16, ground: .98, h: .58 }, beasts: ['jackrabbit'], murmur: true },
     loup:       { img: 'loup-fog', fy: .5, arch: { k: 'arch-celadon', cx: .12, ground: .98, h: .5 }, beasts: ['owl', 'crane'] },
@@ -20,7 +20,7 @@ window.HSCENE = (() => {
     columbus:   { img: 'columbus', fy: .5, arch: { k: 'arch-white', cx: .12, ground: .98, h: .5 }, beasts: ['crane'], murmur: true },
     mainstreet: { img: 'mainstreet', fy: .6, arch: { k: 'arch-red-hook', cx: .5, ground: .99, h: .56 }, beasts: ['folded', 'owl'] },
     courthouse: { img: 'courthouse', fy: .5, arch: { k: 'arch-white', cx: .66, ground: .99, h: .66 }, beasts: ['listener'], indoor: true },
-    kingsley:   { img: 'kingsley', fy: .5, arch: { k: 'arch-white', cx: .14, ground: .98, h: .34 }, beasts: ['turtle'], murmur: true },
+    kingsley:   { img: 'kingsley', fy: .5, arch: { k: 'arch-carved', cx: .14, ground: .98, h: .34 }, beasts: ['turtle'], murmur: true },
     niobrara:   { img: 'niobrara', fy: .5, arch: { k: 'arch-black', cx: .16, ground: .98, h: .3 }, beasts: ['bison'] },
     scottsbluff: { img: 'scottsbluff', fy: .5, arch: { k: 'arch-red-blue', cx: .82, ground: .98, h: .34 }, beasts: ['bison', 'coyote'], murmur: true },
     toadstool:  { img: 'toadstool', fy: .55, arch: { k: 'arch-black', cx: .64, ground: .97, h: .4 }, beasts: ['rhino', 'critter'] },

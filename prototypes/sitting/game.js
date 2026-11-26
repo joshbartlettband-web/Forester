@@ -16,11 +16,13 @@ const LOC = n => ({ kind: 'archive', src: `public/loc-${n}.jpg`, credit: 'Solomo
 const R = (img, over) => ({ kind: 'render', src: `img/${img}.jpg`, over: over && `sketches/${over}.png` });
 const D = s => ({ kind: 'drawing', src: `sketches/${s}.png` });
 const O = s => ({ kind: 'object', src: `objects/${s}.png` });
+/* your own photographs, from Instagram, used whole */
+const IG = s => ({ kind: 'painting', src: `img/ig-${s}.jpg` });
 /* public-domain images from Neon's pool, checked against Wikimedia's license records */
 const PD = (id, credit, kind = 'archive') => ({ kind, src: `public/${id}.jpg`, credit });
 const CARDS = [
   // carried from home: your starting deck
-  C('talk-weather', 'The weather, mostly', 'It was hot. Then it wasn’t.', 'Weather', 'halsey', 'Later', null, 0, 2, 1, D('stars'), { small: true }),
+  C('talk-weather', 'The weather, mostly', 'It was hot. Then it wasn’t.', 'Weather', 'halsey', 'Later', null, 0, 2, 1, IG('red-circle'), { small: true }),
   C('talk-kin', 'Who’s related to who', 'Your aunt’s my cousin, near enough.', 'Kin', 'halsey', 'Later', null, 0, 2, 1, D('traveler'), { small: true }),
   C('rows', 'Planting the rows by hand', 'Twelve hundred a day with a bar and a bucket.', 'Work', 'halsey', '1903', 'Repeat', 1, 6, 1, R('halsey-rows', 'tower')),
   C('hail', 'The hail that flattened the rows', 'Somebody wrote down every broken tree.', 'Weather', 'halsey', '1903', 'Chain', 1, 5, 1, R('halsey-rows')),
@@ -73,7 +75,7 @@ const CARDS = [
   C('gus-sister', 'My sister took the water', 'She waved from the middle like it was nothing.', 'Leaving', 'bridge', 'Later', 'Chain', 1, 7, 2, D('drawn-gus'), { people: ['gus', 'imani'] }),
   C('gus-looked', 'It looked at me', 'Long legs, like sticks that made up their mind.', 'Strange', 'halsey', 'Later', 'Risk', 2, 10, 2, O('beast-critter'), { people: ['gus', 'ruth'] }),
   C('gus-notebook', 'The survey that never came back', 'Every page filled. No name.', 'Leaving', 'archway', 'Later', 'Find', 1, 6, 2, R('archway'), { people: ['gus'] }),
-  C('gus-old', 'When I’m old enough', 'I’m going too.', 'Leaving', 'archway', 'Later', 'Spare', 1, 5, 2, R('archway', 'traveler'), { people: ['gus'] }),
+  C('gus-old', 'When I’m old enough', 'I’m going too.', 'Leaving', 'archway', 'Later', 'Spare', 1, 5, 2, IG('road-out'), { people: ['gus'] }),
   // Marisol (Columbus)
   C('marisol-cousins', 'Cousins in Columbus', 'Half signed, half didn’t. We still do Christmas.', 'Kin', 'columbus', '1974', 'Repeat', 1, 6, 2, R('columbus', 'drawn-marisol'), { people: ['marisol', 'odette'] }),
   C('marisol-quilt', 'Everyone’s initials', 'Ninety squares. Some are only initials now.', 'Kin', 'columbus', '1950', 'Spare', 1, 7, 2, D('drawn-marisol'), { people: ['marisol'] }),
@@ -89,12 +91,12 @@ const CARDS = [
   // Odette (the Register of Deeds)
   C('odette-survey', 'Her grandmother’s Survey', 'The baby is in four of the stories.', 'Kin', 'courthouse', '1903', 'Chain', 1, 8, 2, LOC(2005693386), { people: ['odette'] }),
   C('odette-copy', 'Copying the deed books', 'My hand will be in the record longer than I will.', 'Work', 'courthouse', 'Later', 'Spare', 1, 7, 2, D('drawn-odette'), { people: ['odette'] }),
-  C('odette-lamp', 'The lamp they keep', 'Nobody pays for it. It’s in the agreement.', 'Light', 'courthouse', '1903', 'Spare', 2, 9, 3, D('bulb'), { people: ['odette'], rare: true }),
+  C('odette-lamp', 'The lamp they keep', 'Nobody pays for it. It’s in the agreement.', 'Light', 'courthouse', '1903', 'Spare', 2, 9, 3, IG('hanging-light'), { people: ['odette'], rare: true }),
   C('odette-bees', 'Bees in the courthouse wall', 'The deeds smell like honey in July.', 'Animals', 'courthouse', 'Later', 'Find', 1, 6, 2, R('courthouse', 'crane-small'), { people: ['odette', 'priya'] }),
   // Imani, at the bridge
   C('imani-water', 'Taking the water at Brownville', 'You get in, and then you’re from somewhere else.', 'Leaving', 'bridge', 'Later', 'Risk', 2, 12, 3, R('bridge'), { people: ['imani'], rare: true }),
   C('imani-count', 'Who crosses the bridge', 'I count them both ways.', 'Leaving', 'bridge', 'Later', 'Repeat', 1, 7, 2, D('drawn-imani'), { people: ['imani'] }),
-  C('imani-brown', 'Brown water at Omaha', 'Every handful is from somewhere.', 'Water', 'omaha', 'Later', 'Chain', 1, 7, 2, R('omaha'), { people: ['imani'] }),
+  C('imani-brown', 'Brown water at Omaha', 'Every handful is from somewhere.', 'Water', 'omaha', 'Later', 'Chain', 1, 7, 2, IG('canal'), { people: ['imani'] }),
   C('imani-back', 'More come back than you’d think', 'They come back carrying something.', 'Kin', 'bridge', 'Later', 'Spare', 1, 6, 2, R('night-bridge'), { people: ['imani', 'gus'] }),
   // Lou (Kingsley Dam)
   C('lou-valley', 'The lake that used to be a valley', 'My grandfather’s house is under there. On calm days you can see the chimney.', 'Water', 'kingsley', '1950', 'Find', 2, 9, 3, R('kingsley'), { people: ['lou'], rare: true }),
@@ -108,23 +110,23 @@ const CARDS = [
   C('cal-upstream', 'The canoe that came back upstream', 'Empty. Dry inside. It tied itself to my dock.', 'Strange', 'niobrara', 'Later', 'Risk', 2, 10, 3, D('drawn-cal'), { people: ['cal'], rare: true }),
   // Lan (Toadstool)
   C('lan-tracks', 'The tracks go into the rock', 'They don’t come out the other side. I checked.', 'Strange', 'toadstool', 'Later', 'Find', 1, 6, 2, R('toadstool', 'drawn-lan'), { people: ['lan'] }),
-  C('lan-caps', 'Every cap is balanced', 'Every year one falls, and nobody hears it.', 'Weather', 'toadstool', '1950', 'Repeat', 1, 6, 2, R('toadstool'), { people: ['lan'] }),
+  C('lan-caps', 'Every cap is balanced', 'Every year one falls, and nobody hears it.', 'Weather', 'toadstool', '1950', 'Repeat', 1, 6, 2, IG('speckled-forms'), { people: ['lan'] }),
   C('lan-rhino', 'The rhino in the clay', 'Barrel-shaped. Short legs. It looked surprised.', 'Animals', 'toadstool', '1888', 'Chain', 2, 9, 3, O('beast-rhino'), { people: ['lan', 'bettina'], rare: true }),
   C('lan-shelter', 'A sod shelter in the badlands', 'Somebody built with the ground they stood on. The wall is mostly bones.', 'Work', 'toadstool', '1888', 'Spare', 1, 6, 2, R('night-toadstool'), { people: ['lan'] }),
   // Maeve (O’Neill)
   C('maeve-shamrock', 'Painting the shamrock', 'Every spring, in the middle of the crossroads. The trucks go around.', 'Work', 'oneill', '1974', 'Repeat', 1, 6, 2, R('oneill', 'drawn-maeve'), { people: ['maeve'] }),
   C('maeve-postcards', 'A shoebox of postcards', 'Boston, Butte, Brisbane. All of them say come home.', 'Leaving', 'oneill', '1950', 'Find', 1, 6, 2, D('drawn-maeve'), { people: ['maeve', 'imani'] }),
   C('maeve-boat', 'My mother came on a boat', 'She brought a cup of dirt from home and planted it under the porch.', 'Kin', 'oneill', '1903', 'Chain', 2, 9, 3, R('night-oneill'), { people: ['maeve'], rare: true }),
-  C('maeve-hail', 'Hail the size of potatoes', 'We put them in the freezer. Proof.', 'Weather', 'oneill', '2000', 'Risk', 2, 10, 2, R('oneill'), { people: ['maeve'] }),
+  C('maeve-hail', 'Hail the size of potatoes', 'We put them in the freezer. Proof.', 'Weather', 'oneill', '2000', 'Risk', 2, 10, 2, IG('marbles'), { people: ['maeve'] }),
   // Nadia (Scotts Bluff)
   C('nadia-summit', 'Driving the summit road', 'Three tunnels. In the middle one everybody stops talking.', 'Leaving', 'scottsbluff', 'Later', 'Chain', 1, 6, 2, R('scottsbluff', 'drawn-nadia'), { people: ['nadia', 'marisol'] }),
   C('nadia-hat', 'The wind took my hat to Wyoming', 'Probably. I never saw it land.', 'Weather', 'scottsbluff', '2000', 'Risk', 2, 10, 2, R('night-scottsbluff'), { people: ['nadia'] }),
-  C('nadia-goods', 'Dry goods for the wagons', 'My great-grandfather sold needles, coffee, and a map that was mostly blank.', 'Leaving', 'scottsbluff', '1888', 'Spare', 1, 6, 2, R('scottsbluff'), { people: ['nadia'] }),
+  C('nadia-goods', 'Dry goods for the wagons', 'My great-grandfather sold needles, coffee, and a map that was mostly blank.', 'Leaving', 'scottsbluff', '1888', 'Spare', 1, 6, 2, IG('framed-desert'), { people: ['nadia'] }),
   C('nadia-blank', 'The blank part of the map', 'He said the blank was where the good stories were.', 'Strange', 'scottsbluff', '1888', 'Find', 2, 9, 3, D('drawn-nadia'), { people: ['nadia'], rare: true }),
   // Bettina (Ashfall)
   C('bettina-brush', 'One brush at a time', 'A rib a summer. They waited twelve million years. They can wait for me.', 'Work', 'ashfall', 'Later', 'Spare', 1, 6, 2, R('ashfall', 'drawn-bettina'), { people: ['bettina'] }),
-  C('bettina-calf', 'The calf under its mother', 'Even in the ash she was keeping it out of the weather.', 'Animals', 'ashfall', '1974', 'Chain', 2, 9, 3, R('ashfall'), { people: ['bettina'], rare: true }),
-  C('bettina-sky', 'Snow that didn’t melt', 'The ash came a thousand miles and fell like snow. It never melted.', 'Weather', 'ashfall', '1974', 'Risk', 2, 10, 2, O('beast-rhino'), { people: ['bettina'] }),
+  C('bettina-calf', 'The calf under its mother', 'Even in the ash she was keeping it out of the weather.', 'Animals', 'ashfall', '1974', 'Chain', 2, 9, 3, IG('swaddles'), { people: ['bettina'], rare: true }),
+  C('bettina-sky', 'Snow that didn’t melt', 'The ash came a thousand miles and fell like snow. It never melted.', 'Weather', 'ashfall', '1974', 'Risk', 2, 10, 2, IG('bloom-in-snow'), { people: ['bettina'] }),
   C('bettina-blinked', 'The skull blinked', 'Once, in the afternoon. I didn’t tell the others.', 'Strange', 'ashfall', 'Later', 'Find', 1, 6, 2, R('night-ashfall'), { people: ['bettina', 'frank'] }),
   // Abuk (Lexington)
   C('abuk-train', 'The four o’clock train', 'I race it every morning. Some mornings it lets me win.', 'Work', 'lexington', 'Later', 'Chain', 1, 6, 2, R('lexington', 'drawn-abuk'), { people: ['abuk'] }),
@@ -138,7 +140,7 @@ const CARDS = [
   C('femi-ledger', 'Every tree in one book', 'Every tree planted in the state, by hand. The book stops in 1903.', 'Work', 'nebraskacity', '1903', 'Spare', 1, 6, 2, PD('pd_aerial_otoe_1949', 'USDA aerial index, Otoe County, 1949 · public domain', 'painting'), { people: ['femi'] }),
   // Dot (the Capitol)
   C('dot-sower', 'The Sower turned around', 'Once, in a thunderstorm. He was facing west in the morning.', 'Strange', 'capitol', '1974', 'Risk', 2, 10, 3, R('capitol', 'drawn-dot'), { people: ['dot'], rare: true }),
-  C('dot-weather', 'Weather from three counties', 'From the top you can see it coming. I used to warn the senators.', 'Weather', 'capitol', '1950', 'Find', 1, 6, 2, R('capitol'), { people: ['dot'] }),
+  C('dot-weather', 'Weather from three counties', 'From the top you can see it coming. I used to warn the senators.', 'Weather', 'capitol', '1950', 'Find', 1, 6, 2, IG('above-clouds'), { people: ['dot'] }),
   C('dot-dome', 'Checking the dome lights', 'They put the lamps on a timer. I still go up and check.', 'Light', 'capitol', '2000', 'Repeat', 1, 6, 2, R('night-capitol'), { people: ['dot', 'arne'] }),
   C('dot-gate', 'What they say on the way up', 'Senators, schoolchildren. Everybody tells the elevator the truth.', 'Kin', 'capitol', '1950', 'Spare', 1, 6, 2, D('drawn-dot'), { people: ['dot', 'odette'] }),
   // Metta Brown (Hummel Hill, Ponca): her own words, from the pieces she wrote for the family, 1955 to 1961
@@ -148,7 +150,7 @@ const CARDS = [
   C('metta-chain', 'The chain in the cornfield', 'He plowed up a huge chain, not far from the big cottonwood the river boats tied up to.', 'Strange', 'ponca', '1888', 'Chain', 1, 6, 2, D('sk-chain'), { people: ['metta'] }),
   C('metta-coyote', 'The coyote on the front lawn', 'The cars line up for blocks, to study this situation.', 'Animals', 'ponca', '1950', 'Risk', 1, 6, 2, O('beast-coyote'), { people: ['metta'] }),
   C('metta-brush', 'Into the brush', '“Born in Rockport, married in Florence, and then moved into the brush!”', 'Leaving', 'ponca', '1888', 'Chain', 1, 6, 2, D('sk-school'), { people: ['metta'] }),
-  C('sahara', 'Signed, “Sahara”', 'You can scrape sand from the bathtub with a spoon.', 'Water', 'ponca', '1950', 'Spare', 0, 4, 1, R('ponca'), { people: ['metta'] }),
+  C('sahara', 'Signed, “Sahara”', 'You can scrape sand from the bathtub with a spoon.', 'Water', 'ponca', '1950', 'Spare', 0, 4, 1, IG('tile-floor'), { people: ['metta'] }),
   // Velzoe Brown (Tech High, Omaha): her words, from the memoir she wrote for her parents in 1976 and what she told people later
   C('velzoe-sunshine', 'Sunshine’s golden trombone', 'She lifted her golden trombone, and to me it was angelic.', 'Light', 'techhigh', '1926', 'Find', 1, 6, 2, D('obj-trombone'), { people: ['velzoe'] }),
   C('velzoe-baldy', 'Go home, Baldy', '“Go home, Baldy!” He always did.', 'Animals', 'ponca', '1926', 'Chain', 1, 6, 2, D('sk-baldy'), { people: ['velzoe'] }),
@@ -166,7 +168,7 @@ const CARDS = [
   C('duffel-east', 'A bag pointed east', 'Somebody set it down facing the river and kept going without it.', 'Leaving', 'sandhills', 'Later', 'Chain', 1, 6, 2, R('road-duffel')),
   C('boot-fence', 'Every boot on the fence', 'One for everybody who walked away and kept walking.', 'Leaving', 'sandhills', '1974', 'Spare', 1, 6, 2, R('road-bootfence')),
   C('kolaches', 'Kolaches after the funeral', 'Apricot, poppy seed, prune. Everybody knew whose were whose.', 'Kin', 'mainstreet', '1950', 'Find', 1, 6, 2, R('road-kolaches')),
-  C('culvert', 'Waiting out the storm', 'A stranger who keeps bees shared the culvert.', 'Weather', 'thedford', 'Later', 'Find', 1, 5, 2, R('thedford'), { people: ['priya'] }),
+  C('culvert', 'Waiting out the storm', 'A stranger who keeps bees shared the culvert.', 'Weather', 'thedford', 'Later', 'Find', 1, 5, 2, IG('culvert-pipe'), { people: ['priya'] }),
 ];
 /* ---------------- the value budget ----------------
    Every card's Weight is set from a budget, so cards of the same rarity and cost are worth the same
