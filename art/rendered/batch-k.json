@@ -1,0 +1,20 @@
+{
+ "drawn-metta-face": [
+  "!Draw the person in the first image as a loose pen portrait in exactly the drawing style of the second and third images: thin black ink pen lines, wobbly and quick, a few flat gray marker shadows, mostly empty white paper, no background. Same framing, pose and proportions as the photograph, the face filling the frame the same way, the person recognizable. Plain white background only.",
+  "3:4",
+  [
+   "art/rendered/cast-metta-photo.jpg",
+   "art/sketches/face2.png",
+   "art/sketches/face1.png"
+  ]
+ ],
+ "drawn-velzoe-face": [
+  "!Draw the person in the first image as a loose pen portrait in exactly the drawing style of the second and third images: thin black ink pen lines, wobbly and quick, a few flat gray marker shadows, mostly empty white paper, no background. Same framing, pose and proportions as the photograph, the face filling the frame the same way, the person recognizable. Plain white background only.",
+  "3:4",
+  [
+   "art/rendered/cast-velzoe-photo.jpg",
+   "art/sketches/face2.png",
+   "art/sketches/face1.png"
+  ]
+ ]
+}

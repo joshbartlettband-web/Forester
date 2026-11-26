@@ -150,12 +150,12 @@ const CARDS = [
   C('metta-brush', 'Into the brush', '“Born in Rockport, married in Florence, and then moved into the brush!”', 'Leaving', 'ponca', '1888', 'Chain', 1, 6, 2, D('sk-school'), { people: ['metta'] }),
   C('sahara', 'Signed, “Sahara”', 'You can scrape sand from the bathtub with a spoon.', 'Water', 'ponca', '1950', 'Spare', 0, 4, 1, R('ponca'), { people: ['metta'] }),
   // Velzoe Brown (Tech High, Omaha): her words, from the memoir she wrote for her parents in 1976 and what she told people later
-  C('velzoe-sunshine', 'Sunshine’s golden trombone', 'She lifted her golden trombone, and to me it was angelic.', 'Light', 'techhigh', '1926', 'Find', 1, 6, 2, D('drawn-velzoe'), { people: ['velzoe'] }),
+  C('velzoe-sunshine', 'Sunshine’s golden trombone', 'She lifted her golden trombone, and to me it was angelic.', 'Light', 'techhigh', '1926', 'Find', 1, 6, 2, D('obj-trombone'), { people: ['velzoe'] }),
   C('velzoe-baldy', 'Go home, Baldy', '“Go home, Baldy!” He always did.', 'Animals', 'ponca', '1926', 'Chain', 1, 6, 2, D('sk-baldy'), { people: ['velzoe'] }),
   C('velzoe-glad', 'The Glad Girls leave town', 'Into the wide, wild world, with my dear parents’ blessing.', 'Leaving', 'omaha', '1926', 'Risk', 2, 10, 3, D('sk-studebaker'), { people: ['velzoe'], rare: true }),
   C('velzoe-lights', 'The lights went out at the toll bridge', 'Pitch dark, and the lights went out on the Model T. No problem. I called home.', 'Light', 'bridge', '1926', 'Spare', 1, 6, 2, D('sk-modelt'), { people: ['velzoe'] }),
-  C('velzoe-ragtime', 'Mother played ragtime', 'Mother played Rag-time piano like the great Joplin himself.', 'Kin', 'ponca', '1926', 'Repeat', 1, 6, 2, D('drawn-metta'), { people: ['velzoe', 'metta'] }),
-  C('velzoe-chromatic', 'First chair, and no lessons', '“Dear Lord,” I wondered. “What is a chromatic scale?”', 'Work', 'techhigh', '1926', 'Spare', 0, 4, 1, D('drawn-velzoe'), { people: ['velzoe'] }),
+  C('velzoe-ragtime', 'Mother played ragtime', 'Mother played Rag-time piano like the great Joplin himself.', 'Kin', 'ponca', '1926', 'Repeat', 1, 6, 2, D('obj-piano-stool'), { people: ['velzoe', 'metta'] }),
+  C('velzoe-chromatic', 'First chair, and no lessons', '“Dear Lord,” I wondered. “What is a chromatic scale?”', 'Work', 'techhigh', '1926', 'Spare', 0, 4, 1, D('obj-trombone'), { people: ['velzoe'] }),
   // found on the road
   C('peaches', 'Peaches from Dunning', 'She said they were spare.', 'Kin', 'sandhills', 'Later', 'Spare', 0, 4, 1, D('traveler')),
   C('cousin', 'A man who knows your cousin', 'You’re Odette’s cousin’s kid. I knew it.', 'Kin', 'brokenbow', 'Later', 'Chain', 1, 5, 2, D('face3'), { people: ['odette', 'marisol', 'walt'] }),
