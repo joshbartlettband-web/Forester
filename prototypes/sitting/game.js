@@ -22,7 +22,7 @@ const IG = s => ({ kind: 'painting', src: `img/ig-${s}.jpg` });
 const PD = (id, credit, kind = 'archive') => ({ kind, src: `public/${id}.jpg`, credit });
 const CARDS = [
   // carried from home: your starting deck
-  C('talk-weather', 'The weather, mostly', 'It was hot. Then it wasn’t.', 'Weather', 'halsey', 'Later', null, 0, 2, 1, IG('red-circle'), { small: true }),
+  C('talk-weather', 'The weather, mostly', 'It was hot. Then it wasn’t.', 'Weather', 'halsey', 'Later', null, 0, 2, 1, D('stars'), { small: true }),
   C('talk-kin', 'Who’s related to who', 'Your aunt’s my cousin, near enough.', 'Kin', 'halsey', 'Later', null, 0, 2, 1, D('traveler'), { small: true }),
   C('rows', 'Planting the rows by hand', 'Twelve hundred a day with a bar and a bucket.', 'Work', 'halsey', '1903', 'Repeat', 1, 6, 1, R('halsey-rows', 'tower')),
   C('hail', 'The hail that flattened the rows', 'Somebody wrote down every broken tree.', 'Weather', 'halsey', '1903', 'Chain', 1, 5, 1, R('halsey-rows')),
@@ -96,7 +96,7 @@ const CARDS = [
   // Imani, at the bridge
   C('imani-water', 'Taking the water at Brownville', 'You get in, and then you’re from somewhere else.', 'Leaving', 'bridge', 'Later', 'Risk', 2, 12, 3, R('bridge'), { people: ['imani'], rare: true }),
   C('imani-count', 'Who crosses the bridge', 'I count them both ways.', 'Leaving', 'bridge', 'Later', 'Repeat', 1, 7, 2, D('drawn-imani'), { people: ['imani'] }),
-  C('imani-brown', 'Brown water at Omaha', 'Every handful is from somewhere.', 'Water', 'omaha', 'Later', 'Chain', 1, 7, 2, IG('canal'), { people: ['imani'] }),
+  C('imani-brown', 'Brown water at Omaha', 'Every handful is from somewhere.', 'Water', 'omaha', 'Later', 'Chain', 1, 7, 2, R('omaha'), { people: ['imani'] }),
   C('imani-back', 'More come back than you’d think', 'They come back carrying something.', 'Kin', 'bridge', 'Later', 'Spare', 1, 6, 2, R('night-bridge'), { people: ['imani', 'gus'] }),
   // Lou (Kingsley Dam)
   C('lou-valley', 'The lake that used to be a valley', 'My grandfather’s house is under there. On calm days you can see the chimney.', 'Water', 'kingsley', '1950', 'Find', 2, 9, 3, R('kingsley'), { people: ['lou'], rare: true }),
@@ -120,7 +120,7 @@ const CARDS = [
   C('maeve-hail', 'Hail the size of potatoes', 'We put them in the freezer. Proof.', 'Weather', 'oneill', '2000', 'Risk', 2, 10, 2, IG('marbles'), { people: ['maeve'] }),
   // Nadia (Scotts Bluff)
   C('nadia-summit', 'Driving the summit road', 'Three tunnels. In the middle one everybody stops talking.', 'Leaving', 'scottsbluff', 'Later', 'Chain', 1, 6, 2, R('scottsbluff', 'drawn-nadia'), { people: ['nadia', 'marisol'] }),
-  C('nadia-hat', 'The wind took my hat to Wyoming', 'Probably. I never saw it land.', 'Weather', 'scottsbluff', '2000', 'Risk', 2, 10, 2, R('night-scottsbluff'), { people: ['nadia'] }),
+  C('nadia-hat', 'The wind took my hat to Wyoming', 'Probably. I never saw it land.', 'Weather', 'scottsbluff', '2000', 'Risk', 2, 10, 2, IG('canal'), { people: ['nadia'] }),
   C('nadia-goods', 'Dry goods for the wagons', 'My great-grandfather sold needles, coffee, and a map that was mostly blank.', 'Leaving', 'scottsbluff', '1888', 'Spare', 1, 6, 2, IG('framed-desert'), { people: ['nadia'] }),
   C('nadia-blank', 'The blank part of the map', 'He said the blank was where the good stories were.', 'Strange', 'scottsbluff', '1888', 'Find', 2, 9, 3, D('drawn-nadia'), { people: ['nadia'], rare: true }),
   // Bettina (Ashfall)
@@ -150,7 +150,7 @@ const CARDS = [
   C('metta-chain', 'The chain in the cornfield', 'He plowed up a huge chain, not far from the big cottonwood the river boats tied up to.', 'Strange', 'ponca', '1888', 'Chain', 1, 6, 2, D('sk-chain'), { people: ['metta'] }),
   C('metta-coyote', 'The coyote on the front lawn', 'The cars line up for blocks, to study this situation.', 'Animals', 'ponca', '1950', 'Risk', 1, 6, 2, O('beast-coyote'), { people: ['metta'] }),
   C('metta-brush', 'Into the brush', '“Born in Rockport, married in Florence, and then moved into the brush!”', 'Leaving', 'ponca', '1888', 'Chain', 1, 6, 2, D('sk-school'), { people: ['metta'] }),
-  C('sahara', 'Signed, “Sahara”', 'You can scrape sand from the bathtub with a spoon.', 'Water', 'ponca', '1950', 'Spare', 0, 4, 1, IG('tile-floor'), { people: ['metta'] }),
+  C('sahara', 'Signed, “Sahara”', 'You can scrape sand from the bathtub with a spoon.', 'Water', 'ponca', '1950', 'Spare', 0, 4, 1, R('ponca'), { people: ['metta'] }),
   // Velzoe Brown (Tech High, Omaha): her words, from the memoir she wrote for her parents in 1976 and what she told people later
   C('velzoe-sunshine', 'Sunshine’s golden trombone', 'She lifted her golden trombone, and to me it was angelic.', 'Light', 'techhigh', '1926', 'Find', 1, 6, 2, D('obj-trombone'), { people: ['velzoe'] }),
   C('velzoe-baldy', 'Go home, Baldy', '“Go home, Baldy!” He always did.', 'Animals', 'ponca', '1926', 'Chain', 1, 6, 2, D('sk-baldy'), { people: ['velzoe'] }),
