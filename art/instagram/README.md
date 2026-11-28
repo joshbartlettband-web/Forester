@@ -17,7 +17,7 @@ More of the designer's own work and photographs from the same account, picked fo
 | `bloom-in-snow.jpg` (black bloom arch in snow) | Snow that didn't melt |
 | `marbles.jpg` | Hail the size of potatoes |
 | `canal.jpg` (irrigation ditch at Scottsbluff, sunflowers) | The wind took my hat to Wyoming |
-| `hanging-light.jpg` (hanging sculpture, lit) | The lamp they keep |
+| `drain-ice.jpg` (ice flowing out of a drainage pipe) | The falls froze standing up |
 | `above-clouds.jpg` (from a plane window) | Weather from three counties |
 | `road-out.jpg` | When I'm old enough |
 | `framed-desert.jpg` (drawing in a drawn frame) | Dry goods for the wagons |
@@ -26,3 +26,4 @@ More of the designer's own work and photographs from the same account, picked fo
 - **arch-carved.jpg:** the white carved arch, cut out (`cutouts/arch-carved.png` and its `-opening.png`). It is the threshold in the Sandhills and at Kingsley Dam.
 
 - Not used: the red thread circle in the same post is a Sheila Hicks piece, not the designer's; the tile floor was a bathroom.
+- The framed desert drawing is the designer's own.

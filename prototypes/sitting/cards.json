@@ -1218,8 +1218,8 @@
     "odette"
    ],
    "art": {
-    "kind": "painting",
-    "src": "img/ig-hanging-light.jpg"
+    "kind": "drawing",
+    "src": "sketches/bulb.png"
    }
   },
   {
@@ -1448,8 +1448,8 @@
     "cal"
    ],
    "art": {
-    "kind": "render",
-    "src": "img/night-niobrara.jpg"
+    "kind": "painting",
+    "src": "img/ig-drain-ice.jpg"
    }
   },
   {

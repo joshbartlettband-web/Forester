@@ -91,7 +91,7 @@ const CARDS = [
   // Odette (the Register of Deeds)
   C('odette-survey', 'Her grandmother’s Survey', 'The baby is in four of the stories.', 'Kin', 'courthouse', '1903', 'Chain', 1, 8, 2, LOC(2005693386), { people: ['odette'] }),
   C('odette-copy', 'Copying the deed books', 'My hand will be in the record longer than I will.', 'Work', 'courthouse', 'Later', 'Spare', 1, 7, 2, D('drawn-odette'), { people: ['odette'] }),
-  C('odette-lamp', 'The lamp they keep', 'Nobody pays for it. It’s in the agreement.', 'Light', 'courthouse', '1903', 'Spare', 2, 9, 3, IG('hanging-light'), { people: ['odette'], rare: true }),
+  C('odette-lamp', 'The lamp they keep', 'Nobody pays for it. It’s in the agreement.', 'Light', 'courthouse', '1903', 'Spare', 2, 9, 3, D('bulb'), { people: ['odette'], rare: true }),
   C('odette-bees', 'Bees in the courthouse wall', 'The deeds smell like honey in July.', 'Animals', 'courthouse', 'Later', 'Find', 1, 6, 2, R('courthouse', 'crane-small'), { people: ['odette', 'priya'] }),
   // Imani, at the bridge
   C('imani-water', 'Taking the water at Brownville', 'You get in, and then you’re from somewhere else.', 'Leaving', 'bridge', 'Later', 'Risk', 2, 12, 3, R('bridge'), { people: ['imani'], rare: true }),
@@ -105,7 +105,7 @@ const CARDS = [
   C('lou-sundays', 'Sundays at the dam with Frank', 'He won’t sign. I won’t stop asking. We both come anyway.', 'Kin', 'kingsley', 'Later', 'Spare', 1, 6, 2, R('kingsley', 'drawn-frank'), { people: ['lou', 'frank'] }),
   // Cal (the Niobrara)
   C('cal-keeps', 'What the river keeps', 'A wedding ring, a dog’s collar, a whole canoe. I put them on the shelf by the register.', 'Water', 'niobrara', 'Later', 'Find', 1, 6, 2, R('niobrara', 'drawn-cal'), { people: ['cal'] }),
-  C('cal-falls', 'The falls froze standing up', 'All winter, like it was holding its breath.', 'Weather', 'niobrara', '1974', 'Spare', 1, 6, 2, R('night-niobrara'), { people: ['cal'] }),
+  C('cal-falls', 'The falls froze standing up', 'All winter, like it was holding its breath.', 'Weather', 'niobrara', '1974', 'Spare', 1, 6, 2, IG('drain-ice'), { people: ['cal'] }),
   C('cal-bison', 'Bison at the crossing', 'They came down to drink and the river went quiet.', 'Animals', 'niobrara', '1888', 'Chain', 1, 6, 2, O('beast-bison'), { people: ['cal'] }),
   C('cal-upstream', 'The canoe that came back upstream', 'Empty. Dry inside. It tied itself to my dock.', 'Strange', 'niobrara', 'Later', 'Risk', 2, 10, 3, D('drawn-cal'), { people: ['cal'], rare: true }),
   // Lan (Toadstool)
